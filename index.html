@@ -1,0 +1,2071 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Encyclopedia by WonderMayank</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --mc-green: #2d7d32;
+  --mc-green-light: #4caf50;
+  --mc-green-bright: #76c442;
+  --mc-green-dark: #1b5e20;
+  --mc-grass: #5a9e2f;
+  --mc-dirt: #8B5E3C;
+  --mc-white: #f5f5f5;
+  --mc-off-white: #e8f5e9;
+  --mc-cream: #f9fbe7;
+  --mc-dark: #1a1a1a;
+  --mc-card-bg: rgba(255,255,255,0.08);
+  --pixel-font: 'Press Start 2P', monospace;
+  --vt-font: 'VT323', monospace;
+  --body-font: 'Inter', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body-font);
+  background: #0a1a0a;
+  color: var(--mc-white);
+  overflow-x: hidden;
+}
+
+/* ===================== LOADING SCREEN ===================== */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0a1a0a;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+}
+
+.loader-title {
+  font-family: var(--pixel-font);
+  font-size: clamp(10px, 2vw, 18px);
+  color: var(--mc-green-bright);
+  text-shadow: 3px 3px 0 var(--mc-green-dark);
+  text-align: center;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker { 0%,100%{opacity:1} 50%{opacity:0.85} }
+
+.block-stack {
+  display: flex; flex-direction: column-reverse;
+  align-items: center; gap: 0;
+  height: 200px; justify-content: flex-start;
+}
+
+.mc-block {
+  width: 48px; height: 48px;
+  border: 3px solid rgba(0,0,0,0.5);
+  image-rendering: pixelated;
+  opacity: 0;
+  transform: translateY(-80px);
+  animation: dropBlock 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+.block-grass { background: linear-gradient(180deg, #5a9e2f 40%, #8B5E3C 40%); }
+.block-dirt  { background: #8B5E3C; background-image: repeating-linear-gradient(45deg,rgba(0,0,0,.1) 0,rgba(0,0,0,.1) 2px,transparent 2px,transparent 8px); }
+.block-stone { background: #808080; background-image: repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 6px); }
+.block-wood  { background: #8B6914; background-image: repeating-linear-gradient(90deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 2px,transparent 2px,transparent 10px); }
+.block-leaves{ background: #2d7d32; background-image: radial-gradient(circle,rgba(0,0,0,.2) 1px,transparent 1px); background-size: 6px 6px; }
+.block-diamond{ background: linear-gradient(135deg,#4de8ff,#00bcd4); }
+.block-gold  { background: linear-gradient(135deg,#ffd700,#ff8f00); }
+.block-tnt   { background: repeating-linear-gradient(45deg,#c62828 0,#c62828 8px,#f5f5f5 8px,#f5f5f5 16px); }
+
+@keyframes dropBlock {
+  0% { opacity: 0; transform: translateY(-80px) scale(1.2); }
+  60% { transform: translateY(4px) scale(0.95); opacity: 1; }
+  80% { transform: translateY(-3px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.loader-bar-wrap {
+  width: 300px; background: #111; border: 3px solid var(--mc-green);
+  height: 24px; position: relative;
+  image-rendering: pixelated;
+}
+
+.loader-bar {
+  height: 100%; background: linear-gradient(90deg, var(--mc-green-dark), var(--mc-green-bright));
+  width: 0%; transition: width 0.05s linear;
+  box-shadow: 0 0 12px var(--mc-green);
+}
+
+.loader-pct {
+  font-family: var(--pixel-font); font-size: 10px;
+  color: var(--mc-green-bright);
+  margin-top: 6px;
+}
+
+.loader-tip {
+  font-family: var(--vt-font); font-size: 22px;
+  color: #aaa; max-width: 340px; text-align: center;
+}
+
+/* ===================== NAVBAR ===================== */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 1000;
+  background: rgba(10, 26, 10, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--mc-green);
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+
+.nav-logo {
+  font-family: var(--pixel-font); font-size: clamp(7px, 1.2vw, 11px);
+  color: var(--mc-green-bright);
+  text-shadow: 2px 2px 0 var(--mc-green-dark);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-block-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(180deg, #5a9e2f 45%, #8B5E3C 45%);
+  border: 2px solid rgba(0,0,0,0.5);
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex; gap: 4px; list-style: none;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: #ccc; text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--mc-green-bright);
+  border-color: var(--mc-green);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* ===================== HERO ===================== */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('minecraft_bg.png') center/cover no-repeat,
+              linear-gradient(135deg, #0a1a0a 0%, #1b3d1b 50%, #0a1a0a 100%);
+  background-blend-mode: normal;
+}
+
+.hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(10,26,10,0.6) 70%, #0a1a0a 100%);
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center; padding: 120px 20px 60px;
+  max-width: 900px;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--pixel-font); font-size: 8px;
+  color: var(--mc-green-bright);
+  border: 2px solid var(--mc-green);
+  padding: 6px 16px;
+  background: rgba(45,125,50,0.2);
+  margin-bottom: 20px;
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(118,196,66,0.4)} 50%{box-shadow:0 0 0 8px rgba(118,196,66,0)} }
+
+.hero-title {
+  font-family: var(--pixel-font);
+  font-size: clamp(18px, 4vw, 48px);
+  line-height: 1.4;
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--mc-green-dark), 0 0 30px rgba(118,196,66,0.5);
+  margin-bottom: 10px;
+}
+
+.hero-title span { color: var(--mc-green-bright); }
+
+.hero-sub {
+  font-family: var(--pixel-font); font-size: clamp(7px, 1.2vw, 11px);
+  color: #aaa; margin-bottom: 30px;
+}
+
+.hero-sub span { color: var(--mc-green-light); }
+
+.hero-desc {
+  font-size: 16px; color: #ccc; max-width: 600px; margin: 0 auto 40px;
+  line-height: 1.8;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+
+.btn-primary {
+  font-family: var(--pixel-font); font-size: 9px;
+  padding: 14px 28px;
+  background: var(--mc-green);
+  color: #fff;
+  border: 3px solid var(--mc-green-bright);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.15s;
+  box-shadow: 4px 4px 0 var(--mc-green-dark);
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--mc-green-dark);
+  background: var(--mc-green-light);
+}
+
+.btn-secondary {
+  font-family: var(--pixel-font); font-size: 9px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--mc-green-bright);
+  border: 3px solid var(--mc-green);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.15s;
+  box-shadow: 4px 4px 0 rgba(45,125,50,0.3);
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  background: rgba(76,175,80,0.1);
+  transform: translate(-2px,-2px);
+}
+
+/* ===================== SECTIONS ===================== */
+section { padding: 80px 20px; }
+
+.section-header {
+  text-align: center; margin-bottom: 60px;
+}
+
+.section-tag {
+  font-family: var(--pixel-font); font-size: 8px;
+  color: var(--mc-green-bright);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.section-title {
+  font-family: var(--pixel-font);
+  font-size: clamp(14px, 2.5vw, 28px);
+  color: #fff;
+  text-shadow: 3px 3px 0 var(--mc-green-dark);
+  line-height: 1.5;
+}
+
+.section-desc {
+  font-size: 15px; color: #999;
+  max-width: 600px; margin: 16px auto 0;
+  line-height: 1.8;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ===================== STATS BAR ===================== */
+#stats {
+  background: linear-gradient(90deg, var(--mc-green-dark), #0a1a0a, var(--mc-green-dark));
+  border-top: 2px solid var(--mc-green);
+  border-bottom: 2px solid var(--mc-green);
+  padding: 30px 20px;
+}
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px; max-width: 1000px; margin: 0 auto;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-num {
+  font-family: var(--pixel-font); font-size: clamp(16px, 2.5vw, 28px);
+  color: var(--mc-green-bright);
+  display: block;
+  text-shadow: 2px 2px 0 var(--mc-green-dark);
+}
+
+.stat-label {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: #aaa; margin-top: 6px; display: block;
+}
+
+/* ===================== BLOCKS SECTION ===================== */
+#blocks { background: #0d1f0d; }
+
+.blocks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.block-card {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(76,175,80,0.2);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.block-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(76,175,80,0.05), transparent);
+  opacity: 0; transition: opacity 0.2s;
+}
+
+.block-card:hover {
+  border-color: var(--mc-green-bright);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(76,175,80,0.2);
+}
+
+.block-card:hover::before { opacity: 1; }
+
+.block-pixel {
+  width: 56px; height: 56px; margin: 0 auto 12px;
+  image-rendering: pixelated;
+  border: 2px solid rgba(0,0,0,0.5);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+}
+
+.block-name {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: var(--mc-green-bright);
+  margin-bottom: 6px;
+}
+
+.block-type {
+  font-size: 10px; color: #777;
+}
+
+.block-hardness {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--pixel-font); font-size: 6px;
+  color: var(--mc-green);
+  background: rgba(0,0,0,0.5);
+  padding: 2px 4px;
+}
+
+/* Block pixel art patterns */
+.b-grass { background: linear-gradient(180deg, #5a9e2f 30%, #8B5E3C 30%); }
+.b-dirt  { background: #8B5E3C; }
+.b-stone { background: #9e9e9e; }
+.b-wood  { background: #8B6914; }
+.b-sand  { background: #e0c270; }
+.b-gravel{ background: #9e9e9e; background-image: radial-gradient(circle,#777 1px,transparent 1px); background-size: 6px 6px; }
+.b-coal  { background: #424242; }
+.b-iron  { background: #c8a882; }
+.b-gold  { background: #ffd700; }
+.b-diamond { background: #4de8ff; }
+.b-emerald { background: #00e676; }
+.b-redstone { background: #f44336; }
+.b-lapis { background: #1565c0; }
+.b-obsidian { background: #1a0020; box-shadow: inset 0 0 10px rgba(123,31,162,0.5); }
+.b-netherrack { background: #7c1c1c; }
+.b-tnt   { background: repeating-linear-gradient(45deg, #c62828 0, #c62828 7px, #f5f5f5 7px, #f5f5f5 14px); }
+.b-leaves { background: radial-gradient(circle, #388e3c 60%, #1b5e20 100%); }
+.b-water { background: linear-gradient(180deg, #1565c0 0%, #0d47a1 100%); opacity: 0.85; }
+.b-lava  { background: linear-gradient(180deg, #ff6d00 0%, #bf360c 100%); }
+.b-glass { background: rgba(180,220,255,0.25); border: 2px solid rgba(180,220,255,0.5) !important; }
+.b-bookshelf { background: #8B6914; background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.3) 0, rgba(0,0,0,0.3) 4px, transparent 4px, transparent 18px); }
+.b-crafting { background: #6d4c41; }
+.b-furnace { background: #616161; }
+.b-chest { background: #8B6914; }
+.b-bed   { background: linear-gradient(90deg, #f44336 50%, #f5f5f5 50%); }
+.b-torch { background: radial-gradient(circle at 50% 30%, #ffd54f 20%, transparent 60%), #8B5E3C; }
+.b-nether-brick { background: #3e1a1a; }
+.b-end-stone { background: #d4cc8e; }
+.b-purpur { background: #9c27b0; }
+.b-prismarine { background: #26a69a; }
+.b-slime { background: rgba(76,175,80,0.7); }
+.b-honey  { background: #ff8f00; }
+.b-amethyst { background: #ab47bc; }
+.b-deepslate { background: #37474f; }
+.b-copper { background: #b45309; }
+.b-tuff   { background: #78909c; }
+.b-calcite{ background: #eceff1; }
+.b-snow   { background: #e3f2fd; }
+.b-ice    { background: rgba(100,181,246,0.6); }
+.b-packed-ice { background: #90caf9; }
+.b-soul-sand { background: #4e342e; }
+.b-magma  { background: radial-gradient(circle, #ff7043 20%, #bf360c 100%); }
+.b-shroomlight { background: radial-gradient(circle, #ff6f00 40%, #e65100 100%); }
+.b-warped-nylium { background: #00695c; }
+.b-crimson { background: #b71c1c; }
+
+/* ===================== BIOMES ===================== */
+#biomes { background: #081408; }
+
+.biomes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.biome-card {
+  position: relative; overflow: hidden;
+  border: 2px solid rgba(76,175,80,0.2);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.biome-card:hover {
+  border-color: var(--mc-green-bright);
+  transform: scale(1.02);
+  box-shadow: 0 12px 36px rgba(76,175,80,0.25);
+}
+
+.biome-visual {
+  height: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.biome-info {
+  padding: 20px;
+  background: rgba(10,26,10,0.9);
+}
+
+.biome-name {
+  font-family: var(--pixel-font); font-size: 10px;
+  color: var(--mc-green-bright); margin-bottom: 8px;
+}
+
+.biome-temp {
+  font-size: 12px; color: #aaa; margin-bottom: 8px;
+}
+
+.biome-tags {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+.biome-tag {
+  font-family: var(--pixel-font); font-size: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--mc-green);
+  color: var(--mc-green-bright);
+  background: rgba(45,125,50,0.15);
+}
+
+/* Biome visuals */
+.bv-forest { background: linear-gradient(180deg, #1565c0 0%, #4caf50 55%, #2d7d32 55%, #5d4037 75%, #3e2723 75%); }
+.bv-desert { background: linear-gradient(180deg, #ff8f00 0%, #ffd740 60%, #e0c270 60%, #c8a860 80%); }
+.bv-ocean  { background: linear-gradient(180deg, #1565c0 0%, #1976d2 50%, #0d47a1 50%, #0a2a6e 100%); }
+.bv-mountain { background: linear-gradient(180deg, #90caf9 0%, #9e9e9e 40%, #5a9e2f 60%, #4e342e 80%); }
+.bv-jungle { background: linear-gradient(180deg, #1b5e20 0%, #2e7d32 30%, #388e3c 50%, #4caf50 100%); }
+.bv-tundra { background: linear-gradient(180deg, #90caf9 0%, #e3f2fd 50%, #b0bec5 50%, #78909c 100%); }
+.bv-swamp  { background: linear-gradient(180deg, #33691e 0%, #558b2f 40%, #6d4c41 60%, #4e342e 100%); }
+.bv-savanna { background: linear-gradient(180deg, #ff8f00 0%, #ffa000 50%, #8bc34a 50%, #6d4c41 100%); }
+.bv-nether { background: linear-gradient(180deg, #b71c1c 0%, #7c1c1c 50%, #4e0000 100%); }
+.bv-end    { background: linear-gradient(180deg, #1a0030 0%, #4a0080 50%, #1a0030 100%); }
+.bv-badlands { background: linear-gradient(180deg, #ff8f00 0%, #e64a19 30%, #bf360c 60%, #6d4c41 100%); }
+.bv-mushroom { background: linear-gradient(180deg, #880e4f 0%, #ad1457 40%, #6a1b4d 60%, #c8a860 100%); }
+
+/* ===================== MOBS ===================== */
+#mobs { background: #0d1f0d; }
+
+.mobs-tabs {
+  display: flex; gap: 8px; justify-content: center;
+  margin-bottom: 40px; flex-wrap: wrap;
+}
+
+.tab-btn {
+  font-family: var(--pixel-font); font-size: 8px;
+  padding: 10px 18px;
+  background: transparent;
+  color: #aaa;
+  border: 2px solid rgba(76,175,80,0.3);
+  cursor: pointer; transition: all 0.2s;
+}
+
+.tab-btn.active, .tab-btn:hover {
+  background: var(--mc-green);
+  color: #fff;
+  border-color: var(--mc-green-bright);
+}
+
+.mobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.mob-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.15);
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.mob-card:hover {
+  border-color: var(--mc-green);
+  background: rgba(76,175,80,0.08);
+  transform: translateY(-3px);
+}
+
+.mob-sprite {
+  width: 64px; height: 64px; margin: 0 auto 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.mob-name {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: var(--mc-green-bright); margin-bottom: 8px;
+}
+
+.mob-hp {
+  font-size: 11px; color: #f44336;
+  margin-bottom: 4px;
+}
+
+.mob-type {
+  font-family: var(--pixel-font); font-size: 6px;
+  padding: 3px 8px;
+  display: inline-block;
+}
+
+.type-passive  { color: #4caf50; border: 1px solid #4caf50; }
+.type-hostile  { color: #f44336; border: 1px solid #f44336; }
+.type-neutral  { color: #ff9800; border: 1px solid #ff9800; }
+.type-boss     { color: #9c27b0; border: 1px solid #9c27b0; }
+
+/* ===================== CRAFTING ===================== */
+#crafting { background: #081408; }
+
+.crafting-search {
+  display: flex; gap: 12px; margin-bottom: 40px;
+  max-width: 500px; margin-left: auto; margin-right: auto;
+}
+
+.mc-input {
+  flex: 1;
+  font-family: var(--pixel-font); font-size: 9px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid var(--mc-green);
+  color: #fff;
+  outline: none;
+}
+
+.mc-input:focus { border-color: var(--mc-green-bright); box-shadow: 0 0 12px rgba(76,175,80,0.2); }
+
+.mc-input::placeholder { color: #555; }
+
+.recipes-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.recipe-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.2);
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.recipe-card:hover { border-color: var(--mc-green); }
+
+.recipe-name {
+  font-family: var(--pixel-font); font-size: 9px;
+  color: var(--mc-green-bright); margin-bottom: 16px;
+}
+
+.crafting-table {
+  display: grid; grid-template-columns: repeat(3, 48px);
+  gap: 3px; margin: 0 auto 16px;
+  width: fit-content;
+}
+
+.ct-slot {
+  width: 48px; height: 48px;
+  background: #1a2a1a;
+  border: 2px solid #333;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  image-rendering: pixelated;
+}
+
+.ct-slot.filled { border-color: #555; background: #222; }
+
+.recipe-arrow {
+  text-align: center; font-size: 24px; color: var(--mc-green);
+  margin: 8px 0;
+}
+
+.recipe-result {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.result-slot {
+  width: 56px; height: 56px;
+  background: #1a2a1a;
+  border: 2px solid var(--mc-green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 0 12px rgba(76,175,80,0.3);
+}
+
+.result-info .recipe-yield {
+  font-family: var(--pixel-font); font-size: 8px;
+  color: var(--mc-green-bright);
+}
+
+.result-info .recipe-mat {
+  font-size: 11px; color: #777; margin-top: 4px;
+}
+
+/* ===================== BUILDS ===================== */
+#builds { background: #0d1f0d; }
+
+.builds-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.build-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.15);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.build-card:hover {
+  border-color: var(--mc-green-bright);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(76,175,80,0.2);
+}
+
+.build-preview {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+
+.build-isometric {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px;
+  filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.7));
+}
+
+.build-gradient {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(10,26,10,0.9));
+}
+
+.build-info { padding: 20px; }
+
+.build-name {
+  font-family: var(--pixel-font); font-size: 9px;
+  color: var(--mc-green-bright); margin-bottom: 8px;
+}
+
+.build-diff {
+  display: flex; gap: 4px; margin-bottom: 10px;
+}
+
+.diff-star { font-size: 12px; }
+.diff-star.filled { color: var(--mc-green); }
+.diff-star.empty { color: #333; }
+
+.build-desc { font-size: 12px; color: #999; line-height: 1.6; }
+
+.build-tags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
+}
+
+.build-tag {
+  font-family: var(--pixel-font); font-size: 6px;
+  padding: 3px 8px;
+  background: rgba(45,125,50,0.15);
+  border: 1px solid var(--mc-green);
+  color: var(--mc-green-bright);
+}
+
+/* ===================== ITEMS & TOOLS ===================== */
+#items { background: #081408; }
+
+.items-tabs {
+  display: flex; gap: 8px; justify-content: center;
+  margin-bottom: 40px; flex-wrap: wrap;
+}
+
+.items-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.item-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.15);
+  padding: 16px 10px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.item-card:hover {
+  border-color: var(--mc-green);
+  background: rgba(76,175,80,0.08);
+  transform: translateY(-2px);
+}
+
+.item-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+
+.item-name {
+  font-family: var(--pixel-font); font-size: 6px;
+  color: var(--mc-green-bright); margin-bottom: 4px;
+}
+
+.item-rarity {
+  font-size: 9px;
+}
+
+.rarity-common   { color: #9e9e9e; }
+.rarity-uncommon { color: #4caf50; }
+.rarity-rare     { color: #2196f3; }
+.rarity-epic     { color: #9c27b0; }
+
+/* ===================== DIMENSIONS ===================== */
+#dimensions { background: #0d1f0d; }
+
+.dimensions-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 32px;
+}
+
+.dim-card {
+  border: 2px solid rgba(76,175,80,0.2);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.dim-card:hover {
+  border-color: var(--mc-green-bright);
+  box-shadow: 0 0 30px rgba(76,175,80,0.2);
+}
+
+.dim-header {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dim-overworld { background: radial-gradient(ellipse at top, #1565c0 0%, #4caf50 50%, #2d7d32 70%, #5d4037 100%); }
+.dim-nether    { background: radial-gradient(ellipse at center, #ff6d00 0%, #b71c1c 40%, #4e0000 100%); }
+.dim-end       { background: radial-gradient(ellipse at center, #7b1fa2 0%, #1a0030 50%, #000 100%); }
+
+.dim-glow {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 100px;
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+.dim-body { padding: 24px; background: rgba(10,26,10,0.95); }
+
+.dim-name {
+  font-family: var(--pixel-font); font-size: 14px;
+  color: var(--mc-green-bright); margin-bottom: 12px;
+}
+
+.dim-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;
+}
+
+.dim-stat { font-size: 12px; color: #999; }
+.dim-stat strong { color: #ccc; display: block; margin-top: 2px; font-size: 13px; }
+
+.dim-desc { font-size: 13px; color: #888; line-height: 1.7; }
+
+/* ===================== ENCHANTMENTS ===================== */
+#enchants { background: #081408; }
+
+.enchants-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.enchant-card {
+  background: linear-gradient(135deg, rgba(63,81,181,0.08), rgba(156,39,176,0.08));
+  border: 2px solid rgba(63,81,181,0.3);
+  padding: 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.enchant-card::after {
+  content: '✦';
+  position: absolute; top: 8px; right: 12px;
+  color: rgba(156,39,176,0.3); font-size: 20px;
+}
+
+.enchant-card:hover {
+  border-color: #7c4dff;
+  background: linear-gradient(135deg, rgba(63,81,181,0.15), rgba(156,39,176,0.15));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(124,77,255,0.2);
+}
+
+.enchant-name {
+  font-family: var(--pixel-font); font-size: 8px;
+  color: #ce93d8; margin-bottom: 8px;
+}
+
+.enchant-max {
+  font-size: 11px; color: #7986cb; margin-bottom: 8px;
+}
+
+.enchant-desc { font-size: 12px; color: #888; line-height: 1.6; }
+
+.enchant-applies {
+  display: flex; gap: 4px; flex-wrap: wrap; margin-top: 10px;
+}
+
+.enc-tag {
+  font-family: var(--pixel-font); font-size: 5px;
+  padding: 2px 6px;
+  background: rgba(63,81,181,0.2);
+  border: 1px solid rgba(63,81,181,0.4);
+  color: #9fa8da;
+}
+
+/* ===================== ADVANCEMENTS ===================== */
+#advancements { background: #0d1f0d; }
+
+.adv-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.adv-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.15);
+  padding: 20px;
+  display: flex; gap: 16px; align-items: flex-start;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.adv-card:hover {
+  border-color: var(--mc-green);
+  background: rgba(76,175,80,0.06);
+}
+
+.adv-icon {
+  width: 48px; height: 48px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  background: rgba(255,215,0,0.1);
+  border: 2px solid rgba(255,215,0,0.3);
+}
+
+.adv-icon.challenge { background: rgba(244,67,54,0.1); border-color: rgba(244,67,54,0.3); }
+.adv-icon.goal { background: rgba(76,175,80,0.1); border-color: rgba(76,175,80,0.3); }
+
+.adv-content {}
+.adv-title { font-family: var(--pixel-font); font-size: 7px; color: #ffd54f; margin-bottom: 6px; }
+.adv-title.challenge-text { color: #ef9a9a; }
+.adv-title.goal-text { color: #a5d6a7; }
+.adv-desc { font-size: 11px; color: #888; line-height: 1.6; }
+.adv-cat { font-family: var(--pixel-font); font-size: 6px; color: #555; margin-top: 6px; }
+
+/* ===================== POTIONS ===================== */
+#potions { background: #081408; }
+
+.potions-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.potion-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76,175,80,0.15);
+  padding: 24px 16px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.potion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(76,175,80,0.15);
+}
+
+.potion-bottle {
+  font-size: 40px; margin-bottom: 12px; display: block;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.potion-name {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: var(--mc-green-bright); margin-bottom: 8px;
+}
+
+.potion-effect { font-size: 11px; color: #aaa; line-height: 1.5; }
+.potion-dur { font-family: var(--pixel-font); font-size: 6px; color: #555; margin-top: 8px; }
+
+/* ===================== ABOUT ===================== */
+#about { background: #0d1f0d; }
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+  max-width: 1000px; margin: 0 auto;
+}
+
+@media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-visual {
+  position: relative; padding: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.about-cube {
+  width: 120px; height: 120px;
+  background: linear-gradient(135deg, var(--mc-green), var(--mc-green-dark));
+  border: 4px solid var(--mc-green-bright);
+  transform: rotate(45deg);
+  box-shadow: 0 0 40px rgba(76,175,80,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 50px;
+  animation: spin-slow 8s linear infinite;
+}
+
+@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+.about-text .section-title { text-align: left; }
+
+.about-features {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px;
+}
+
+.about-feat {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+
+.feat-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: rgba(76,175,80,0.15);
+  border: 2px solid var(--mc-green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.feat-text h4 { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 4px; }
+.feat-text p { font-size: 11px; color: #888; line-height: 1.5; }
+
+/* ===================== SEARCH MODAL ===================== */
+.search-overlay {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+  align-items: flex-start; justify-content: center;
+  padding-top: 80px;
+}
+
+.search-overlay.open { display: flex; }
+
+.search-box {
+  width: 100%; max-width: 600px;
+  background: #0d1f0d;
+  border: 2px solid var(--mc-green);
+  box-shadow: 0 0 40px rgba(76,175,80,0.3);
+}
+
+.search-box input {
+  width: 100%; font-family: var(--pixel-font); font-size: 12px;
+  padding: 20px;
+  background: transparent; border: none;
+  color: #fff; outline: none;
+}
+
+.search-results { max-height: 400px; overflow-y: auto; }
+
+.search-result-item {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(76,175,80,0.15);
+  cursor: pointer; display: flex; gap: 12px; align-items: center;
+  transition: background 0.15s;
+}
+
+.search-result-item:hover { background: rgba(76,175,80,0.08); }
+
+.sr-icon { font-size: 24px; }
+.sr-info h4 { font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); margin-bottom: 4px; }
+.sr-info p  { font-size: 11px; color: #777; }
+
+/* ===================== PROGRESS BARS ===================== */
+.hp-bar-wrap { width: 100%; background: #111; height: 6px; margin-top: 6px; }
+.hp-bar { height: 100%; background: #f44336; }
+
+/* ===================== SCROLL BLOCKS ===================== */
+.scroll-blocks {
+  position: fixed; right: 20px; bottom: 20px; z-index: 500;
+  display: flex; flex-direction: column; gap: 4px; opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.scroll-blocks.visible { opacity: 1; }
+
+.scroll-block {
+  width: 12px; height: 12px;
+  background: var(--mc-green);
+  border: 1px solid var(--mc-green-bright);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.scroll-block:hover { transform: scale(1.5); background: var(--mc-green-bright); }
+
+/* ===================== FOOTER ===================== */
+footer {
+  background: #040d04;
+  border-top: 3px solid var(--mc-green);
+  padding: 60px 20px 30px;
+}
+
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px; max-width: 1200px; margin: 0 auto 40px;
+}
+
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px) { .footer-grid { grid-template-columns: 1fr; } }
+
+.footer-brand .nav-logo {
+  font-size: 9px; margin-bottom: 16px; display: flex;
+}
+
+.footer-brand p { font-size: 13px; color: #666; line-height: 1.8; max-width: 280px; }
+
+.footer-col h4 {
+  font-family: var(--pixel-font); font-size: 8px;
+  color: var(--mc-green-bright); margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(76,175,80,0.2);
+}
+
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a {
+  font-size: 13px; color: #666; text-decoration: none;
+  transition: color 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.footer-col ul li a:hover { color: var(--mc-green-bright); }
+.footer-col ul li a::before { content: '▸'; color: var(--mc-green); font-size: 10px; }
+
+.footer-bottom {
+  max-width: 1200px; margin: 0 auto;
+  padding-top: 30px;
+  border-top: 1px solid rgba(76,175,80,0.15);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+
+.footer-copy {
+  font-family: var(--pixel-font); font-size: 7px;
+  color: #444;
+}
+
+.footer-blocks { display: flex; gap: 4px; }
+.footer-block-item {
+  width: 16px; height: 16px;
+  border: 1px solid rgba(76,175,80,0.3);
+}
+
+/* ===================== SECTION BG SEPARATORS ===================== */
+.section-sep {
+  height: 60px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(45,125,50,0.08) 0, rgba(45,125,50,0.08) 60px,
+    transparent 60px, transparent 120px
+  );
+  border-top: 1px solid rgba(76,175,80,0.1);
+  border-bottom: 1px solid rgba(76,175,80,0.1);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .blocks-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .biomes-grid { grid-template-columns: 1fr; }
+  .mobs-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+/* ===================== SCROLL ANIMATIONS ===================== */
+.fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ===================== TOOLTIP ===================== */
+[data-tooltip] { position: relative; }
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: 110%; left: 50%;
+  transform: translateX(-50%);
+  background: #0a1a0a;
+  border: 2px solid var(--mc-green);
+  color: var(--mc-green-bright);
+  font-family: var(--pixel-font); font-size: 7px;
+  padding: 6px 10px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(76,175,80,0.2);
+}
+
+/* Version badge */
+.version-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--pixel-font); font-size: 7px;
+  color: var(--mc-green-bright);
+  border: 1px solid var(--mc-green);
+  padding: 4px 10px;
+  background: rgba(45,125,50,0.1);
+  margin-bottom: 12px;
+}
+
+.version-dot { width: 6px; height: 6px; background: var(--mc-green-bright); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+</style>
+</head>
+<body>
+
+<!-- ============ LOADING SCREEN ============ -->
+<div id="loader">
+  <div class="loader-title">MINECRAFT ENCYCLOPEDIA</div>
+  <div class="loader-title" style="font-size:8px;color:#888;margin-top:-16px">by WonderMayank</div>
+
+  <div class="block-stack" id="blockStack">
+    <div class="mc-block b-grass" style="animation-delay:0.1s"></div>
+    <div class="mc-block b-dirt"  style="animation-delay:0.35s"></div>
+    <div class="mc-block b-stone" style="animation-delay:0.6s"></div>
+    <div class="mc-block b-wood"  style="animation-delay:0.85s"></div>
+    <div class="mc-block b-diamond" style="animation-delay:1.1s"></div>
+    <div class="mc-block b-gold"  style="animation-delay:1.35s"></div>
+    <div class="mc-block b-tnt"   style="animation-delay:1.6s"></div>
+  </div>
+
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="loaderBar"></div>
+  </div>
+  <div class="loader-pct" id="loaderPct">0%</div>
+  <div class="loader-tip" id="loaderTip">Loading terrain...</div>
+</div>
+
+<!-- ============ SEARCH OVERLAY ============ -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search blocks, mobs, items..." oninput="doSearch(this.value)">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <div class="nav-block-icon"></div>
+    MC ENCYCLOPEDIA
+  </a>
+  <ul class="nav-links">
+    <li><a href="#blocks">Blocks</a></li>
+    <li><a href="#biomes">Biomes</a></li>
+    <li><a href="#mobs">Mobs</a></li>
+    <li><a href="#crafting">Crafting</a></li>
+    <li><a href="#builds">Builds</a></li>
+    <li><a href="#items">Items</a></li>
+    <li><a href="#dimensions">Dimensions</a></li>
+    <li><a href="#enchants">Enchants</a></li>
+    <li><a href="#potions">Potions</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <button onclick="openSearch()" style="background:transparent;border:2px solid var(--mc-green);color:var(--mc-green-bright);font-family:var(--pixel-font);font-size:8px;padding:8px 14px;cursor:pointer;">🔍 SEARCH</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="version-badge"><div class="version-dot"></div>JAVA & BEDROCK · 1.21</div>
+    <div class="hero-badge">✦ THE ULTIMATE MINECRAFT REFERENCE ✦</div>
+    <h1 class="hero-title">MINECRAFT<br><span>ENCYCLOPEDIA</span></h1>
+    <p class="hero-sub">by <span>WonderMayank</span> · 900+ Blocks · 100+ Mobs · All Biomes</p>
+    <p class="hero-desc">Your complete guide to the world of Minecraft. Explore every block, mob, biome, crafting recipe, enchantment, and build — all in one place.</p>
+    <div class="hero-btns">
+      <a href="#blocks" class="btn-primary">EXPLORE BLOCKS</a>
+      <a href="#biomes" class="btn-secondary">VIEW BIOMES</a>
+      <button onclick="openSearch()" class="btn-secondary" style="border:3px solid var(--mc-green);">🔍 QUICK SEARCH</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div id="stats">
+  <div class="stats-grid">
+    <div class="stat-item"><span class="stat-num" data-count="900">0</span><span class="stat-label">TOTAL BLOCKS</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="138">0</span><span class="stat-label">UNIQUE MOBS</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="60">0</span><span class="stat-label">BIOMES</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="350">0</span><span class="stat-label">CRAFTING RECIPES</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="37">0</span><span class="stat-label">ENCHANTMENTS</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="3">0</span><span class="stat-label">DIMENSIONS</span></div>
+  </div>
+</div>
+
+<div class="section-sep"></div>
+
+<!-- ============ BLOCKS ============ -->
+<section id="blocks">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// DATABASE</span>
+      <h2 class="section-title">ALL BLOCKS</h2>
+      <p class="section-desc">Every block in Minecraft with properties, hardness, and tool requirements. From basic dirt to rare ancient debris.</p>
+    </div>
+    <div class="blocks-grid fade-in" id="blocksGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ BIOMES ============ -->
+<section id="biomes">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// WORLD GEN</span>
+      <h2 class="section-title">BIOMES & TERRAIN</h2>
+      <p class="section-desc">Explore every biome across all three dimensions — from lush forests and scorching deserts to the mysterious End.</p>
+    </div>
+    <div class="biomes-grid fade-in" id="biomesGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ MOBS ============ -->
+<section id="mobs">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ENTITIES</span>
+      <h2 class="section-title">MOBS & CREATURES</h2>
+      <p class="section-desc">Every creature that roams the Minecraft world — friendly, hostile, and everything in between.</p>
+    </div>
+    <div class="mobs-tabs">
+      <button class="tab-btn active" onclick="filterMobs('all',this)">ALL</button>
+      <button class="tab-btn" onclick="filterMobs('passive',this)">PASSIVE</button>
+      <button class="tab-btn" onclick="filterMobs('hostile',this)">HOSTILE</button>
+      <button class="tab-btn" onclick="filterMobs('neutral',this)">NEUTRAL</button>
+      <button class="tab-btn" onclick="filterMobs('boss',this)">BOSSES</button>
+    </div>
+    <div class="mobs-grid fade-in" id="mobsGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ CRAFTING ============ -->
+<section id="crafting">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// RECIPES</span>
+      <h2 class="section-title">CRAFTING RECIPES</h2>
+      <p class="section-desc">Find crafting recipes for all tools, weapons, armor, and utility items.</p>
+    </div>
+    <div class="crafting-search fade-in">
+      <input class="mc-input" type="text" placeholder="Search recipes..." id="recipeSearch" oninput="filterRecipes(this.value)">
+    </div>
+    <div class="recipes-grid fade-in" id="recipesGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ BUILDS ============ -->
+<section id="builds">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ARCHITECTURE</span>
+      <h2 class="section-title">ICONIC BUILDS</h2>
+      <p class="section-desc">Classic Minecraft structures, build types, and architectural styles from easy starter homes to megaproject wonders.</p>
+    </div>
+    <div class="builds-grid fade-in" id="buildsGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ ITEMS ============ -->
+<section id="items">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// INVENTORY</span>
+      <h2 class="section-title">ITEMS & TOOLS</h2>
+      <p class="section-desc">All weapons, tools, armor, food, and miscellaneous items in Minecraft.</p>
+    </div>
+    <div class="items-tabs">
+      <button class="tab-btn active" onclick="filterItems('all',this)">ALL</button>
+      <button class="tab-btn" onclick="filterItems('tools',this)">TOOLS</button>
+      <button class="tab-btn" onclick="filterItems('weapons',this)">WEAPONS</button>
+      <button class="tab-btn" onclick="filterItems('armor',this)">ARMOR</button>
+      <button class="tab-btn" onclick="filterItems('food',this)">FOOD</button>
+      <button class="tab-btn" onclick="filterItems('misc',this)">MISC</button>
+    </div>
+    <div class="items-grid fade-in" id="itemsGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ DIMENSIONS ============ -->
+<section id="dimensions">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// REALMS</span>
+      <h2 class="section-title">THE THREE DIMENSIONS</h2>
+      <p class="section-desc">Journey through the Overworld, brave the hellish Nether, and venture into the mysterious End.</p>
+    </div>
+    <div class="dimensions-grid fade-in">
+      <div class="dim-card">
+        <div class="dim-header dim-overworld">
+          <div class="dim-glow" style="color:#4caf50">🌍</div>
+        </div>
+        <div class="dim-body">
+          <div class="dim-name">THE OVERWORLD</div>
+          <div class="dim-stats">
+            <div class="dim-stat">Height Range<strong>-64 to 320</strong></div>
+            <div class="dim-stat">Biomes<strong>50+ unique biomes</strong></div>
+            <div class="dim-stat">Notable Mobs<strong>Creeper, Zombie, Witch</strong></div>
+            <div class="dim-stat">Key Feature<strong>Day/Night Cycle</strong></div>
+          </div>
+          <p class="dim-desc">The primary dimension of Minecraft. A diverse world of forests, oceans, mountains, deserts, and underground cave systems. Home to villages, strongholds, and ocean monuments.</p>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-header dim-nether">
+          <div class="dim-glow" style="color:#ff6d00">🔥</div>
+        </div>
+        <div class="dim-body">
+          <div class="dim-name">THE NETHER</div>
+          <div class="dim-stats">
+            <div class="dim-stat">Height Range<strong>0 to 256</strong></div>
+            <div class="dim-stat">Biomes<strong>5 nether biomes</strong></div>
+            <div class="dim-stat">Notable Mobs<strong>Ghast, Piglin, Blaze</strong></div>
+            <div class="dim-stat">Key Feature<strong>1:8 scale to Overworld</strong></div>
+          </div>
+          <p class="dim-desc">A hellish dimension of fire, lava, and ancient fortresses. Enter via a Nether Portal and gather Blaze Rods, Quartz, and rare Nether Wart for brewing. Home to Piglin civilization.</p>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-header dim-end">
+          <div class="dim-glow" style="color:#ce93d8">🌑</div>
+        </div>
+        <div class="dim-body">
+          <div class="dim-name">THE END</div>
+          <div class="dim-stats">
+            <div class="dim-stat">Height Range<strong>0 to 255</strong></div>
+            <div class="dim-stat">Biomes<strong>3 end biomes</strong></div>
+            <div class="dim-stat">Notable Mobs<strong>Ender Dragon, Enderman</strong></div>
+            <div class="dim-stat">Key Feature<strong>End Cities & Elytra</strong></div>
+          </div>
+          <p class="dim-desc">The final frontier. A vast void of floating obsidian islands surrounding the central island where the Ender Dragon awaits. Defeat it to unlock End Cities containing the coveted Elytra.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ ENCHANTMENTS ============ -->
+<section id="enchants">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// MAGIC</span>
+      <h2 class="section-title">ENCHANTMENTS</h2>
+      <p class="section-desc">All 37 enchantments — from basic Efficiency to the legendary Mending — with max levels and compatible equipment.</p>
+    </div>
+    <div class="enchants-grid fade-in" id="enchantsGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ ADVANCEMENTS ============ -->
+<section id="advancements">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ACHIEVEMENTS</span>
+      <h2 class="section-title">ADVANCEMENTS</h2>
+      <p class="section-desc">Track your progress — from the basics of punching wood to slaying the Ender Dragon and beyond.</p>
+    </div>
+    <div class="adv-grid fade-in" id="advGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ POTIONS ============ -->
+<section id="potions">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ALCHEMY</span>
+      <h2 class="section-title">POTIONS & BREWING</h2>
+      <p class="section-desc">All brewed potions, their effects, durations, and enhancement options.</p>
+    </div>
+    <div class="potions-grid fade-in" id="potionsGrid"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ABOUT</span>
+      <h2 class="section-title">ABOUT THIS PROJECT</h2>
+    </div>
+    <div class="about-grid fade-in">
+      <div class="about-visual">
+        <div class="about-cube">🎮</div>
+      </div>
+      <div class="about-text">
+        <p style="font-size:15px;color:#aaa;line-height:1.9;margin-bottom:20px;">
+          The <strong style="color:var(--mc-green-bright)">Minecraft Encyclopedia</strong> is a comprehensive reference built by WonderMayank — covering every aspect of Minecraft Java and Bedrock editions up to 1.21.
+        </p>
+        <p style="font-size:14px;color:#888;line-height:1.8;margin-bottom:24px;">
+          From the basic grass block to the most complex redstone contraption, from serene sunflower plains to treacherous basalt deltas — everything documented, organized, and searchable.
+        </p>
+        <div class="about-features">
+          <div class="about-feat"><div class="feat-icon">🧱</div><div class="feat-text"><h4>900+ BLOCKS</h4><p>Complete block database with properties</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🐾</div><div class="feat-text"><h4>ALL MOBS</h4><p>Stats, drops, and behavior</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🗺️</div><div class="feat-text"><h4>BIOME GUIDE</h4><p>Every biome documented</p></div></div>
+          <div class="about-feat"><div class="feat-icon">⚗️</div><div class="feat-text"><h4>RECIPES</h4><p>Complete crafting reference</p></div></div>
+          <div class="about-feat"><div class="feat-icon">✨</div><div class="feat-text"><h4>ENCHANTS</h4><p>All enchantment effects & levels</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🏆</div><div class="feat-text"><h4>ADVANCEMENTS</h4><p>Full achievements checklist</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="nav-block-icon"></div>
+        MC ENCYCLOPEDIA
+      </div>
+      <p>The most comprehensive Minecraft reference site. Built with ❤️ by WonderMayank. Not affiliated with Mojang or Microsoft.</p>
+      <div style="margin-top:20px;display:flex;gap:8px;">
+        <div class="b-grass" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
+        <div class="b-diamond" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
+        <div class="b-gold" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
+        <div class="b-emerald" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
+        <div class="b-lapis" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>EXPLORE</h4>
+      <ul>
+        <li><a href="#blocks">Blocks Database</a></li>
+        <li><a href="#biomes">Biomes Guide</a></li>
+        <li><a href="#mobs">Mob Encyclopedia</a></li>
+        <li><a href="#crafting">Crafting Recipes</a></li>
+        <li><a href="#items">Items & Tools</a></li>
+        <li><a href="#dimensions">Dimensions</a></li>
+        <li><a href="#enchants">Enchantments</a></li>
+        <li><a href="#potions">Potions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>CREATOR</h4>
+      <ul>
+        <li><a href="https://wondermayank.github.io/" target="_blank">WonderMayank</a></li>
+        <li><a href="https://commercesehoga.github.io/dashboard" target="_blank">CBT Mock Platform</a></li>
+        <li><a href="https://wondermayank.github.io/terms" target="_blank">Terms of Service</a></li>
+        <li><a href="https://wondermayank.github.io/privacy" target="_blank">Privacy Policy</a></li>
+        <li><a href="https://wondermayank.github.io/disclaimer" target="_blank">Disclaimer</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>SUPPORT</h4>
+      <ul>
+        <li><a href="https://wondermayank.github.io/contact" target="_blank">Contact Owner</a></li>
+        <li><a href="https://commercesehoga.github.io/help" target="_blank">Donate / Support</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2024 MINECRAFT ENCYCLOPEDIA BY WONDERMAYANK · NOT AFFILIATED WITH MOJANG</div>
+    <div class="footer-blocks">
+      <div class="footer-block-item b-grass"></div>
+      <div class="footer-block-item b-dirt"></div>
+      <div class="footer-block-item b-stone"></div>
+      <div class="footer-block-item b-diamond"></div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll indicator -->
+<div class="scroll-blocks" id="scrollBlocks">
+  <div class="scroll-block b-diamond" onclick="scrollTo(0,0)" title="Top"></div>
+  <div class="scroll-block b-grass" onclick="document.getElementById('blocks').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="scroll-block b-gold" onclick="document.getElementById('mobs').scrollIntoView({behavior:'smooth'})"></div>
+</div>
+
+<script>
+// ===================== LOADING =====================
+const tips = [
+  "Never dig straight down...",
+  "Creepers were a coding mistake.",
+  "Notch created Minecraft in 2009.",
+  "The Enderman language is English played backwards.",
+  "Diamonds are found between Y -58 and Y 16.",
+  "Beds explode in the Nether.",
+  "You can eat pumpkins as a helmet.",
+  "TNT was added in Alpha 1.0.1.",
+  "The Wither has more HP than the Ender Dragon.",
+  "Silk Touch lets you pick up spawners."
+];
+
+let loadPct = 0;
+const bar = document.getElementById('loaderBar');
+const pct = document.getElementById('loaderPct');
+const tipEl = document.getElementById('loaderTip');
+let tipIdx = 0;
+
+const loadInterval = setInterval(() => {
+  loadPct += Math.random() * 8 + 2;
+  if (loadPct >= 100) { loadPct = 100; clearInterval(loadInterval); setTimeout(hideLoader, 500); }
+  bar.style.width = loadPct + '%';
+  pct.textContent = Math.floor(loadPct) + '%';
+}, 80);
+
+setInterval(() => {
+  tipEl.textContent = tips[tipIdx++ % tips.length];
+}, 1200);
+
+function hideLoader() {
+  const loader = document.getElementById('loader');
+  loader.style.transition = 'opacity 0.6s';
+  loader.style.opacity = '0';
+  setTimeout(() => { loader.style.display = 'none'; initCounters(); }, 600);
+}
+
+// ===================== BLOCKS DATA =====================
+const BLOCKS = [
+  {name:'Grass Block',  cls:'b-grass',    type:'Natural',  hard:0.6},
+  {name:'Dirt',         cls:'b-dirt',     type:'Natural',  hard:0.5},
+  {name:'Stone',        cls:'b-stone',    type:'Natural',  hard:1.5},
+  {name:'Oak Wood',     cls:'b-wood',     type:'Wood',     hard:2.0},
+  {name:'Oak Leaves',   cls:'b-leaves',   type:'Natural',  hard:0.2},
+  {name:'Sand',         cls:'b-sand',     type:'Natural',  hard:0.5},
+  {name:'Gravel',       cls:'b-gravel',   type:'Natural',  hard:0.6},
+  {name:'Coal Ore',     cls:'b-coal',     type:'Ore',      hard:3.0},
+  {name:'Iron Ore',     cls:'b-iron',     type:'Ore',      hard:3.0},
+  {name:'Gold Ore',     cls:'b-gold',     type:'Ore',      hard:3.0},
+  {name:'Diamond Ore',  cls:'b-diamond',  type:'Ore',      hard:3.0},
+  {name:'Emerald Ore',  cls:'b-emerald',  type:'Ore',      hard:3.0},
+  {name:'Redstone Ore', cls:'b-redstone', type:'Ore',      hard:3.0},
+  {name:'Lapis Ore',    cls:'b-lapis',    type:'Ore',      hard:3.0},
+  {name:'Obsidian',     cls:'b-obsidian', type:'Natural',  hard:50},
+  {name:'Netherrack',   cls:'b-netherrack',type:'Nether',  hard:0.4},
+  {name:'TNT',          cls:'b-tnt',      type:'Utility',  hard:0},
+  {name:'Water',        cls:'b-water',    type:'Fluid',    hard:0},
+  {name:'Lava',         cls:'b-lava',     type:'Fluid',    hard:0},
+  {name:'Glass',        cls:'b-glass',    type:'Utility',  hard:0.3},
+  {name:'Bookshelf',    cls:'b-bookshelf',type:'Utility',  hard:1.5},
+  {name:'Crafting Table',cls:'b-crafting',type:'Utility',  hard:2.5},
+  {name:'Furnace',      cls:'b-furnace',  type:'Utility',  hard:3.5},
+  {name:'Chest',        cls:'b-chest',    type:'Storage',  hard:2.5},
+  {name:'Bed',          cls:'b-bed',      type:'Utility',  hard:0.2},
+  {name:'Torch',        cls:'b-torch',    type:'Light',    hard:0},
+  {name:'Nether Brick', cls:'b-nether-brick',type:'Nether',hard:2.0},
+  {name:'End Stone',    cls:'b-end-stone',type:'End',      hard:3.0},
+  {name:'Purpur Block', cls:'b-purpur',   type:'End',      hard:1.5},
+  {name:'Prismarine',   cls:'b-prismarine',type:'Ocean',   hard:1.5},
+  {name:'Slime Block',  cls:'b-slime',    type:'Utility',  hard:0},
+  {name:'Honey Block',  cls:'b-honey',    type:'Utility',  hard:0},
+  {name:'Amethyst',     cls:'b-amethyst', type:'Geode',    hard:1.5},
+  {name:'Deepslate',    cls:'b-deepslate',type:'Natural',  hard:3.0},
+  {name:'Copper Block', cls:'b-copper',   type:'Natural',  hard:3.0},
+  {name:'Tuff',         cls:'b-tuff',     type:'Natural',  hard:1.5},
+  {name:'Calcite',      cls:'b-calcite',  type:'Natural',  hard:0.75},
+  {name:'Snow Block',   cls:'b-snow',     type:'Natural',  hard:0.2},
+  {name:'Ice',          cls:'b-ice',      type:'Natural',  hard:0.5},
+  {name:'Packed Ice',   cls:'b-packed-ice',type:'Natural', hard:0.5},
+  {name:'Soul Sand',    cls:'b-soul-sand',type:'Nether',   hard:0.5},
+  {name:'Magma Block',  cls:'b-magma',    type:'Nether',   hard:0.5},
+  {name:'Shroomlight',  cls:'b-shroomlight',type:'Nether', hard:1.0},
+  {name:'Warped Nylium',cls:'b-warped-nylium',type:'Nether',hard:0.4},
+  {name:'Crimson',      cls:'b-crimson',  type:'Nether',   hard:2.0},
+];
+
+function renderBlocks() {
+  const g = document.getElementById('blocksGrid');
+  g.innerHTML = BLOCKS.map(b => `
+    <div class="block-card" data-tooltip="${b.name}">
+      <div class="block-hardness">♥ ${b.hard}</div>
+      <div class="block-pixel ${b.cls}"></div>
+      <div class="block-name">${b.name}</div>
+      <div class="block-type">${b.type}</div>
+    </div>`).join('');
+}
+
+// ===================== BIOMES =====================
+const BIOMES = [
+  {name:'Forest',       cls:'bv-forest',  temp:'Mild',   tags:['Overworld','Wooded','Common']},
+  {name:'Desert',       cls:'bv-desert',  temp:'Hot',    tags:['Overworld','Arid','Villages']},
+  {name:'Ocean',        cls:'bv-ocean',   temp:'Cool',   tags:['Overworld','Aquatic','Ships']},
+  {name:'Mountains',    cls:'bv-mountain',temp:'Cold',   tags:['Overworld','High','Goats']},
+  {name:'Jungle',       cls:'bv-jungle',  temp:'Hot',    tags:['Overworld','Dense','Parrots']},
+  {name:'Snowy Tundra', cls:'bv-tundra',  temp:'Freezing',tags:['Overworld','Cold','Polar Bears']},
+  {name:'Swamp',        cls:'bv-swamp',   temp:'Mild',   tags:['Overworld','Wet','Slimes']},
+  {name:'Savanna',      cls:'bv-savanna', temp:'Warm',   tags:['Overworld','Flat','Horses']},
+  {name:'Nether Wastes',cls:'bv-nether',  temp:'Inferno',tags:['Nether','Dangerous','Ghasts']},
+  {name:'The End',      cls:'bv-end',     temp:'Void',   tags:['End','Boss','Elytra']},
+  {name:'Badlands',     cls:'bv-badlands',temp:'Hot',    tags:['Overworld','Gold','Rare']},
+  {name:'Mushroom Fields',cls:'bv-mushroom',temp:'Mild', tags:['Overworld','Safe','Mooshrooms']},
+];
+
+function renderBiomes() {
+  const g = document.getElementById('biomesGrid');
+  g.innerHTML = BIOMES.map(b => `
+    <div class="biome-card fade-in">
+      <div class="biome-visual ${b.cls}"></div>
+      <div class="biome-info">
+        <div class="biome-name">${b.name}</div>
+        <div class="biome-temp">🌡️ Temperature: <strong>${b.temp}</strong></div>
+        <div class="biome-tags">${b.tags.map(t=>`<span class="biome-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===================== MOBS =====================
+const MOBS = [
+  {n:'Creeper',  e:'💚', hp:20, type:'hostile', drops:'Gunpowder'},
+  {n:'Zombie',   e:'🧟', hp:20, type:'hostile', drops:'Rotten Flesh'},
+  {n:'Skeleton', e:'🦴', hp:20, type:'hostile', drops:'Arrows, Bones'},
+  {n:'Spider',   e:'🕷️', hp:16, type:'neutral',  drops:'String, Spider Eye'},
+  {n:'Enderman', e:'👾', hp:40, type:'neutral',  drops:'Ender Pearl'},
+  {n:'Witch',    e:'🧙', hp:26, type:'hostile', drops:'Potions, Sticks'},
+  {n:'Blaze',    e:'🔥', hp:20, type:'hostile', drops:'Blaze Rod'},
+  {n:'Ghast',    e:'👻', hp:10, type:'hostile', drops:'Ghast Tear, GP'},
+  {n:'Ender Dragon',e:'🐉',hp:200,type:'boss',  drops:'Dragon Egg, XP'},
+  {n:'Wither',   e:'💀', hp:300,type:'boss',    drops:'Nether Star'},
+  {n:'Elder Guardian',e:'🐟',hp:80,type:'boss', drops:'Wet Sponge'},
+  {n:'Warden',   e:'🌑', hp:500,type:'hostile', drops:'Sculk Catalyst'},
+  {n:'Pig',      e:'🐷', hp:10, type:'passive', drops:'Raw Porkchop'},
+  {n:'Cow',      e:'🐄', hp:10, type:'passive', drops:'Leather, Beef'},
+  {n:'Chicken',  e:'🐔', hp:4,  type:'passive', drops:'Feather, Egg'},
+  {n:'Sheep',    e:'🐑', hp:8,  type:'passive', drops:'Wool, Mutton'},
+  {n:'Wolf',     e:'🐺', hp:8,  type:'neutral', drops:'Nothing'},
+  {n:'Cat',      e:'🐱', hp:10, type:'passive', drops:'String'},
+  {n:'Horse',    e:'🐴', hp:30, type:'passive', drops:'Leather'},
+  {n:'Bee',      e:'🐝', hp:10, type:'neutral', drops:'Honey Bottle'},
+  {n:'Axolotl',  e:'🦎', hp:14, type:'passive', drops:'Nothing'},
+  {n:'Fox',      e:'🦊', hp:10, type:'neutral', drops:'Feather'},
+  {n:'Dolphin',  e:'🐬', hp:10, type:'neutral', drops:'Raw Cod'},
+  {n:'Turtle',   e:'🐢', hp:30, type:'passive', drops:'Scute'},
+  {n:'Pillager', e:'⚔️', hp:24, type:'hostile', drops:'Crossbow, Arrow'},
+  {n:'Ravager',  e:'🦏', hp:100,type:'hostile', drops:'Saddle'},
+  {n:'Vindicator',e:'🪓',hp:24, type:'hostile', drops:'Emerald, Axe'},
+  {n:'Piglin',   e:'🪙', hp:16, type:'neutral', drops:'Gold Ingot'},
+];
+
+let currentMobFilter = 'all';
+
+function renderMobs(filter='all') {
+  const g = document.getElementById('mobsGrid');
+  const filtered = filter==='all' ? MOBS : MOBS.filter(m=>m.type===filter);
+  g.innerHTML = filtered.map(m => {
+    const hpPct = Math.min(100, (m.hp / 300) * 100);
+    return `<div class="mob-card">
+      <div class="mob-sprite">${m.e}</div>
+      <div class="mob-name">${m.n}</div>
+      <div class="mob-hp">❤️ ${m.hp} HP</div>
+      <div class="hp-bar-wrap"><div class="hp-bar" style="width:${hpPct}%"></div></div>
+      <div style="margin-top:8px;font-size:10px;color:#666;">${m.drops}</div>
+      <div style="margin-top:8px;"><span class="mob-type type-${m.type}">${m.type.toUpperCase()}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function filterMobs(type, btn) {
+  document.querySelectorAll('.mobs-tabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMobs(type);
+}
+
+// ===================== CRAFTING RECIPES =====================
+const RECIPES = [
+  {name:'Crafting Table', grid:['🪵','🪵','','🪵','🪵','','','',''],  result:'🪚', yield:'1x Crafting Table', mat:'4 Oak Planks'},
+  {name:'Wooden Pickaxe', grid:['🪵','🪵','🪵','','🪹','','','🪹',''],  result:'⛏️', yield:'1x Wooden Pickaxe', mat:'3 Planks + 2 Sticks'},
+  {name:'Iron Sword',     grid:['','⬛','','','⬛','','','🪹',''],        result:'⚔️',  yield:'1x Iron Sword',  mat:'2 Iron + 1 Stick'},
+  {name:'Torch',          grid:['','⬛','','','🪹','','','',''],          result:'🔦', yield:'4x Torch',        mat:'1 Coal + 1 Stick'},
+  {name:'Chest',          grid:['🪵','🪵','🪵','🪵','','🪵','🪵','🪵','🪵'], result:'📦',yield:'1x Chest',       mat:'8 Oak Planks'},
+  {name:'Furnace',        grid:['⬛','⬛','⬛','⬛','','⬛','⬛','⬛','⬛'], result:'🔥', yield:'1x Furnace',      mat:'8 Cobblestone'},
+  {name:'Iron Pickaxe',   grid:['⬛','⬛','⬛','','🪹','','','🪹',''],    result:'⛏️', yield:'1x Iron Pickaxe', mat:'3 Iron + 2 Sticks'},
+  {name:'Shield',         grid:['🪵','⬛','🪵','🪵','🪵','🪵','','🪵',''], result:'🛡️', yield:'1x Shield',      mat:'6 Planks + 1 Iron'},
+  {name:'Bow',            grid:['','🪹','⬜','🪹','','⬜','','🪹','⬜'], result:'🏹', yield:'1x Bow',           mat:'3 Sticks + 3 String'},
+  {name:'Bucket',         grid:['⬛','','⬛','','⬛','','','',''],        result:'🪣', yield:'1x Bucket',        mat:'3 Iron Ingots'},
+  {name:'Bread',          grid:['🌾','🌾','🌾','','','','','',''],       result:'🍞', yield:'1x Bread',          mat:'3 Wheat'},
+  {name:'Golden Apple',   grid:['🥇','🥇','🥇','🥇','🍎','🥇','🥇','🥇','🥇'], result:'🍏',yield:'1x Golden Apple', mat:'8 Gold + 1 Apple'},
+];
+
+let allRecipes = [...RECIPES];
+
+function renderRecipes(list) {
+  const g = document.getElementById('recipesGrid');
+  g.innerHTML = list.map(r => {
+    const slots = Array(9).fill('');
+    r.grid.forEach((v,i)=>{ if(v) slots[i]=v; });
+    return `<div class="recipe-card">
+      <div class="recipe-name">${r.name}</div>
+      <div class="crafting-table">${slots.map(s=>`<div class="ct-slot ${s?'filled':''}">${s}</div>`).join('')}</div>
+      <div class="recipe-arrow">▼</div>
+      <div class="recipe-result">
+        <div class="result-slot">${r.result}</div>
+        <div class="result-info">
+          <div class="recipe-yield">${r.yield}</div>
+          <div class="recipe-mat">${r.mat}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterRecipes(q) {
+  const filtered = allRecipes.filter(r=>r.name.toLowerCase().includes(q.toLowerCase()));
+  renderRecipes(filtered);
+}
+
+// ===================== BUILDS =====================
+const BUILDS = [
+  {n:'Starter House',  e:'🏠', bg:'#2d7d32', diff:1, desc:'The classic first night shelter. Simple 5×5 wood and cobblestone home.',tags:['Beginner','Survival','Wood']},
+  {n:'Nether Portal Hub',e:'🌀',bg:'#7b1fa2',diff:2, desc:'A decorated portal room linking your Overworld and Nether networks.',tags:['Intermediate','Nether','Portal']},
+  {n:'Iron Farm',      e:'⚙️', bg:'#607d8b', diff:3, desc:'Automated iron golem farm for endless iron ingots.',tags:['Farms','Redstone','Advanced']},
+  {n:'Tree Farm',      e:'🌳', bg:'#388e3c', diff:2, desc:'Automated tree farm with flying machine or observer array.',tags:['Farms','Wood','Redstone']},
+  {n:'Medieval Castle',e:'🏰', bg:'#795548', diff:5, desc:'Multi-tower stone castle with battlements, great hall, and dungeons.',tags:['Mega','Stone','Medieval']},
+  {n:'Sky Island',     e:'☁️', bg:'#1565c0', diff:3, desc:'A floating island base suspended in the sky with waterfalls and bridges.',tags:['Creative','Sky','Advanced']},
+  {n:'Wheat Farm',     e:'🌾', bg:'#f57f17', diff:1, desc:'Basic or automated villager wheat farm for unlimited bread.',tags:['Beginner','Food','Farms']},
+  {n:'Storage System', e:'📦', bg:'#4e342e', diff:3, desc:'AE/ME style chest + hopper sorting system with labeled categories.',tags:['Redstone','Storage','Advanced']},
+  {n:'Mob Grinder',    e:'💀', bg:'#212121', diff:3, desc:'XP and loot farm using a spawner or dark room spawn platform.',tags:['XP Farm','Hostile','Redstone']},
+  {n:'Village Upgrade',e:'🏘️', bg:'#6d4c41', diff:2, desc:'Transform a default villager village into a thriving trade hub.',tags:['Village','Trade','Intermediate']},
+  {n:'Ocean Monument Base',e:'🐟',bg:'#0d47a1',diff:4,desc:'Convert an ocean monument into an underwater base.',tags:['Ocean','Mega','Advanced']},
+  {n:'End Portal Room',e:'🌑', bg:'#1a0030', diff:4, desc:'Decorative end portal chamber with dragon head trophies.',tags:['End','Decorative','Boss']},
+];
+
+function renderBuilds() {
+  const g = document.getElementById('buildsGrid');
+  g.innerHTML = BUILDS.map(b => {
+    const stars = Array(5).fill(0).map((_,i)=>`<span class="diff-star ${i<b.diff?'filled':'empty'}">${i<b.diff?'★':'☆'}</span>`).join('');
+    return `<div class="build-card">
+      <div class="build-preview" style="background:${b.bg}">
+        <div class="build-isometric">${b.e}</div>
+        <div class="build-gradient"></div>
+      </div>
+      <div class="build-info">
+        <div class="build-name">${b.n}</div>
+        <div class="build-diff">${stars}</div>
+        <div class="build-desc">${b.desc}</div>
+        <div class="build-tags">${b.tags.map(t=>`<span class="build-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== ITEMS =====================
+const ITEMS = [
+  {n:'Diamond Sword',  e:'⚔️',  cat:'weapons',  r:'rare'},
+  {n:'Iron Pickaxe',   e:'⛏️',  cat:'tools',    r:'uncommon'},
+  {n:'Golden Sword',   e:'🗡️',  cat:'weapons',  r:'uncommon'},
+  {n:'Bow',            e:'🏹',  cat:'weapons',  r:'common'},
+  {n:'Diamond Helmet', e:'💎',  cat:'armor',    r:'rare'},
+  {n:'Iron Chestplate',e:'🛡️',  cat:'armor',    r:'uncommon'},
+  {n:'Leather Boots',  e:'👢',  cat:'armor',    r:'common'},
+  {n:'Bread',          e:'🍞',  cat:'food',     r:'common'},
+  {n:'Golden Apple',   e:'🍏',  cat:'food',     r:'rare'},
+  {n:'Cooked Steak',   e:'🥩',  cat:'food',     r:'common'},
+  {n:'Eye of Ender',   e:'👁️',  cat:'misc',     r:'uncommon'},
+  {n:'Ender Pearl',    e:'💫',  cat:'misc',     r:'uncommon'},
+  {n:'Elytra',         e:'🦋',  cat:'misc',     r:'epic'},
+  {n:'Trident',        e:'🔱',  cat:'weapons',  r:'rare'},
+  {n:'Crossbow',       e:'🎯',  cat:'weapons',  r:'uncommon'},
+  {n:'Flint & Steel',  e:'🔥',  cat:'tools',    r:'common'},
+  {n:'Compass',        e:'🧭',  cat:'tools',    r:'common'},
+  {n:'Clock',          e:'🕐',  cat:'misc',     r:'common'},
+  {n:'Spyglass',       e:'🔭',  cat:'misc',     r:'uncommon'},
+  {n:'Totem of Undying',e:'🗿', cat:'misc',     r:'rare'},
+  {n:'Netherite Sword',e:'🗡️',  cat:'weapons',  r:'epic'},
+  {n:'Axe',            e:'🪓',  cat:'tools',    r:'common'},
+  {n:'Shears',         e:'✂️',  cat:'tools',    r:'common'},
+  {n:'Fishing Rod',    e:'🎣',  cat:'tools',    r:'common'},
+];
+
+function renderItems(filter='all') {
+  const g = document.getElementById('itemsGrid');
+  const filtered = filter==='all' ? ITEMS : ITEMS.filter(i=>i.cat===filter);
+  g.innerHTML = filtered.map(i => `
+    <div class="item-card">
+      <span class="item-icon">${i.e}</span>
+      <div class="item-name">${i.n}</div>
+      <div class="item-rarity rarity-${i.r}">${i.r.toUpperCase()}</div>
+    </div>`).join('');
+}
+
+function filterItems(type, btn) {
+  document.querySelectorAll('.items-tabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderItems(type);
+}
+
+// ===================== ENCHANTMENTS =====================
+const ENCHANTS = [
+  {n:'Sharpness',    max:5,  desc:'Increases melee damage.',     applies:['Sword','Axe']},
+  {n:'Protection',   max:4,  desc:'Reduces most damage taken.',  applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Efficiency',   max:5,  desc:'Increases tool speed.',       applies:['Pickaxe','Axe','Shovel','Hoe']},
+  {n:'Mending',      max:1,  desc:'Repairs item using XP orbs.', applies:['All']},
+  {n:'Unbreaking',   max:3,  desc:'Increases item durability.',  applies:['All']},
+  {n:'Fortune',      max:3,  desc:'More drops from ores.',       applies:['Pickaxe','Axe','Shovel','Hoe']},
+  {n:'Silk Touch',   max:1,  desc:'Pick up blocks in true form.',applies:['Pickaxe','Axe','Shovel','Hoe']},
+  {n:'Power',        max:5,  desc:'Increases bow damage.',       applies:['Bow']},
+  {n:'Flame',        max:1,  desc:'Arrows set targets on fire.', applies:['Bow']},
+  {n:'Infinity',     max:1,  desc:'Infinite arrows from 1.',     applies:['Bow']},
+  {n:'Feather Falling',max:4,desc:'Reduces fall damage.',        applies:['Boots']},
+  {n:'Thorns',       max:3,  desc:'Damages attackers.',          applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Looting',      max:3,  desc:'More mob drops.',             applies:['Sword']},
+  {n:'Fire Aspect',  max:2,  desc:'Sets target on fire.',        applies:['Sword']},
+  {n:'Knockback',    max:2,  desc:'Knocks enemies back.',        applies:['Sword']},
+  {n:'Aqua Affinity',max:1,  desc:'Normal underwater mining speed.',applies:['Helmet']},
+  {n:'Respiration',  max:3,  desc:'Extends underwater breathing.',applies:['Helmet']},
+  {n:'Depth Strider',max:3,  desc:'Faster underwater movement.', applies:['Boots']},
+  {n:'Soul Speed',   max:3,  desc:'Faster on soul sand/soil.',   applies:['Boots']},
+  {n:'Channeling',   max:1,  desc:'Calls lightning in storm.',   applies:['Trident']},
+  {n:'Riptide',      max:3,  desc:'Fly with trident in rain.',   applies:['Trident']},
+  {n:'Loyalty',      max:3,  desc:'Trident returns after throw.',applies:['Trident']},
+  {n:'Impaling',     max:5,  desc:'Extra damage to aquatic mobs.',applies:['Trident']},
+  {n:'Multishot',    max:1,  desc:'Shoot 3 arrows at once.',     applies:['Crossbow']},
+  {n:'Piercing',     max:4,  desc:'Arrows pass through entities.',applies:['Crossbow']},
+  {n:'Quick Charge', max:3,  desc:'Faster crossbow reload.',     applies:['Crossbow']},
+  {n:'Sweeping Edge',max:3,  desc:'Sweeping attacks deal more damage.',applies:['Sword']},
+  {n:'Bane of Arthropods',max:5,desc:'Extra damage to spiders, silverfish.',applies:['Sword','Axe']},
+  {n:'Smite',        max:5,  desc:'Extra damage to undead mobs.',applies:['Sword','Axe']},
+  {n:'Frost Walker', max:2,  desc:'Freeze water into ice.',      applies:['Boots']},
+  {n:'Blast Protection',max:4,desc:'Reduces explosion damage.',  applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Fire Protection',max:4,desc:'Reduces fire damage.',        applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Projectile Protection',max:4,desc:'Reduces projectile damage.',applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Punch',        max:2,  desc:'Knocks back enemies farther.',applies:['Bow']},
+  {n:'Luck of the Sea',max:3,desc:'Better fishing loot.',        applies:['Fishing Rod']},
+  {n:'Lure',         max:3,  desc:'Faster fishing.',             applies:['Fishing Rod']},
+  {n:'Curse of Binding',max:1,desc:'Cannot remove from armor.',  applies:['Armor']},
+];
+
+function renderEnchants() {
+  const g = document.getElementById('enchantsGrid');
+  g.innerHTML = ENCHANTS.map(e => `
+    <div class="enchant-card">
+      <div class="enchant-name">${e.n}</div>
+      <div class="enchant-max">Max Level: ${'I'.repeat(e.max)} (${e.max})</div>
+      <div class="enchant-desc">${e.desc}</div>
+      <div class="enchant-applies">${e.applies.map(a=>`<span class="enc-tag">${a}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ===================== ADVANCEMENTS =====================
+const ADVS = [
+  {t:'Getting Wood',    icon:'🪵', type:'normal', cat:'Minecraft', desc:'Punch a tree to get a log.'},
+  {t:'Stone Age',       icon:'⬛', type:'normal', cat:'Minecraft', desc:'Mine stone with a pickaxe.'},
+  {t:'Getting an Upgrade',icon:'⛏️',type:'normal',cat:'Minecraft', desc:'Craft a stone pickaxe.'},
+  {t:'Acquire Hardware',icon:'🔩', type:'normal', cat:'Minecraft', desc:'Smelt an iron ingot.'},
+  {t:'Suit Up',         icon:'🛡️', type:'normal', cat:'Minecraft', desc:'Craft a piece of iron armor.'},
+  {t:'Hot Stuff',       icon:'🔥', type:'normal', cat:'Minecraft', desc:'Fill a bucket with lava.'},
+  {t:'Into Fire',       icon:'💫', type:'challenge',cat:'Minecraft',desc:'Obtain a blaze rod from a blaze.'},
+  {t:'Eye Spy',         icon:'👁️', type:'normal', cat:'Minecraft', desc:'Follow an Eye of Ender.'},
+  {t:'The End?',        icon:'🌑', type:'goal',    cat:'Minecraft', desc:'Enter the End.'},
+  {t:'Free the End',    icon:'🐉', type:'goal',    cat:'The End',   desc:'Defeat the Ender Dragon.'},
+  {t:'The Parrots & the Bats',icon:'🦜',type:'normal',cat:'Adventure',desc:'Breed animals using food.'},
+  {t:'Monster Hunter',  icon:'⚔️', type:'normal', cat:'Adventure', desc:'Kill any hostile monster.'},
+  {t:'A Throwaway Joke',icon:'🔱', type:'challenge',cat:'Adventure',desc:'Throw a trident at a mob while under riptide.'},
+  {t:'Hero of the Village',icon:'🏘️',type:'challenge',cat:'Adventure',desc:'Successfully defend a village.'},
+  {t:'Voluntary Exile',  icon:'🪓', type:'challenge',cat:'Adventure',desc:'Kill a raid captain.'},
+  {t:'How Did We Get Here?',icon:'💀',type:'challenge',cat:'Husbandry',desc:'Have every effect at once.'},
+  {t:'Adventuring Time',icon:'🗺️', type:'challenge',cat:'Adventure',desc:'Discover 17+ biomes.'},
+  {t:'A Complete Catalogue',icon:'🐱',type:'challenge',cat:'Husbandry',desc:'Tame all cat variants.'},
+  {t:'Serious Dedication',icon:'💎',type:'challenge',cat:'Husbandry',desc:'Max out a tool with Mending.'},
+  {t:'Withering Heights',icon:'💀', type:'challenge',cat:'Nether',  desc:'Summon and defeat the Wither.'},
+  {t:'Uneasy Alliance',  icon:'🐷', type:'challenge',cat:'Nether',  desc:'Rescue a ghast from the Nether.'},
+  {t:'Beaconator',       icon:'🔦', type:'challenge',cat:'Nether',  desc:'Create a full Beacon.'},
+  {t:'Sniper Duel',      icon:'🏹', type:'challenge',cat:'Adventure',desc:'Kill a skeleton from 50m away with a bow.'},
+];
+
+function renderAdvs() {
+  const g = document.getElementById('advGrid');
+  g.innerHTML = ADVS.map(a => {
+    const cls = a.type==='challenge'?'challenge-text':a.type==='goal'?'goal-text':'';
+    const iconCls = a.type==='challenge'?'challenge':a.type==='goal'?'goal':'';
+    return `<div class="adv-card">
+      <div class="adv-icon ${iconCls}">${a.icon}</div>
+      <div class="adv-content">
+        <div class="adv-title ${cls}">${a.t}</div>
+        <div class="adv-desc">${a.desc}</div>
+        <div class="adv-cat">${a.cat.toUpperCase()} · ${a.type.toUpperCase()}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== POTIONS =====================
+const POTIONS = [
+  {n:'Potion of Healing',    e:'🧪', color:'#e57373', effect:'Restores 4 HP instantly.', dur:'Instant'},
+  {n:'Potion of Regeneration',e:'💊',color:'#f48fb1', effect:'+1 HP every 2.5 sec.',     dur:'45s / 2min'},
+  {n:'Potion of Strength',   e:'🧫', color:'#8d6e63', effect:'+3 melee damage.',          dur:'3 min'},
+  {n:'Potion of Speed',      e:'🏃', color:'#80cbc4', effect:'+20% move speed.',          dur:'3 min'},
+  {n:'Potion of Invisibility',e:'👻',color:'#eeeeee', effect:'Makes you invisible.',       dur:'3 min'},
+  {n:'Potion of Night Vision',e:'👁️',color:'#1565c0', effect:'See in the dark.',          dur:'3 min'},
+  {n:'Potion of Fire Resistance',e:'🔥',color:'#ff8a65',effect:'Immune to fire/lava.', dur:'3 min'},
+  {n:'Potion of Water Breathing',e:'🫧',color:'#4fc3f7',effect:'Breathe underwater.',   dur:'3 min'},
+  {n:'Potion of Leaping',    e:'🦘', color:'#a5d6a7', effect:'+1 block jump height.',     dur:'3 min'},
+  {n:'Potion of Slow Falling',e:'🍃',color:'#e8f5e9', effect:'Fall slowly, no damage.',   dur:'90s'},
+  {n:'Potion of Weakness',   e:'💧', color:'#78909c', effect:'-4 melee damage.',           dur:'1.5 min'},
+  {n:'Potion of Poison',     e:'☠️', color:'#9ccc65', effect:'Deals damage over time.',   dur:'45s'},
+];
+
+function renderPotions() {
+  const g = document.getElementById('potionsGrid');
+  g.innerHTML = POTIONS.map(p => `
+    <div class="potion-card" style="border-color:${p.color}33;">
+      <span class="potion-bottle" style="color:${p.color}">${p.e}</span>
+      <div class="potion-name" style="color:${p.color}">${p.n}</div>
+      <div class="potion-effect">${p.effect}</div>
+      <div class="potion-dur">⏱ ${p.dur}</div>
+    </div>`).join('');
+}
+
+// ===================== SEARCH =====================
+const searchData = [
+  ...BLOCKS.map(b=>({icon:'🧱',name:b.name,type:'Block',cat:'blocks'})),
+  ...BIOMES.map(b=>({icon:'🗺️',name:b.name,type:'Biome',cat:'biomes'})),
+  ...MOBS.map(m=>({icon:m.e,name:m.n,type:'Mob',cat:'mobs'})),
+  ...ITEMS.map(i=>({icon:i.e,name:i.n,type:'Item',cat:'items'})),
+  ...ENCHANTS.map(e=>({icon:'✨',name:e.n,type:'Enchantment',cat:'enchants'})),
+];
+
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  document.getElementById('searchInput').focus();
+  doSearch('');
+}
+
+function closeSearch(e) {
+  if(e.target===document.getElementById('searchOverlay'))
+    document.getElementById('searchOverlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') document.getElementById('searchOverlay').classList.remove('open');
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}
+});
+
+function doSearch(q) {
+  const r = document.getElementById('searchResults');
+  const results = q.length<1 ? searchData.slice(0,10) : searchData.filter(d=>d.name.toLowerCase().includes(q.toLowerCase())).slice(0,12);
+  r.innerHTML = results.map(d=>`
+    <div class="search-result-item" onclick="goToSection('${d.cat}')">
+      <span class="sr-icon">${d.icon}</span>
+      <div class="sr-info">
+        <h4>${d.name}</h4>
+        <p>${d.type}</p>
+      </div>
+    </div>`).join('') || '<div style="padding:20px;color:#666;font-family:var(--pixel-font);font-size:9px;">No results found.</div>';
+}
+
+function goToSection(cat) {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById(cat).scrollIntoView({behavior:'smooth'});
+}
+
+// ===================== COUNTERS =====================
+function initCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = +el.dataset.count;
+    let current = 0;
+    const step = target / 60;
+    const iv = setInterval(() => {
+      current = Math.min(current+step, target);
+      el.textContent = Math.floor(current)+(current>=target?'+':'');
+      if(current>=target) clearInterval(iv);
+    }, 30);
+  });
+}
+
+// ===================== SCROLL ANIMATIONS =====================
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.1});
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+window.addEventListener('scroll', () => {
+  const sb = document.getElementById('scrollBlocks');
+  if(window.scrollY > 300) sb.classList.add('visible');
+  else sb.classList.remove('visible');
+
+  // Re-observe newly added elements
+  document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
+});
+
+// ===================== INIT =====================
+renderBlocks();
+renderBiomes();
+renderMobs();
+renderRecipes(RECIPES);
+renderBuilds();
+renderItems();
+renderEnchants();
+renderAdvs();
+renderPotions();
+</script>
+</body>
+</html>
