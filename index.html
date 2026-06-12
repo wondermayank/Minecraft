@@ -12,1284 +12,447 @@
   --mc-green-light: #4caf50;
   --mc-green-bright: #76c442;
   --mc-green-dark: #1b5e20;
-  --mc-grass: #5a9e2f;
-  --mc-dirt: #8B5E3C;
   --mc-white: #f5f5f5;
-  --mc-off-white: #e8f5e9;
-  --mc-cream: #f9fbe7;
-  --mc-dark: #1a1a1a;
-  --mc-card-bg: rgba(255,255,255,0.08);
   --pixel-font: 'Press Start 2P', monospace;
   --vt-font: 'VT323', monospace;
   --body-font: 'Inter', sans-serif;
+  --base: https://raw.githubusercontent.com/PrismarineJS/minecraft-assets/master/data/1.21.4;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
+body { font-family: var(--body-font); background: #0a1a0a; color: var(--mc-white); overflow-x: hidden; }
 
-body {
-  font-family: var(--body-font);
-  background: #0a1a0a;
-  color: var(--mc-white);
-  overflow-x: hidden;
-}
-
-/* ===================== LOADING SCREEN ===================== */
-#loader {
-  position: fixed; inset: 0; z-index: 9999;
-  background: #0a1a0a;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 24px;
-}
-
-.loader-title {
-  font-family: var(--pixel-font);
-  font-size: clamp(10px, 2vw, 18px);
-  color: var(--mc-green-bright);
-  text-shadow: 3px 3px 0 var(--mc-green-dark);
-  text-align: center;
-  animation: flicker 2s infinite;
-}
-
+/* LOADING */
+#loader { position: fixed; inset: 0; z-index: 9999; background: #0a1a0a; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+.loader-title { font-family: var(--pixel-font); font-size: clamp(10px,2vw,18px); color: var(--mc-green-bright); text-shadow: 3px 3px 0 var(--mc-green-dark); text-align: center; animation: flicker 2s infinite; }
 @keyframes flicker { 0%,100%{opacity:1} 50%{opacity:0.85} }
-
-.block-stack {
-  display: flex; flex-direction: column-reverse;
-  align-items: center; gap: 0;
-  height: 200px; justify-content: flex-start;
-}
-
-.mc-block {
-  width: 48px; height: 48px;
-  border: 3px solid rgba(0,0,0,0.5);
-  image-rendering: pixelated;
-  opacity: 0;
-  transform: translateY(-80px);
-  animation: dropBlock 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
-}
-
+.block-stack { display: flex; flex-direction: column-reverse; align-items: center; height: 200px; }
+.mc-block { width: 48px; height: 48px; border: 3px solid rgba(0,0,0,0.5); image-rendering: pixelated; opacity: 0; transform: translateY(-80px); animation: dropBlock 0.4s cubic-bezier(0.36,0.07,0.19,0.97) forwards; }
 .block-grass { background: linear-gradient(180deg, #5a9e2f 40%, #8B5E3C 40%); }
-.block-dirt  { background: #8B5E3C; background-image: repeating-linear-gradient(45deg,rgba(0,0,0,.1) 0,rgba(0,0,0,.1) 2px,transparent 2px,transparent 8px); }
-.block-stone { background: #808080; background-image: repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 6px); }
-.block-wood  { background: #8B6914; background-image: repeating-linear-gradient(90deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 2px,transparent 2px,transparent 10px); }
-.block-leaves{ background: #2d7d32; background-image: radial-gradient(circle,rgba(0,0,0,.2) 1px,transparent 1px); background-size: 6px 6px; }
-.block-diamond{ background: linear-gradient(135deg,#4de8ff,#00bcd4); }
-.block-gold  { background: linear-gradient(135deg,#ffd700,#ff8f00); }
-.block-tnt   { background: repeating-linear-gradient(45deg,#c62828 0,#c62828 8px,#f5f5f5 8px,#f5f5f5 16px); }
+.block-dirt { background: #8B5E3C; }
+.block-stone { background: #808080; }
+.block-wood { background: #8B6914; }
+.block-diamond { background: linear-gradient(135deg,#4de8ff,#00bcd4); }
+.block-gold { background: linear-gradient(135deg,#ffd700,#ff8f00); }
+.block-tnt { background: repeating-linear-gradient(45deg,#c62828 0,#c62828 8px,#f5f5f5 8px,#f5f5f5 16px); }
+@keyframes dropBlock { 0%{opacity:0;transform:translateY(-80px) scale(1.2)} 60%{transform:translateY(4px) scale(0.95);opacity:1} 80%{transform:translateY(-3px) scale(1.02)} 100%{transform:translateY(0) scale(1);opacity:1} }
+.loader-bar-wrap { width: 300px; background: #111; border: 3px solid var(--mc-green); height: 24px; }
+.loader-bar { height: 100%; background: linear-gradient(90deg, var(--mc-green-dark), var(--mc-green-bright)); width: 0%; transition: width 0.05s linear; }
+.loader-pct { font-family: var(--pixel-font); font-size: 10px; color: var(--mc-green-bright); }
+.loader-tip { font-family: var(--vt-font); font-size: 22px; color: #aaa; max-width: 340px; text-align: center; }
 
-@keyframes dropBlock {
-  0% { opacity: 0; transform: translateY(-80px) scale(1.2); }
-  60% { transform: translateY(4px) scale(0.95); opacity: 1; }
-  80% { transform: translateY(-3px) scale(1.02); }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
+/* NAVBAR */
+nav { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(10,26,10,0.95); backdrop-filter: blur(12px); border-bottom: 2px solid var(--mc-green); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 58px; }
+.nav-logo { font-family: var(--pixel-font); font-size: clamp(7px,1vw,10px); color: var(--mc-green-bright); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.nav-block-icon { width: 26px; height: 26px; background: linear-gradient(180deg,#5a9e2f 45%,#8B5E3C 45%); border: 2px solid rgba(0,0,0,0.5); flex-shrink: 0; }
+.nav-links { display: flex; gap: 2px; list-style: none; flex-wrap: wrap; }
+.nav-links a { font-family: var(--pixel-font); font-size: 6.5px; color: #ccc; text-decoration: none; padding: 5px 8px; border: 1px solid transparent; transition: all 0.2s; }
+.nav-links a:hover { color: var(--mc-green-bright); border-color: var(--mc-green); background: rgba(76,175,80,0.1); }
 
-.loader-bar-wrap {
-  width: 300px; background: #111; border: 3px solid var(--mc-green);
-  height: 24px; position: relative;
-  image-rendering: pixelated;
-}
-
-.loader-bar {
-  height: 100%; background: linear-gradient(90deg, var(--mc-green-dark), var(--mc-green-bright));
-  width: 0%; transition: width 0.05s linear;
-  box-shadow: 0 0 12px var(--mc-green);
-}
-
-.loader-pct {
-  font-family: var(--pixel-font); font-size: 10px;
-  color: var(--mc-green-bright);
-  margin-top: 6px;
-}
-
-.loader-tip {
-  font-family: var(--vt-font); font-size: 22px;
-  color: #aaa; max-width: 340px; text-align: center;
-}
-
-/* ===================== NAVBAR ===================== */
-nav {
-  position: fixed; top: 0; width: 100%; z-index: 1000;
-  background: rgba(10, 26, 10, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 2px solid var(--mc-green);
-  padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 60px;
-}
-
-.nav-logo {
-  font-family: var(--pixel-font); font-size: clamp(7px, 1.2vw, 11px);
-  color: var(--mc-green-bright);
-  text-shadow: 2px 2px 0 var(--mc-green-dark);
-  text-decoration: none;
-  display: flex; align-items: center; gap: 10px;
-}
-
-.nav-block-icon {
-  width: 28px; height: 28px;
-  background: linear-gradient(180deg, #5a9e2f 45%, #8B5E3C 45%);
-  border: 2px solid rgba(0,0,0,0.5);
-  flex-shrink: 0;
-}
-
-.nav-links {
-  display: flex; gap: 4px; list-style: none;
-  flex-wrap: wrap;
-}
-
-.nav-links a {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: #ccc; text-decoration: none;
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-}
-
-.nav-links a:hover {
-  color: var(--mc-green-bright);
-  border-color: var(--mc-green);
-  background: rgba(76, 175, 80, 0.1);
-}
-
-/* ===================== HERO ===================== */
-#hero {
-  position: relative; min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute; inset: 0;
-  background: url('minecraft_bg.png') center/cover no-repeat,
-              linear-gradient(135deg, #0a1a0a 0%, #1b3d1b 50%, #0a1a0a 100%);
-  background-blend-mode: normal;
-}
-
-.hero-bg::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(10,26,10,0.6) 70%, #0a1a0a 100%);
-}
-
-.hero-content {
-  position: relative; z-index: 2;
-  text-align: center; padding: 120px 20px 60px;
-  max-width: 900px;
-}
-
-.hero-badge {
-  display: inline-block;
-  font-family: var(--pixel-font); font-size: 8px;
-  color: var(--mc-green-bright);
-  border: 2px solid var(--mc-green);
-  padding: 6px 16px;
-  background: rgba(45,125,50,0.2);
-  margin-bottom: 20px;
-  animation: pulse-border 2s infinite;
-}
-
+/* HERO */
+#hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg,#0a1a0a 0%,#1b3d1b 50%,#0a1a0a 100%); }
+.hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,0.2) 0%,rgba(10,26,10,0.5) 70%,#0a1a0a 100%); }
+.hero-content { position: relative; z-index: 2; text-align: center; padding: 120px 20px 60px; max-width: 900px; }
+.hero-badge { display: inline-block; font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); border: 2px solid var(--mc-green); padding: 6px 16px; background: rgba(45,125,50,0.2); margin-bottom: 20px; animation: pulse-border 2s infinite; }
 @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(118,196,66,0.4)} 50%{box-shadow:0 0 0 8px rgba(118,196,66,0)} }
-
-.hero-title {
-  font-family: var(--pixel-font);
-  font-size: clamp(18px, 4vw, 48px);
-  line-height: 1.4;
-  color: #fff;
-  text-shadow: 4px 4px 0 var(--mc-green-dark), 0 0 30px rgba(118,196,66,0.5);
-  margin-bottom: 10px;
-}
-
+.hero-title { font-family: var(--pixel-font); font-size: clamp(18px,4vw,48px); line-height: 1.4; color: #fff; text-shadow: 4px 4px 0 var(--mc-green-dark); margin-bottom: 10px; }
 .hero-title span { color: var(--mc-green-bright); }
-
-.hero-sub {
-  font-family: var(--pixel-font); font-size: clamp(7px, 1.2vw, 11px);
-  color: #aaa; margin-bottom: 30px;
-}
-
+.hero-sub { font-family: var(--pixel-font); font-size: clamp(7px,1.2vw,11px); color: #aaa; margin-bottom: 30px; }
 .hero-sub span { color: var(--mc-green-light); }
+.hero-desc { font-size: 16px; color: #ccc; max-width: 600px; margin: 0 auto 40px; line-height: 1.8; }
+.hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { font-family: var(--pixel-font); font-size: 9px; padding: 14px 28px; background: var(--mc-green); color: #fff; border: 3px solid var(--mc-green-bright); cursor: pointer; text-decoration: none; transition: all 0.15s; box-shadow: 4px 4px 0 var(--mc-green-dark); display: inline-block; }
+.btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--mc-green-dark); background: var(--mc-green-light); }
+.btn-secondary { font-family: var(--pixel-font); font-size: 9px; padding: 14px 28px; background: transparent; color: var(--mc-green-bright); border: 3px solid var(--mc-green); cursor: pointer; text-decoration: none; transition: all 0.15s; display: inline-block; }
+.btn-secondary:hover { background: rgba(76,175,80,0.1); transform: translate(-2px,-2px); }
+.version-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); border: 1px solid var(--mc-green); padding: 4px 10px; background: rgba(45,125,50,0.1); margin-bottom: 12px; }
+.version-dot { width: 6px; height: 6px; background: var(--mc-green-bright); border-radius: 50%; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-.hero-desc {
-  font-size: 16px; color: #ccc; max-width: 600px; margin: 0 auto 40px;
-  line-height: 1.8;
-}
+/* STATS */
+#stats { background: linear-gradient(90deg,var(--mc-green-dark),#0a1a0a,var(--mc-green-dark)); border-top: 2px solid var(--mc-green); border-bottom: 2px solid var(--mc-green); padding: 30px 20px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+.stat-item { text-align: center; }
+.stat-num { font-family: var(--pixel-font); font-size: clamp(16px,2.5vw,28px); color: var(--mc-green-bright); display: block; text-shadow: 2px 2px 0 var(--mc-green-dark); }
+.stat-label { font-family: var(--pixel-font); font-size: 7px; color: #aaa; margin-top: 6px; display: block; }
 
-.hero-btns {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-}
-
-.btn-primary {
-  font-family: var(--pixel-font); font-size: 9px;
-  padding: 14px 28px;
-  background: var(--mc-green);
-  color: #fff;
-  border: 3px solid var(--mc-green-bright);
-  cursor: pointer; text-decoration: none;
-  transition: all 0.15s;
-  box-shadow: 4px 4px 0 var(--mc-green-dark);
-  display: inline-block;
-}
-
-.btn-primary:hover {
-  transform: translate(-2px,-2px);
-  box-shadow: 6px 6px 0 var(--mc-green-dark);
-  background: var(--mc-green-light);
-}
-
-.btn-secondary {
-  font-family: var(--pixel-font); font-size: 9px;
-  padding: 14px 28px;
-  background: transparent;
-  color: var(--mc-green-bright);
-  border: 3px solid var(--mc-green);
-  cursor: pointer; text-decoration: none;
-  transition: all 0.15s;
-  box-shadow: 4px 4px 0 rgba(45,125,50,0.3);
-  display: inline-block;
-}
-
-.btn-secondary:hover {
-  background: rgba(76,175,80,0.1);
-  transform: translate(-2px,-2px);
-}
-
-/* ===================== SECTIONS ===================== */
-section { padding: 80px 20px; }
-
-.section-header {
-  text-align: center; margin-bottom: 60px;
-}
-
-.section-tag {
-  font-family: var(--pixel-font); font-size: 8px;
-  color: var(--mc-green-bright);
-  letter-spacing: 3px;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.section-title {
-  font-family: var(--pixel-font);
-  font-size: clamp(14px, 2.5vw, 28px);
-  color: #fff;
-  text-shadow: 3px 3px 0 var(--mc-green-dark);
-  line-height: 1.5;
-}
-
-.section-desc {
-  font-size: 15px; color: #999;
-  max-width: 600px; margin: 16px auto 0;
-  line-height: 1.8;
-}
-
+/* SECTIONS */
+section { padding: 70px 20px; }
+.section-header { text-align: center; margin-bottom: 50px; }
+.section-tag { font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); letter-spacing: 3px; margin-bottom: 12px; display: block; }
+.section-title { font-family: var(--pixel-font); font-size: clamp(14px,2.5vw,28px); color: #fff; text-shadow: 3px 3px 0 var(--mc-green-dark); line-height: 1.5; }
+.section-desc { font-size: 15px; color: #999; max-width: 600px; margin: 16px auto 0; line-height: 1.8; }
 .container { max-width: 1200px; margin: 0 auto; }
-
-/* ===================== STATS BAR ===================== */
-#stats {
-  background: linear-gradient(90deg, var(--mc-green-dark), #0a1a0a, var(--mc-green-dark));
-  border-top: 2px solid var(--mc-green);
-  border-bottom: 2px solid var(--mc-green);
-  padding: 30px 20px;
-}
-
-.stats-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px; max-width: 1000px; margin: 0 auto;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-num {
-  font-family: var(--pixel-font); font-size: clamp(16px, 2.5vw, 28px);
-  color: var(--mc-green-bright);
-  display: block;
-  text-shadow: 2px 2px 0 var(--mc-green-dark);
-}
-
-.stat-label {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: #aaa; margin-top: 6px; display: block;
-}
-
-/* ===================== BLOCKS SECTION ===================== */
-#blocks { background: #0d1f0d; }
-
-.blocks-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-}
-
-.block-card {
-  background: rgba(255,255,255,0.05);
-  border: 2px solid rgba(76,175,80,0.2);
-  padding: 20px 12px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.block-card::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(76,175,80,0.05), transparent);
-  opacity: 0; transition: opacity 0.2s;
-}
-
-.block-card:hover {
-  border-color: var(--mc-green-bright);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(76,175,80,0.2);
-}
-
-.block-card:hover::before { opacity: 1; }
-
-.block-pixel {
-  width: 56px; height: 56px; margin: 0 auto 12px;
-  image-rendering: pixelated;
-  border: 2px solid rgba(0,0,0,0.5);
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
-}
-
-.block-name {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: var(--mc-green-bright);
-  margin-bottom: 6px;
-}
-
-.block-type {
-  font-size: 10px; color: #777;
-}
-
-.block-hardness {
-  position: absolute; top: 8px; right: 8px;
-  font-family: var(--pixel-font); font-size: 6px;
-  color: var(--mc-green);
-  background: rgba(0,0,0,0.5);
-  padding: 2px 4px;
-}
-
-/* Block pixel art patterns */
-.b-grass { background: linear-gradient(180deg, #5a9e2f 30%, #8B5E3C 30%); }
-.b-dirt  { background: #8B5E3C; }
-.b-stone { background: #9e9e9e; }
-.b-wood  { background: #8B6914; }
-.b-sand  { background: #e0c270; }
-.b-gravel{ background: #9e9e9e; background-image: radial-gradient(circle,#777 1px,transparent 1px); background-size: 6px 6px; }
-.b-coal  { background: #424242; }
-.b-iron  { background: #c8a882; }
-.b-gold  { background: #ffd700; }
-.b-diamond { background: #4de8ff; }
-.b-emerald { background: #00e676; }
-.b-redstone { background: #f44336; }
-.b-lapis { background: #1565c0; }
-.b-obsidian { background: #1a0020; box-shadow: inset 0 0 10px rgba(123,31,162,0.5); }
-.b-netherrack { background: #7c1c1c; }
-.b-tnt   { background: repeating-linear-gradient(45deg, #c62828 0, #c62828 7px, #f5f5f5 7px, #f5f5f5 14px); }
-.b-leaves { background: radial-gradient(circle, #388e3c 60%, #1b5e20 100%); }
-.b-water { background: linear-gradient(180deg, #1565c0 0%, #0d47a1 100%); opacity: 0.85; }
-.b-lava  { background: linear-gradient(180deg, #ff6d00 0%, #bf360c 100%); }
-.b-glass { background: rgba(180,220,255,0.25); border: 2px solid rgba(180,220,255,0.5) !important; }
-.b-bookshelf { background: #8B6914; background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.3) 0, rgba(0,0,0,0.3) 4px, transparent 4px, transparent 18px); }
-.b-crafting { background: #6d4c41; }
-.b-furnace { background: #616161; }
-.b-chest { background: #8B6914; }
-.b-bed   { background: linear-gradient(90deg, #f44336 50%, #f5f5f5 50%); }
-.b-torch { background: radial-gradient(circle at 50% 30%, #ffd54f 20%, transparent 60%), #8B5E3C; }
-.b-nether-brick { background: #3e1a1a; }
-.b-end-stone { background: #d4cc8e; }
-.b-purpur { background: #9c27b0; }
-.b-prismarine { background: #26a69a; }
-.b-slime { background: rgba(76,175,80,0.7); }
-.b-honey  { background: #ff8f00; }
-.b-amethyst { background: #ab47bc; }
-.b-deepslate { background: #37474f; }
-.b-copper { background: #b45309; }
-.b-tuff   { background: #78909c; }
-.b-calcite{ background: #eceff1; }
-.b-snow   { background: #e3f2fd; }
-.b-ice    { background: rgba(100,181,246,0.6); }
-.b-packed-ice { background: #90caf9; }
-.b-soul-sand { background: #4e342e; }
-.b-magma  { background: radial-gradient(circle, #ff7043 20%, #bf360c 100%); }
-.b-shroomlight { background: radial-gradient(circle, #ff6f00 40%, #e65100 100%); }
-.b-warped-nylium { background: #00695c; }
-.b-crimson { background: #b71c1c; }
-
-/* ===================== BIOMES ===================== */
-#biomes { background: #081408; }
-
-.biomes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.biome-card {
-  position: relative; overflow: hidden;
-  border: 2px solid rgba(76,175,80,0.2);
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.biome-card:hover {
-  border-color: var(--mc-green-bright);
-  transform: scale(1.02);
-  box-shadow: 0 12px 36px rgba(76,175,80,0.25);
-}
-
-.biome-visual {
-  height: 140px;
-  position: relative;
-  overflow: hidden;
-}
-
-.biome-info {
-  padding: 20px;
-  background: rgba(10,26,10,0.9);
-}
-
-.biome-name {
-  font-family: var(--pixel-font); font-size: 10px;
-  color: var(--mc-green-bright); margin-bottom: 8px;
-}
-
-.biome-temp {
-  font-size: 12px; color: #aaa; margin-bottom: 8px;
-}
-
-.biome-tags {
-  display: flex; gap: 6px; flex-wrap: wrap;
-}
-
-.biome-tag {
-  font-family: var(--pixel-font); font-size: 6px;
-  padding: 3px 8px;
-  border: 1px solid var(--mc-green);
-  color: var(--mc-green-bright);
-  background: rgba(45,125,50,0.15);
-}
-
-/* Biome visuals */
-.bv-forest { background: linear-gradient(180deg, #1565c0 0%, #4caf50 55%, #2d7d32 55%, #5d4037 75%, #3e2723 75%); }
-.bv-desert { background: linear-gradient(180deg, #ff8f00 0%, #ffd740 60%, #e0c270 60%, #c8a860 80%); }
-.bv-ocean  { background: linear-gradient(180deg, #1565c0 0%, #1976d2 50%, #0d47a1 50%, #0a2a6e 100%); }
-.bv-mountain { background: linear-gradient(180deg, #90caf9 0%, #9e9e9e 40%, #5a9e2f 60%, #4e342e 80%); }
-.bv-jungle { background: linear-gradient(180deg, #1b5e20 0%, #2e7d32 30%, #388e3c 50%, #4caf50 100%); }
-.bv-tundra { background: linear-gradient(180deg, #90caf9 0%, #e3f2fd 50%, #b0bec5 50%, #78909c 100%); }
-.bv-swamp  { background: linear-gradient(180deg, #33691e 0%, #558b2f 40%, #6d4c41 60%, #4e342e 100%); }
-.bv-savanna { background: linear-gradient(180deg, #ff8f00 0%, #ffa000 50%, #8bc34a 50%, #6d4c41 100%); }
-.bv-nether { background: linear-gradient(180deg, #b71c1c 0%, #7c1c1c 50%, #4e0000 100%); }
-.bv-end    { background: linear-gradient(180deg, #1a0030 0%, #4a0080 50%, #1a0030 100%); }
-.bv-badlands { background: linear-gradient(180deg, #ff8f00 0%, #e64a19 30%, #bf360c 60%, #6d4c41 100%); }
-.bv-mushroom { background: linear-gradient(180deg, #880e4f 0%, #ad1457 40%, #6a1b4d 60%, #c8a860 100%); }
-
-/* ===================== MOBS ===================== */
-#mobs { background: #0d1f0d; }
-
-.mobs-tabs {
-  display: flex; gap: 8px; justify-content: center;
-  margin-bottom: 40px; flex-wrap: wrap;
-}
-
-.tab-btn {
-  font-family: var(--pixel-font); font-size: 8px;
-  padding: 10px 18px;
-  background: transparent;
-  color: #aaa;
-  border: 2px solid rgba(76,175,80,0.3);
-  cursor: pointer; transition: all 0.2s;
-}
-
-.tab-btn.active, .tab-btn:hover {
-  background: var(--mc-green);
-  color: #fff;
-  border-color: var(--mc-green-bright);
-}
-
-.mobs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-}
-
-.mob-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.15);
-  padding: 20px 16px;
-  text-align: center;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.mob-card:hover {
-  border-color: var(--mc-green);
-  background: rgba(76,175,80,0.08);
-  transform: translateY(-3px);
-}
-
-.mob-sprite {
-  width: 64px; height: 64px; margin: 0 auto 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-}
-
-.mob-name {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: var(--mc-green-bright); margin-bottom: 8px;
-}
-
-.mob-hp {
-  font-size: 11px; color: #f44336;
-  margin-bottom: 4px;
-}
-
-.mob-type {
-  font-family: var(--pixel-font); font-size: 6px;
-  padding: 3px 8px;
-  display: inline-block;
-}
-
-.type-passive  { color: #4caf50; border: 1px solid #4caf50; }
-.type-hostile  { color: #f44336; border: 1px solid #f44336; }
-.type-neutral  { color: #ff9800; border: 1px solid #ff9800; }
-.type-boss     { color: #9c27b0; border: 1px solid #9c27b0; }
-
-/* ===================== CRAFTING ===================== */
-#crafting { background: #081408; }
-
-.crafting-search {
-  display: flex; gap: 12px; margin-bottom: 40px;
-  max-width: 500px; margin-left: auto; margin-right: auto;
-}
-
-.mc-input {
-  flex: 1;
-  font-family: var(--pixel-font); font-size: 9px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 2px solid var(--mc-green);
-  color: #fff;
-  outline: none;
-}
-
-.mc-input:focus { border-color: var(--mc-green-bright); box-shadow: 0 0 12px rgba(76,175,80,0.2); }
-
-.mc-input::placeholder { color: #555; }
-
-.recipes-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.recipe-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.2);
-  padding: 24px;
-  transition: all 0.2s;
-}
-
-.recipe-card:hover { border-color: var(--mc-green); }
-
-.recipe-name {
-  font-family: var(--pixel-font); font-size: 9px;
-  color: var(--mc-green-bright); margin-bottom: 16px;
-}
-
-.crafting-table {
-  display: grid; grid-template-columns: repeat(3, 48px);
-  gap: 3px; margin: 0 auto 16px;
-  width: fit-content;
-}
-
-.ct-slot {
-  width: 48px; height: 48px;
-  background: #1a2a1a;
-  border: 2px solid #333;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  image-rendering: pixelated;
-}
-
-.ct-slot.filled { border-color: #555; background: #222; }
-
-.recipe-arrow {
-  text-align: center; font-size: 24px; color: var(--mc-green);
-  margin: 8px 0;
-}
-
-.recipe-result {
-  display: flex; align-items: center; gap: 12px;
-}
-
-.result-slot {
-  width: 56px; height: 56px;
-  background: #1a2a1a;
-  border: 2px solid var(--mc-green);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-  box-shadow: 0 0 12px rgba(76,175,80,0.3);
-}
-
-.result-info .recipe-yield {
-  font-family: var(--pixel-font); font-size: 8px;
-  color: var(--mc-green-bright);
-}
-
-.result-info .recipe-mat {
-  font-size: 11px; color: #777; margin-top: 4px;
-}
-
-/* ===================== BUILDS ===================== */
-#builds { background: #0d1f0d; }
-
-.builds-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.build-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.15);
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.build-card:hover {
-  border-color: var(--mc-green-bright);
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(76,175,80,0.2);
-}
-
-.build-preview {
-  height: 180px;
-  position: relative;
-  overflow: hidden;
-  display: flex; align-items: flex-end;
-}
-
-.build-isometric {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 80px;
-  filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.7));
-}
-
-.build-gradient {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(10,26,10,0.9));
-}
-
-.build-info { padding: 20px; }
-
-.build-name {
-  font-family: var(--pixel-font); font-size: 9px;
-  color: var(--mc-green-bright); margin-bottom: 8px;
-}
-
-.build-diff {
-  display: flex; gap: 4px; margin-bottom: 10px;
-}
-
-.diff-star { font-size: 12px; }
-.diff-star.filled { color: var(--mc-green); }
-.diff-star.empty { color: #333; }
-
-.build-desc { font-size: 12px; color: #999; line-height: 1.6; }
-
-.build-tags {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
-}
-
-.build-tag {
-  font-family: var(--pixel-font); font-size: 6px;
-  padding: 3px 8px;
-  background: rgba(45,125,50,0.15);
-  border: 1px solid var(--mc-green);
-  color: var(--mc-green-bright);
-}
-
-/* ===================== ITEMS & TOOLS ===================== */
-#items { background: #081408; }
-
-.items-tabs {
-  display: flex; gap: 8px; justify-content: center;
-  margin-bottom: 40px; flex-wrap: wrap;
-}
-
-.items-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-}
-
-.item-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.15);
-  padding: 16px 10px;
-  text-align: center;
-  transition: all 0.2s;
-  cursor: pointer;
-  position: relative;
-}
-
-.item-card:hover {
-  border-color: var(--mc-green);
-  background: rgba(76,175,80,0.08);
-  transform: translateY(-2px);
-}
-
-.item-icon { font-size: 32px; margin-bottom: 10px; display: block; }
-
-.item-name {
-  font-family: var(--pixel-font); font-size: 6px;
-  color: var(--mc-green-bright); margin-bottom: 4px;
-}
-
-.item-rarity {
-  font-size: 9px;
-}
-
-.rarity-common   { color: #9e9e9e; }
-.rarity-uncommon { color: #4caf50; }
-.rarity-rare     { color: #2196f3; }
-.rarity-epic     { color: #9c27b0; }
-
-/* ===================== DIMENSIONS ===================== */
-#dimensions { background: #0d1f0d; }
-
-.dimensions-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 32px;
-}
-
-.dim-card {
-  border: 2px solid rgba(76,175,80,0.2);
-  overflow: hidden;
-  transition: all 0.3s;
-}
-
-.dim-card:hover {
-  border-color: var(--mc-green-bright);
-  box-shadow: 0 0 30px rgba(76,175,80,0.2);
-}
-
-.dim-header {
-  height: 200px;
-  position: relative;
-  overflow: hidden;
-}
-
-.dim-overworld { background: radial-gradient(ellipse at top, #1565c0 0%, #4caf50 50%, #2d7d32 70%, #5d4037 100%); }
-.dim-nether    { background: radial-gradient(ellipse at center, #ff6d00 0%, #b71c1c 40%, #4e0000 100%); }
-.dim-end       { background: radial-gradient(ellipse at center, #7b1fa2 0%, #1a0030 50%, #000 100%); }
-
-.dim-glow {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 100px;
-  filter: drop-shadow(0 0 20px currentColor);
-}
-
-.dim-body { padding: 24px; background: rgba(10,26,10,0.95); }
-
-.dim-name {
-  font-family: var(--pixel-font); font-size: 14px;
-  color: var(--mc-green-bright); margin-bottom: 12px;
-}
-
-.dim-stats {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;
-}
-
-.dim-stat { font-size: 12px; color: #999; }
-.dim-stat strong { color: #ccc; display: block; margin-top: 2px; font-size: 13px; }
-
-.dim-desc { font-size: 13px; color: #888; line-height: 1.7; }
-
-/* ===================== ENCHANTMENTS ===================== */
-#enchants { background: #081408; }
-
-.enchants-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.enchant-card {
-  background: linear-gradient(135deg, rgba(63,81,181,0.08), rgba(156,39,176,0.08));
-  border: 2px solid rgba(63,81,181,0.3);
-  padding: 20px;
-  transition: all 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.enchant-card::after {
-  content: '✦';
-  position: absolute; top: 8px; right: 12px;
-  color: rgba(156,39,176,0.3); font-size: 20px;
-}
-
-.enchant-card:hover {
-  border-color: #7c4dff;
-  background: linear-gradient(135deg, rgba(63,81,181,0.15), rgba(156,39,176,0.15));
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(124,77,255,0.2);
-}
-
-.enchant-name {
-  font-family: var(--pixel-font); font-size: 8px;
-  color: #ce93d8; margin-bottom: 8px;
-}
-
-.enchant-max {
-  font-size: 11px; color: #7986cb; margin-bottom: 8px;
-}
-
-.enchant-desc { font-size: 12px; color: #888; line-height: 1.6; }
-
-.enchant-applies {
-  display: flex; gap: 4px; flex-wrap: wrap; margin-top: 10px;
-}
-
-.enc-tag {
-  font-family: var(--pixel-font); font-size: 5px;
-  padding: 2px 6px;
-  background: rgba(63,81,181,0.2);
-  border: 1px solid rgba(63,81,181,0.4);
-  color: #9fa8da;
-}
-
-/* ===================== ADVANCEMENTS ===================== */
-#advancements { background: #0d1f0d; }
-
-.adv-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-
-.adv-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.15);
-  padding: 20px;
-  display: flex; gap: 16px; align-items: flex-start;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.adv-card:hover {
-  border-color: var(--mc-green);
-  background: rgba(76,175,80,0.06);
-}
-
-.adv-icon {
-  width: 48px; height: 48px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-  background: rgba(255,215,0,0.1);
-  border: 2px solid rgba(255,215,0,0.3);
-}
-
-.adv-icon.challenge { background: rgba(244,67,54,0.1); border-color: rgba(244,67,54,0.3); }
-.adv-icon.goal { background: rgba(76,175,80,0.1); border-color: rgba(76,175,80,0.3); }
-
-.adv-content {}
-.adv-title { font-family: var(--pixel-font); font-size: 7px; color: #ffd54f; margin-bottom: 6px; }
-.adv-title.challenge-text { color: #ef9a9a; }
-.adv-title.goal-text { color: #a5d6a7; }
-.adv-desc { font-size: 11px; color: #888; line-height: 1.6; }
-.adv-cat { font-family: var(--pixel-font); font-size: 6px; color: #555; margin-top: 6px; }
-
-/* ===================== POTIONS ===================== */
-#potions { background: #081408; }
-
-.potions-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.potion-card {
-  background: rgba(255,255,255,0.04);
-  border: 2px solid rgba(76,175,80,0.15);
-  padding: 24px 16px;
-  text-align: center;
-  transition: all 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.potion-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(76,175,80,0.15);
-}
-
-.potion-bottle {
-  font-size: 40px; margin-bottom: 12px; display: block;
-  filter: drop-shadow(0 0 8px currentColor);
-}
-
-.potion-name {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: var(--mc-green-bright); margin-bottom: 8px;
-}
-
-.potion-effect { font-size: 11px; color: #aaa; line-height: 1.5; }
-.potion-dur { font-family: var(--pixel-font); font-size: 6px; color: #555; margin-top: 8px; }
-
-/* ===================== ABOUT ===================== */
-#about { background: #0d1f0d; }
-
-.about-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 60px; align-items: center;
-  max-width: 1000px; margin: 0 auto;
-}
-
-@media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
-
-.about-visual {
-  position: relative; padding: 40px;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.about-cube {
-  width: 120px; height: 120px;
-  background: linear-gradient(135deg, var(--mc-green), var(--mc-green-dark));
-  border: 4px solid var(--mc-green-bright);
-  transform: rotate(45deg);
-  box-shadow: 0 0 40px rgba(76,175,80,0.4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 50px;
-  animation: spin-slow 8s linear infinite;
-}
-
-@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-
-.about-text .section-title { text-align: left; }
-
-.about-features {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px;
-}
-
-.about-feat {
-  display: flex; gap: 10px; align-items: flex-start;
-}
-
-.feat-icon {
-  width: 32px; height: 32px; flex-shrink: 0;
-  background: rgba(76,175,80,0.15);
-  border: 2px solid var(--mc-green);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-}
-
-.feat-text h4 { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 4px; }
-.feat-text p { font-size: 11px; color: #888; line-height: 1.5; }
-
-/* ===================== SEARCH MODAL ===================== */
-.search-overlay {
-  display: none; position: fixed; inset: 0; z-index: 2000;
-  background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-  align-items: flex-start; justify-content: center;
-  padding-top: 80px;
-}
-
-.search-overlay.open { display: flex; }
-
-.search-box {
-  width: 100%; max-width: 600px;
-  background: #0d1f0d;
-  border: 2px solid var(--mc-green);
-  box-shadow: 0 0 40px rgba(76,175,80,0.3);
-}
-
-.search-box input {
-  width: 100%; font-family: var(--pixel-font); font-size: 12px;
-  padding: 20px;
-  background: transparent; border: none;
-  color: #fff; outline: none;
-}
-
-.search-results { max-height: 400px; overflow-y: auto; }
-
-.search-result-item {
-  padding: 16px 20px;
-  border-top: 1px solid rgba(76,175,80,0.15);
-  cursor: pointer; display: flex; gap: 12px; align-items: center;
-  transition: background 0.15s;
-}
-
-.search-result-item:hover { background: rgba(76,175,80,0.08); }
-
-.sr-icon { font-size: 24px; }
-.sr-info h4 { font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); margin-bottom: 4px; }
-.sr-info p  { font-size: 11px; color: #777; }
-
-/* ===================== PROGRESS BARS ===================== */
-.hp-bar-wrap { width: 100%; background: #111; height: 6px; margin-top: 6px; }
-.hp-bar { height: 100%; background: #f44336; }
-
-/* ===================== SCROLL BLOCKS ===================== */
-.scroll-blocks {
-  position: fixed; right: 20px; bottom: 20px; z-index: 500;
-  display: flex; flex-direction: column; gap: 4px; opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.scroll-blocks.visible { opacity: 1; }
-
-.scroll-block {
-  width: 12px; height: 12px;
-  background: var(--mc-green);
-  border: 1px solid var(--mc-green-bright);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.scroll-block:hover { transform: scale(1.5); background: var(--mc-green-bright); }
-
-/* ===================== FOOTER ===================== */
-footer {
-  background: #040d04;
-  border-top: 3px solid var(--mc-green);
-  padding: 60px 20px 30px;
-}
-
-.footer-grid {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px; max-width: 1200px; margin: 0 auto 40px;
-}
-
-@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 500px) { .footer-grid { grid-template-columns: 1fr; } }
-
-.footer-brand .nav-logo {
-  font-size: 9px; margin-bottom: 16px; display: flex;
-}
-
-.footer-brand p { font-size: 13px; color: #666; line-height: 1.8; max-width: 280px; }
-
-.footer-col h4 {
-  font-family: var(--pixel-font); font-size: 8px;
-  color: var(--mc-green-bright); margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(76,175,80,0.2);
-}
-
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-col ul li a {
-  font-size: 13px; color: #666; text-decoration: none;
-  transition: color 0.2s;
-  display: flex; align-items: center; gap: 6px;
-}
-.footer-col ul li a:hover { color: var(--mc-green-bright); }
-.footer-col ul li a::before { content: '▸'; color: var(--mc-green); font-size: 10px; }
-
-.footer-bottom {
-  max-width: 1200px; margin: 0 auto;
-  padding-top: 30px;
-  border-top: 1px solid rgba(76,175,80,0.15);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
-}
-
-.footer-copy {
-  font-family: var(--pixel-font); font-size: 7px;
-  color: #444;
-}
-
-.footer-blocks { display: flex; gap: 4px; }
-.footer-block-item {
-  width: 16px; height: 16px;
-  border: 1px solid rgba(76,175,80,0.3);
-}
-
-/* ===================== SECTION BG SEPARATORS ===================== */
-.section-sep {
-  height: 60px;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(45,125,50,0.08) 0, rgba(45,125,50,0.08) 60px,
-    transparent 60px, transparent 120px
-  );
-  border-top: 1px solid rgba(76,175,80,0.1);
-  border-bottom: 1px solid rgba(76,175,80,0.1);
-}
-
-/* ===================== RESPONSIVE ===================== */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .blocks-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-  .biomes-grid { grid-template-columns: 1fr; }
-  .mobs-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-}
-
-/* ===================== SCROLL ANIMATIONS ===================== */
+.section-sep { height: 50px; background: repeating-linear-gradient(90deg,rgba(45,125,50,0.06) 0,rgba(45,125,50,0.06) 60px,transparent 60px,transparent 120px); border-top: 1px solid rgba(76,175,80,0.1); border-bottom: 1px solid rgba(76,175,80,0.1); }
 .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-/* ===================== TOOLTIP ===================== */
+/* ===== BLOCKS — REAL TEXTURES ===== */
+#blocks { background: #0d1f0d; }
+.blocks-filter { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
+.blocks-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(110px,1fr)); gap: 12px; }
+.block-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.2); padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.block-card:hover { border-color: var(--mc-green-bright); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(76,175,80,0.25); }
+.block-tex { width: 56px; height: 56px; margin: 0 auto 10px; image-rendering: pixelated; border: 2px solid rgba(0,0,0,0.5); box-shadow: 3px 3px 0 rgba(0,0,0,0.4); display: block; object-fit: cover; background: #1a2a1a; }
+.block-name { font-family: var(--pixel-font); font-size: 6px; color: var(--mc-green-bright); margin-bottom: 4px; line-height: 1.4; }
+.block-type { font-size: 10px; color: #666; }
+.block-hardness { position: absolute; top: 6px; right: 6px; font-family: var(--pixel-font); font-size: 5px; color: var(--mc-green); background: rgba(0,0,0,0.6); padding: 2px 4px; }
+.show-more-btn { font-family: var(--pixel-font); font-size: 8px; padding: 12px 24px; background: transparent; color: var(--mc-green-bright); border: 2px solid var(--mc-green); cursor: pointer; transition: all 0.2s; display: block; margin: 24px auto 0; }
+.show-more-btn:hover { background: rgba(76,175,80,0.1); }
+
+/* ===== ITEMS / TOOLS — REAL TEXTURES ===== */
+#items { background: #081408; }
+.items-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+.tab-btn { font-family: var(--pixel-font); font-size: 7px; padding: 8px 14px; background: transparent; color: #aaa; border: 2px solid rgba(76,175,80,0.3); cursor: pointer; transition: all 0.2s; }
+.tab-btn.active, .tab-btn:hover { background: var(--mc-green); color: #fff; border-color: var(--mc-green-bright); }
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); gap: 10px; }
+.item-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); padding: 14px 8px; text-align: center; transition: all 0.2s; cursor: pointer; }
+.item-card:hover { border-color: var(--mc-green); background: rgba(76,175,80,0.08); transform: translateY(-2px); }
+.item-tex { width: 48px; height: 48px; margin: 0 auto 10px; image-rendering: pixelated; display: block; background: #1a2a1a; }
+.item-name { font-family: var(--pixel-font); font-size: 5.5px; color: var(--mc-green-bright); margin-bottom: 4px; line-height: 1.4; }
+.item-rarity { font-size: 9px; }
+.rarity-common { color: #9e9e9e; } .rarity-uncommon { color: #4caf50; } .rarity-rare { color: #2196f3; } .rarity-epic { color: #9c27b0; }
+
+/* ===== MOBS GUI ===== */
+#mobs { background: #0d1f0d; }
+.mobs-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+.mobs-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 14px; }
+.mob-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); padding: 18px 12px; text-align: center; transition: all 0.2s; cursor: pointer; }
+.mob-card:hover { border-color: var(--mc-green); background: rgba(76,175,80,0.08); transform: translateY(-3px); }
+.mob-sprite { width: 64px; height: 64px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 38px; }
+.mob-name { font-family: var(--pixel-font); font-size: 6px; color: var(--mc-green-bright); margin-bottom: 8px; }
+.mob-hp { font-size: 11px; color: #f44336; margin-bottom: 4px; }
+.hp-bar-wrap { width: 100%; background: #111; height: 5px; margin-top: 5px; }
+.hp-bar { height: 100%; background: #f44336; }
+.mob-type { font-family: var(--pixel-font); font-size: 5.5px; padding: 3px 6px; display: inline-block; }
+.type-passive { color: #4caf50; border: 1px solid #4caf50; } .type-hostile { color: #f44336; border: 1px solid #f44336; } .type-neutral { color: #ff9800; border: 1px solid #ff9800; } .type-boss { color: #9c27b0; border: 1px solid #9c27b0; }
+
+/* ===== PAINTINGS ===== */
+#paintings { background: #081408; }
+.paintings-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 20px; }
+.painting-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+.painting-card:hover { border-color: var(--mc-green-bright); transform: scale(1.03); box-shadow: 0 8px 24px rgba(76,175,80,0.2); }
+.painting-frame { background: #6d4c41; padding: 8px; display: flex; align-items: center; justify-content: center; min-height: 120px; }
+.painting-img { image-rendering: pixelated; max-width: 100%; max-height: 160px; border: 3px solid #4e342e; display: block; }
+.painting-info { padding: 12px; }
+.painting-name { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 4px; }
+.painting-size { font-size: 10px; color: #666; }
+
+/* ===== ARMOR TRIMS ===== */
+#trims { background: #0d1f0d; }
+.trims-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 16px; }
+.trim-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); padding: 20px 14px; text-align: center; transition: all 0.2s; cursor: pointer; }
+.trim-card:hover { border-color: var(--mc-green-bright); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(76,175,80,0.2); }
+.trim-visual { width: 64px; height: 64px; margin: 0 auto 12px; image-rendering: pixelated; display: block; background: #1a2a1a; border: 2px solid rgba(0,0,0,0.4); }
+.trim-name { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 6px; }
+.trim-mat { font-size: 10px; color: #888; margin-bottom: 6px; }
+.trim-loc { font-size: 9px; color: #555; }
+
+/* ===== GUI SCREENSHOTS ===== */
+#gui { background: #081408; }
+.gui-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 20px; }
+.gui-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+.gui-card:hover { border-color: var(--mc-green-bright); transform: scale(1.02); }
+.gui-preview { background: #1a2a1a; padding: 12px; display: flex; align-items: center; justify-content: center; min-height: 140px; }
+.gui-img { image-rendering: pixelated; max-width: 100%; display: block; }
+.gui-info { padding: 14px; }
+.gui-name { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 6px; }
+.gui-desc { font-size: 11px; color: #777; line-height: 1.5; }
+
+/* ===== BIOMES ===== */
+#biomes { background: #0d1f0d; }
+.biomes-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(270px,1fr)); gap: 24px; }
+.biome-card { position: relative; overflow: hidden; border: 2px solid rgba(76,175,80,0.2); transition: all 0.3s; cursor: pointer; }
+.biome-card:hover { border-color: var(--mc-green-bright); transform: scale(1.02); box-shadow: 0 12px 36px rgba(76,175,80,0.25); }
+.biome-visual { height: 130px; position: relative; overflow: hidden; }
+.biome-info { padding: 18px; background: rgba(10,26,10,0.9); }
+.biome-name { font-family: var(--pixel-font); font-size: 10px; color: var(--mc-green-bright); margin-bottom: 6px; }
+.biome-temp { font-size: 11px; color: #aaa; margin-bottom: 6px; }
+.biome-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.biome-tag { font-family: var(--pixel-font); font-size: 6px; padding: 3px 8px; border: 1px solid var(--mc-green); color: var(--mc-green-bright); background: rgba(45,125,50,0.15); }
+.bv-forest { background: linear-gradient(180deg,#1565c0 0%,#4caf50 55%,#2d7d32 55%,#5d4037 75%,#3e2723 75%); }
+.bv-desert { background: linear-gradient(180deg,#ff8f00 0%,#ffd740 60%,#e0c270 60%,#c8a860 80%); }
+.bv-ocean { background: linear-gradient(180deg,#1565c0 0%,#1976d2 50%,#0d47a1 50%,#0a2a6e 100%); }
+.bv-mountain { background: linear-gradient(180deg,#90caf9 0%,#9e9e9e 40%,#5a9e2f 60%,#4e342e 80%); }
+.bv-jungle { background: linear-gradient(180deg,#1b5e20 0%,#2e7d32 30%,#388e3c 50%,#4caf50 100%); }
+.bv-tundra { background: linear-gradient(180deg,#90caf9 0%,#e3f2fd 50%,#b0bec5 50%,#78909c 100%); }
+.bv-swamp { background: linear-gradient(180deg,#33691e 0%,#558b2f 40%,#6d4c41 60%,#4e342e 100%); }
+.bv-savanna { background: linear-gradient(180deg,#ff8f00 0%,#ffa000 50%,#8bc34a 50%,#6d4c41 100%); }
+.bv-nether { background: linear-gradient(180deg,#b71c1c 0%,#7c1c1c 50%,#4e0000 100%); }
+.bv-end { background: linear-gradient(180deg,#1a0030 0%,#4a0080 50%,#1a0030 100%); }
+.bv-badlands { background: linear-gradient(180deg,#ff8f00 0%,#e64a19 30%,#bf360c 60%,#6d4c41 100%); }
+.bv-mushroom { background: linear-gradient(180deg,#880e4f 0%,#ad1457 40%,#6a1b4d 60%,#c8a860 100%); }
+.bv-cherry { background: linear-gradient(180deg,#f8bbd0 0%,#e91e63 40%,#ad1457 60%,#6d4c41 100%); }
+.bv-mangrove { background: linear-gradient(180deg,#33691e 0%,#1b5e20 30%,#558b2f 50%,#0d47a1 100%); }
+.bv-deep-dark { background: linear-gradient(180deg,#1a0a2e 0%,#12052a 50%,#000 100%); }
+
+/* CRAFTING */
+#crafting { background: #081408; }
+.crafting-search { display: flex; gap: 12px; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.mc-input { flex: 1; font-family: var(--pixel-font); font-size: 9px; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 2px solid var(--mc-green); color: #fff; outline: none; }
+.mc-input:focus { border-color: var(--mc-green-bright); }
+.mc-input::placeholder { color: #555; }
+.recipes-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 20px; }
+.recipe-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.2); padding: 20px; transition: all 0.2s; }
+.recipe-card:hover { border-color: var(--mc-green); }
+.recipe-name { font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); margin-bottom: 14px; }
+.crafting-table { display: grid; grid-template-columns: repeat(3,44px); gap: 2px; margin: 0 auto 12px; width: fit-content; }
+.ct-slot { width: 44px; height: 44px; background: #1a2a1a; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-size: 18px; image-rendering: pixelated; }
+.ct-slot.filled { border-color: #555; background: #222; }
+.ct-slot img { width: 32px; height: 32px; image-rendering: pixelated; }
+.recipe-arrow { text-align: center; font-size: 20px; color: var(--mc-green); margin: 6px 0; }
+.recipe-result { display: flex; align-items: center; gap: 12px; }
+.result-slot { width: 52px; height: 52px; background: #1a2a1a; border: 2px solid var(--mc-green); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.result-slot img { width: 40px; height: 40px; image-rendering: pixelated; }
+.result-info .recipe-yield { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); }
+.result-info .recipe-mat { font-size: 10px; color: #777; margin-top: 4px; }
+
+/* BUILDS */
+#builds { background: #0d1f0d; }
+.builds-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(290px,1fr)); gap: 20px; }
+.build-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); overflow: hidden; transition: all 0.3s; cursor: pointer; }
+.build-card:hover { border-color: var(--mc-green-bright); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(76,175,80,0.2); }
+.build-preview { height: 170px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 80px; filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.7)); }
+.build-gradient { position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: linear-gradient(to bottom,transparent,rgba(10,26,10,0.9)); }
+.build-info { padding: 18px; }
+.build-name { font-family: var(--pixel-font); font-size: 8px; color: var(--mc-green-bright); margin-bottom: 6px; }
+.diff-star.filled { color: var(--mc-green); } .diff-star.empty { color: #333; }
+.build-desc { font-size: 11px; color: #999; line-height: 1.6; margin-top: 8px; }
+.build-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+.build-tag { font-family: var(--pixel-font); font-size: 5.5px; padding: 3px 7px; background: rgba(45,125,50,0.15); border: 1px solid var(--mc-green); color: var(--mc-green-bright); }
+
+/* DIMENSIONS */
+#dimensions { background: #0d1f0d; }
+.dimensions-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 28px; }
+.dim-card { border: 2px solid rgba(76,175,80,0.2); overflow: hidden; transition: all 0.3s; }
+.dim-card:hover { border-color: var(--mc-green-bright); box-shadow: 0 0 30px rgba(76,175,80,0.2); }
+.dim-header { height: 190px; position: relative; overflow: hidden; }
+.dim-overworld { background: radial-gradient(ellipse at top,#1565c0 0%,#4caf50 50%,#2d7d32 70%,#5d4037 100%); }
+.dim-nether { background: radial-gradient(ellipse at center,#ff6d00 0%,#b71c1c 40%,#4e0000 100%); }
+.dim-end { background: radial-gradient(ellipse at center,#7b1fa2 0%,#1a0030 50%,#000 100%); }
+.dim-glow { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 90px; }
+.dim-body { padding: 22px; background: rgba(10,26,10,0.95); }
+.dim-name { font-family: var(--pixel-font); font-size: 13px; color: var(--mc-green-bright); margin-bottom: 10px; }
+.dim-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.dim-stat { font-size: 11px; color: #999; }
+.dim-stat strong { color: #ccc; display: block; margin-top: 2px; font-size: 12px; }
+.dim-desc { font-size: 12px; color: #888; line-height: 1.7; }
+
+/* ENCHANTMENTS */
+#enchants { background: #081408; }
+.enchants-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(230px,1fr)); gap: 14px; }
+.enchant-card { background: linear-gradient(135deg,rgba(63,81,181,0.08),rgba(156,39,176,0.08)); border: 2px solid rgba(63,81,181,0.3); padding: 18px; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; }
+.enchant-card:hover { border-color: #7c4dff; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124,77,255,0.2); }
+.enchant-name { font-family: var(--pixel-font); font-size: 7.5px; color: #ce93d8; margin-bottom: 6px; }
+.enchant-max { font-size: 10px; color: #7986cb; margin-bottom: 6px; }
+.enchant-desc { font-size: 11px; color: #888; line-height: 1.5; }
+.enchant-applies { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.enc-tag { font-family: var(--pixel-font); font-size: 5px; padding: 2px 5px; background: rgba(63,81,181,0.2); border: 1px solid rgba(63,81,181,0.4); color: #9fa8da; }
+
+/* POTIONS */
+#potions { background: #081408; }
+.potions-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 14px; }
+.potion-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); padding: 20px 14px; text-align: center; transition: all 0.2s; cursor: pointer; }
+.potion-card:hover { transform: translateY(-4px); }
+.potion-bottle { font-size: 36px; margin-bottom: 10px; display: block; }
+.potion-name { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 6px; }
+.potion-effect { font-size: 10px; color: #aaa; line-height: 1.5; }
+.potion-dur { font-family: var(--pixel-font); font-size: 5.5px; color: #555; margin-top: 6px; }
+
+/* ADVANCEMENTS */
+#advancements { background: #0d1f0d; }
+.adv-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 14px; }
+.adv-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(76,175,80,0.15); padding: 16px; display: flex; gap: 14px; align-items: flex-start; transition: all 0.2s; cursor: pointer; }
+.adv-card:hover { border-color: var(--mc-green); background: rgba(76,175,80,0.06); }
+.adv-icon { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; background: rgba(255,215,0,0.1); border: 2px solid rgba(255,215,0,0.3); }
+.adv-icon.challenge { background: rgba(244,67,54,0.1); border-color: rgba(244,67,54,0.3); }
+.adv-icon.goal { background: rgba(76,175,80,0.1); border-color: rgba(76,175,80,0.3); }
+.adv-title { font-family: var(--pixel-font); font-size: 6.5px; color: #ffd54f; margin-bottom: 5px; }
+.adv-title.challenge-text { color: #ef9a9a; } .adv-title.goal-text { color: #a5d6a7; }
+.adv-desc { font-size: 10px; color: #888; line-height: 1.5; }
+.adv-cat { font-family: var(--pixel-font); font-size: 5.5px; color: #555; margin-top: 5px; }
+
+/* ABOUT */
+#about { background: #0d1f0d; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto; }
+@media(max-width:768px){ .about-grid { grid-template-columns: 1fr; } }
+.about-cube { width: 110px; height: 110px; background: linear-gradient(135deg,var(--mc-green),var(--mc-green-dark)); border: 4px solid var(--mc-green-bright); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; font-size: 48px; animation: spin-slow 8s linear infinite; margin: 40px auto; }
+@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 26px; }
+.about-feat { display: flex; gap: 10px; align-items: flex-start; }
+.feat-icon { width: 30px; height: 30px; flex-shrink: 0; background: rgba(76,175,80,0.15); border: 2px solid var(--mc-green); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.feat-text h4 { font-family: var(--pixel-font); font-size: 6.5px; color: var(--mc-green-bright); margin-bottom: 3px; }
+.feat-text p { font-size: 10px; color: #888; line-height: 1.5; }
+
+/* SEARCH OVERLAY */
+.search-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: flex-start; justify-content: center; padding-top: 80px; }
+.search-overlay.open { display: flex; }
+.search-box { width: 100%; max-width: 600px; background: #0d1f0d; border: 2px solid var(--mc-green); box-shadow: 0 0 40px rgba(76,175,80,0.3); }
+.search-box input { width: 100%; font-family: var(--pixel-font); font-size: 11px; padding: 18px; background: transparent; border: none; color: #fff; outline: none; }
+.search-results { max-height: 400px; overflow-y: auto; }
+.search-result-item { padding: 14px 18px; border-top: 1px solid rgba(76,175,80,0.15); cursor: pointer; display: flex; gap: 12px; align-items: center; transition: background 0.15s; }
+.search-result-item:hover { background: rgba(76,175,80,0.08); }
+.sr-icon { width: 36px; height: 36px; image-rendering: pixelated; flex-shrink: 0; object-fit: contain; }
+.sr-icon-emoji { font-size: 28px; flex-shrink: 0; }
+.sr-info h4 { font-family: var(--pixel-font); font-size: 7px; color: var(--mc-green-bright); margin-bottom: 3px; }
+.sr-info p { font-size: 10px; color: #777; }
+
+/* SCROLL */
+.scroll-blocks { position: fixed; right: 16px; bottom: 16px; z-index: 500; display: flex; flex-direction: column; gap: 4px; opacity: 0; transition: opacity 0.3s; }
+.scroll-blocks.visible { opacity: 1; }
+.scroll-block { width: 12px; height: 12px; background: var(--mc-green); border: 1px solid var(--mc-green-bright); cursor: pointer; transition: all 0.15s; }
+.scroll-block:hover { transform: scale(1.5); }
+
+/* FOOTER */
+footer { background: #040d04; border-top: 3px solid var(--mc-green); padding: 50px 20px 28px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; max-width: 1200px; margin: 0 auto 36px; }
+@media(max-width:900px){ .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:500px){ .footer-grid { grid-template-columns: 1fr; } }
+.footer-brand p { font-size: 12px; color: #666; line-height: 1.8; max-width: 260px; }
+.footer-col h4 { font-family: var(--pixel-font); font-size: 7.5px; color: var(--mc-green-bright); margin-bottom: 14px; padding-bottom: 7px; border-bottom: 1px solid rgba(76,175,80,0.2); }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col ul li a { font-size: 12px; color: #666; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 5px; }
+.footer-col ul li a::before { content: '▸'; color: var(--mc-green); font-size: 9px; }
+.footer-col ul li a:hover { color: var(--mc-green-bright); }
+.footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 26px; border-top: 1px solid rgba(76,175,80,0.15); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.footer-copy { font-family: var(--pixel-font); font-size: 6.5px; color: #444; }
+
+/* TOOLTIP */
 [data-tooltip] { position: relative; }
-[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute; bottom: 110%; left: 50%;
-  transform: translateX(-50%);
-  background: #0a1a0a;
-  border: 2px solid var(--mc-green);
-  color: var(--mc-green-bright);
-  font-family: var(--pixel-font); font-size: 7px;
-  padding: 6px 10px;
-  white-space: nowrap;
-  z-index: 100;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(76,175,80,0.2);
-}
+[data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); background: #0a1a0a; border: 2px solid var(--mc-green); color: var(--mc-green-bright); font-family: var(--pixel-font); font-size: 6px; padding: 5px 8px; white-space: nowrap; z-index: 100; pointer-events: none; }
 
-/* Version badge */
-.version-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--pixel-font); font-size: 7px;
-  color: var(--mc-green-bright);
-  border: 1px solid var(--mc-green);
-  padding: 4px 10px;
-  background: rgba(45,125,50,0.1);
-  margin-bottom: 12px;
-}
-
-.version-dot { width: 6px; height: 6px; background: var(--mc-green-bright); animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
+/* RESPONSIVE */
+@media(max-width:768px){ .nav-links { display: none; } .blocks-grid { grid-template-columns: repeat(auto-fill,minmax(90px,1fr)); } }
 </style>
 </head>
 <body>
 
-<!-- ============ LOADING SCREEN ============ -->
+<!-- LOADING -->
 <div id="loader">
   <div class="loader-title">MINECRAFT ENCYCLOPEDIA</div>
-  <div class="loader-title" style="font-size:8px;color:#888;margin-top:-16px">by WonderMayank</div>
-
+  <div class="loader-title" style="font-size:8px;color:#888;margin-top:-14px">by WonderMayank</div>
   <div class="block-stack" id="blockStack">
-    <div class="mc-block b-grass" style="animation-delay:0.1s"></div>
-    <div class="mc-block b-dirt"  style="animation-delay:0.35s"></div>
-    <div class="mc-block b-stone" style="animation-delay:0.6s"></div>
-    <div class="mc-block b-wood"  style="animation-delay:0.85s"></div>
-    <div class="mc-block b-diamond" style="animation-delay:1.1s"></div>
-    <div class="mc-block b-gold"  style="animation-delay:1.35s"></div>
-    <div class="mc-block b-tnt"   style="animation-delay:1.6s"></div>
+    <div class="mc-block block-grass" style="animation-delay:0.1s"></div>
+    <div class="mc-block block-dirt"  style="animation-delay:0.35s"></div>
+    <div class="mc-block block-stone" style="animation-delay:0.6s"></div>
+    <div class="mc-block block-wood"  style="animation-delay:0.85s"></div>
+    <div class="mc-block block-diamond" style="animation-delay:1.1s"></div>
+    <div class="mc-block block-gold"  style="animation-delay:1.35s"></div>
+    <div class="mc-block block-tnt"   style="animation-delay:1.6s"></div>
   </div>
-
-  <div class="loader-bar-wrap">
-    <div class="loader-bar" id="loaderBar"></div>
-  </div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
   <div class="loader-pct" id="loaderPct">0%</div>
   <div class="loader-tip" id="loaderTip">Loading terrain...</div>
 </div>
 
-<!-- ============ SEARCH OVERLAY ============ -->
+<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search blocks, mobs, items..." oninput="doSearch(this.value)">
+    <input type="text" id="searchInput" placeholder="Search blocks, mobs, items, enchants..." oninput="doSearch(this.value)">
     <div class="search-results" id="searchResults"></div>
   </div>
 </div>
 
-<!-- ============ NAVBAR ============ -->
+<!-- NAVBAR -->
 <nav>
   <a href="#hero" class="nav-logo">
-    <div class="nav-block-icon"></div>
-    MC ENCYCLOPEDIA
+    <div class="nav-block-icon"></div>MC ENCYCLOPEDIA
   </a>
   <ul class="nav-links">
     <li><a href="#blocks">Blocks</a></li>
-    <li><a href="#biomes">Biomes</a></li>
+    <li><a href="#items">Items</a></li>
     <li><a href="#mobs">Mobs</a></li>
+    <li><a href="#paintings">Paintings</a></li>
+    <li><a href="#trims">Trims</a></li>
+    <li><a href="#gui">GUI</a></li>
+    <li><a href="#biomes">Biomes</a></li>
     <li><a href="#crafting">Crafting</a></li>
     <li><a href="#builds">Builds</a></li>
-    <li><a href="#items">Items</a></li>
     <li><a href="#dimensions">Dimensions</a></li>
     <li><a href="#enchants">Enchants</a></li>
     <li><a href="#potions">Potions</a></li>
-    <li><a href="#about">About</a></li>
   </ul>
-  <button onclick="openSearch()" style="background:transparent;border:2px solid var(--mc-green);color:var(--mc-green-bright);font-family:var(--pixel-font);font-size:8px;padding:8px 14px;cursor:pointer;">🔍 SEARCH</button>
+  <button onclick="openSearch()" style="background:transparent;border:2px solid var(--mc-green);color:var(--mc-green-bright);font-family:var(--pixel-font);font-size:7px;padding:7px 12px;cursor:pointer;">🔍 SEARCH</button>
 </nav>
 
-<!-- ============ HERO ============ -->
+<!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="version-badge"><div class="version-dot"></div>JAVA & BEDROCK · 1.21</div>
+    <div class="version-badge"><div class="version-dot"></div>JAVA &amp; BEDROCK · 1.21.4</div>
     <div class="hero-badge">✦ THE ULTIMATE MINECRAFT REFERENCE ✦</div>
     <h1 class="hero-title">MINECRAFT<br><span>ENCYCLOPEDIA</span></h1>
-    <p class="hero-sub">by <span>WonderMayank</span> · 900+ Blocks · 100+ Mobs · All Biomes</p>
-    <p class="hero-desc">Your complete guide to the world of Minecraft. Explore every block, mob, biome, crafting recipe, enchantment, and build — all in one place.</p>
+    <p class="hero-sub">by <span>WonderMayank</span> · Real Textures · 900+ Blocks · Paintings · Armor Trims · GUI</p>
+    <p class="hero-desc">Your complete guide to Minecraft 1.21.4 — featuring real in-game textures from PrismarineJS assets. Every block, mob, item, painting, armor trim, and GUI screen documented.</p>
     <div class="hero-btns">
       <a href="#blocks" class="btn-primary">EXPLORE BLOCKS</a>
-      <a href="#biomes" class="btn-secondary">VIEW BIOMES</a>
-      <button onclick="openSearch()" class="btn-secondary" style="border:3px solid var(--mc-green);">🔍 QUICK SEARCH</button>
+      <a href="#paintings" class="btn-secondary">VIEW PAINTINGS</a>
+      <button onclick="openSearch()" class="btn-secondary">🔍 QUICK SEARCH</button>
     </div>
   </div>
 </section>
 
-<!-- ============ STATS ============ -->
+<!-- STATS -->
 <div id="stats">
   <div class="stats-grid">
     <div class="stat-item"><span class="stat-num" data-count="900">0</span><span class="stat-label">TOTAL BLOCKS</span></div>
     <div class="stat-item"><span class="stat-num" data-count="138">0</span><span class="stat-label">UNIQUE MOBS</span></div>
-    <div class="stat-item"><span class="stat-num" data-count="60">0</span><span class="stat-label">BIOMES</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="67">0</span><span class="stat-label">BIOMES</span></div>
     <div class="stat-item"><span class="stat-num" data-count="350">0</span><span class="stat-label">CRAFTING RECIPES</span></div>
     <div class="stat-item"><span class="stat-num" data-count="37">0</span><span class="stat-label">ENCHANTMENTS</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="40">0</span><span class="stat-label">PAINTINGS</span></div>
+    <div class="stat-item"><span class="stat-num" data-count="16">0</span><span class="stat-label">ARMOR TRIMS</span></div>
     <div class="stat-item"><span class="stat-num" data-count="3">0</span><span class="stat-label">DIMENSIONS</span></div>
   </div>
 </div>
-
 <div class="section-sep"></div>
 
-<!-- ============ BLOCKS ============ -->
+<!-- ===== BLOCKS ===== -->
 <section id="blocks">
   <div class="container">
     <div class="section-header fade-in">
-      <span class="section-tag">// DATABASE</span>
+      <span class="section-tag">// DATABASE · REAL TEXTURES</span>
       <h2 class="section-title">ALL BLOCKS</h2>
-      <p class="section-desc">Every block in Minecraft with properties, hardness, and tool requirements. From basic dirt to rare ancient debris.</p>
+      <p class="section-desc">Every block in Minecraft with authentic textures served directly from PrismarineJS minecraft-assets 1.21.4.</p>
     </div>
+    <div class="blocks-filter fade-in" id="blocksFilter"></div>
     <div class="blocks-grid fade-in" id="blocksGrid"></div>
+    <button class="show-more-btn" id="blocksMoreBtn" onclick="showMoreBlocks()">LOAD MORE BLOCKS</button>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ BIOMES ============ -->
-<section id="biomes">
+<!-- ===== ITEMS ===== -->
+<section id="items">
   <div class="container">
     <div class="section-header fade-in">
-      <span class="section-tag">// WORLD GEN</span>
-      <h2 class="section-title">BIOMES & TERRAIN</h2>
-      <p class="section-desc">Explore every biome across all three dimensions — from lush forests and scorching deserts to the mysterious End.</p>
+      <span class="section-tag">// INVENTORY · REAL TEXTURES</span>
+      <h2 class="section-title">ITEMS &amp; TOOLS</h2>
+      <p class="section-desc">All weapons, tools, armor, food, and misc items with authentic 1.21.4 item textures.</p>
     </div>
-    <div class="biomes-grid fade-in" id="biomesGrid"></div>
+    <div class="items-tabs fade-in">
+      <button class="tab-btn active" onclick="filterItems('all',this)">ALL</button>
+      <button class="tab-btn" onclick="filterItems('tools',this)">TOOLS</button>
+      <button class="tab-btn" onclick="filterItems('weapons',this)">WEAPONS</button>
+      <button class="tab-btn" onclick="filterItems('armor',this)">ARMOR</button>
+      <button class="tab-btn" onclick="filterItems('food',this)">FOOD</button>
+      <button class="tab-btn" onclick="filterItems('misc',this)">MISC</button>
+    </div>
+    <div class="items-grid fade-in" id="itemsGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ MOBS ============ -->
+<!-- ===== MOBS ===== -->
 <section id="mobs">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-tag">// ENTITIES</span>
-      <h2 class="section-title">MOBS & CREATURES</h2>
-      <p class="section-desc">Every creature that roams the Minecraft world — friendly, hostile, and everything in between.</p>
+      <h2 class="section-title">MOBS &amp; CREATURES</h2>
+      <p class="section-desc">Every creature in Minecraft — passive, hostile, neutral, and bosses.</p>
     </div>
-    <div class="mobs-tabs">
+    <div class="mobs-tabs fade-in">
       <button class="tab-btn active" onclick="filterMobs('all',this)">ALL</button>
       <button class="tab-btn" onclick="filterMobs('passive',this)">PASSIVE</button>
       <button class="tab-btn" onclick="filterMobs('hostile',this)">HOSTILE</button>
@@ -1299,10 +462,61 @@ footer {
     <div class="mobs-grid fade-in" id="mobsGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ CRAFTING ============ -->
+<!-- ===== PAINTINGS ===== -->
+<section id="paintings">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ART · REAL TEXTURES</span>
+      <h2 class="section-title">PAINTINGS</h2>
+      <p class="section-desc">All 40+ paintings in Minecraft 1.21.4 — from classic Kebab to the rare Earth painting — using real game textures.</p>
+    </div>
+    <div class="paintings-grid fade-in" id="paintingsGrid"></div>
+  </div>
+</section>
+<div class="section-sep"></div>
+
+<!-- ===== ARMOR TRIMS ===== -->
+<section id="trims">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// SMITHING · COSMETICS</span>
+      <h2 class="section-title">ARMOR TRIMS</h2>
+      <p class="section-desc">All 16 armor trim patterns — cosmetic upgrades applied at the Smithing Table with rare template items from across the world.</p>
+    </div>
+    <div class="trims-grid fade-in" id="trimsGrid"></div>
+  </div>
+</section>
+<div class="section-sep"></div>
+
+<!-- ===== GUI ===== -->
+<section id="gui">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// INTERFACE · REAL TEXTURES</span>
+      <h2 class="section-title">GUI SCREENS</h2>
+      <p class="section-desc">Authentic Minecraft GUI textures — inventory, crafting table, furnace, enchanting table, and more container interfaces.</p>
+    </div>
+    <div class="gui-grid fade-in" id="guiGrid"></div>
+  </div>
+</section>
+<div class="section-sep"></div>
+
+<!-- ===== BIOMES ===== -->
+<section id="biomes">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// WORLD GEN</span>
+      <h2 class="section-title">BIOMES &amp; TERRAIN</h2>
+      <p class="section-desc">All biomes across every dimension — from Cherry Groves to the Deep Dark.</p>
+    </div>
+    <div class="biomes-grid fade-in" id="biomesGrid"></div>
+  </div>
+</section>
+<div class="section-sep"></div>
+
+<!-- ===== CRAFTING ===== -->
 <section id="crafting">
   <div class="container">
     <div class="section-header fade-in">
@@ -1316,148 +530,116 @@ footer {
     <div class="recipes-grid fade-in" id="recipesGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ BUILDS ============ -->
+<!-- ===== BUILDS ===== -->
 <section id="builds">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-tag">// ARCHITECTURE</span>
       <h2 class="section-title">ICONIC BUILDS</h2>
-      <p class="section-desc">Classic Minecraft structures, build types, and architectural styles from easy starter homes to megaproject wonders.</p>
+      <p class="section-desc">Classic structures, build styles, and farming designs.</p>
     </div>
     <div class="builds-grid fade-in" id="buildsGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ ITEMS ============ -->
-<section id="items">
-  <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-tag">// INVENTORY</span>
-      <h2 class="section-title">ITEMS & TOOLS</h2>
-      <p class="section-desc">All weapons, tools, armor, food, and miscellaneous items in Minecraft.</p>
-    </div>
-    <div class="items-tabs">
-      <button class="tab-btn active" onclick="filterItems('all',this)">ALL</button>
-      <button class="tab-btn" onclick="filterItems('tools',this)">TOOLS</button>
-      <button class="tab-btn" onclick="filterItems('weapons',this)">WEAPONS</button>
-      <button class="tab-btn" onclick="filterItems('armor',this)">ARMOR</button>
-      <button class="tab-btn" onclick="filterItems('food',this)">FOOD</button>
-      <button class="tab-btn" onclick="filterItems('misc',this)">MISC</button>
-    </div>
-    <div class="items-grid fade-in" id="itemsGrid"></div>
-  </div>
-</section>
-
-<div class="section-sep"></div>
-
-<!-- ============ DIMENSIONS ============ -->
+<!-- ===== DIMENSIONS ===== -->
 <section id="dimensions">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-tag">// REALMS</span>
       <h2 class="section-title">THE THREE DIMENSIONS</h2>
-      <p class="section-desc">Journey through the Overworld, brave the hellish Nether, and venture into the mysterious End.</p>
+      <p class="section-desc">Journey through the Overworld, Nether, and the End.</p>
     </div>
     <div class="dimensions-grid fade-in">
       <div class="dim-card">
-        <div class="dim-header dim-overworld">
-          <div class="dim-glow" style="color:#4caf50">🌍</div>
-        </div>
+        <div class="dim-header dim-overworld"><div class="dim-glow">🌍</div></div>
         <div class="dim-body">
           <div class="dim-name">THE OVERWORLD</div>
           <div class="dim-stats">
             <div class="dim-stat">Height Range<strong>-64 to 320</strong></div>
-            <div class="dim-stat">Biomes<strong>50+ unique biomes</strong></div>
-            <div class="dim-stat">Notable Mobs<strong>Creeper, Zombie, Witch</strong></div>
+            <div class="dim-stat">Biomes<strong>50+ unique</strong></div>
+            <div class="dim-stat">Notable Mobs<strong>Creeper, Zombie</strong></div>
             <div class="dim-stat">Key Feature<strong>Day/Night Cycle</strong></div>
           </div>
-          <p class="dim-desc">The primary dimension of Minecraft. A diverse world of forests, oceans, mountains, deserts, and underground cave systems. Home to villages, strongholds, and ocean monuments.</p>
+          <p class="dim-desc">The primary dimension. A diverse world of forests, oceans, mountains, deserts, and underground cave systems. Home to villages, strongholds, ocean monuments, and ancient cities.</p>
         </div>
       </div>
       <div class="dim-card">
-        <div class="dim-header dim-nether">
-          <div class="dim-glow" style="color:#ff6d00">🔥</div>
-        </div>
+        <div class="dim-header dim-nether"><div class="dim-glow">🔥</div></div>
         <div class="dim-body">
           <div class="dim-name">THE NETHER</div>
           <div class="dim-stats">
             <div class="dim-stat">Height Range<strong>0 to 256</strong></div>
             <div class="dim-stat">Biomes<strong>5 nether biomes</strong></div>
             <div class="dim-stat">Notable Mobs<strong>Ghast, Piglin, Blaze</strong></div>
-            <div class="dim-stat">Key Feature<strong>1:8 scale to Overworld</strong></div>
+            <div class="dim-stat">Key Feature<strong>1:8 Overworld Scale</strong></div>
           </div>
-          <p class="dim-desc">A hellish dimension of fire, lava, and ancient fortresses. Enter via a Nether Portal and gather Blaze Rods, Quartz, and rare Nether Wart for brewing. Home to Piglin civilization.</p>
+          <p class="dim-desc">A hellish dimension of fire, lava, and ancient fortresses. Gather Blaze Rods, Quartz, and Nether Wart for brewing. Home to Piglin civilization and ancient Bastion Remnants.</p>
         </div>
       </div>
       <div class="dim-card">
-        <div class="dim-header dim-end">
-          <div class="dim-glow" style="color:#ce93d8">🌑</div>
-        </div>
+        <div class="dim-header dim-end"><div class="dim-glow">🌑</div></div>
         <div class="dim-body">
           <div class="dim-name">THE END</div>
           <div class="dim-stats">
             <div class="dim-stat">Height Range<strong>0 to 255</strong></div>
             <div class="dim-stat">Biomes<strong>3 end biomes</strong></div>
             <div class="dim-stat">Notable Mobs<strong>Ender Dragon, Enderman</strong></div>
-            <div class="dim-stat">Key Feature<strong>End Cities & Elytra</strong></div>
+            <div class="dim-stat">Key Feature<strong>End Cities &amp; Elytra</strong></div>
           </div>
-          <p class="dim-desc">The final frontier. A vast void of floating obsidian islands surrounding the central island where the Ender Dragon awaits. Defeat it to unlock End Cities containing the coveted Elytra.</p>
+          <p class="dim-desc">The final frontier. Floating obsidian islands surrounding the central island where the Ender Dragon awaits. Defeat it to unlock End Cities containing the coveted Elytra wings.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ ENCHANTMENTS ============ -->
+<!-- ===== ENCHANTMENTS ===== -->
 <section id="enchants">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-tag">// MAGIC</span>
       <h2 class="section-title">ENCHANTMENTS</h2>
-      <p class="section-desc">All 37 enchantments — from basic Efficiency to the legendary Mending — with max levels and compatible equipment.</p>
+      <p class="section-desc">All 37 enchantments with max levels and compatible equipment.</p>
     </div>
     <div class="enchants-grid fade-in" id="enchantsGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ ADVANCEMENTS ============ -->
+<!-- ===== POTIONS ===== -->
+<section id="potions">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ALCHEMY</span>
+      <h2 class="section-title">POTIONS &amp; BREWING</h2>
+      <p class="section-desc">All brewed potions, their effects, and durations.</p>
+    </div>
+    <div class="potions-grid fade-in" id="potionsGrid"></div>
+  </div>
+</section>
+<div class="section-sep"></div>
+
+<!-- ===== ADVANCEMENTS ===== -->
 <section id="advancements">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-tag">// ACHIEVEMENTS</span>
       <h2 class="section-title">ADVANCEMENTS</h2>
-      <p class="section-desc">Track your progress — from the basics of punching wood to slaying the Ender Dragon and beyond.</p>
+      <p class="section-desc">Track your progress from punching wood to slaying the Ender Dragon.</p>
     </div>
     <div class="adv-grid fade-in" id="advGrid"></div>
   </div>
 </section>
-
 <div class="section-sep"></div>
 
-<!-- ============ POTIONS ============ -->
-<section id="potions">
-  <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-tag">// ALCHEMY</span>
-      <h2 class="section-title">POTIONS & BREWING</h2>
-      <p class="section-desc">All brewed potions, their effects, durations, and enhancement options.</p>
-    </div>
-    <div class="potions-grid fade-in" id="potionsGrid"></div>
-  </div>
-</section>
+<!-- ===== BUILDS ===== -->
 
-<div class="section-sep"></div>
-
-<!-- ============ ABOUT ============ -->
+<!-- ===== ABOUT ===== -->
 <section id="about">
   <div class="container">
     <div class="section-header fade-in">
@@ -1465,54 +647,43 @@ footer {
       <h2 class="section-title">ABOUT THIS PROJECT</h2>
     </div>
     <div class="about-grid fade-in">
-      <div class="about-visual">
-        <div class="about-cube">🎮</div>
-      </div>
-      <div class="about-text">
-        <p style="font-size:15px;color:#aaa;line-height:1.9;margin-bottom:20px;">
-          The <strong style="color:var(--mc-green-bright)">Minecraft Encyclopedia</strong> is a comprehensive reference built by WonderMayank — covering every aspect of Minecraft Java and Bedrock editions up to 1.21.
-        </p>
-        <p style="font-size:14px;color:#888;line-height:1.8;margin-bottom:24px;">
-          From the basic grass block to the most complex redstone contraption, from serene sunflower plains to treacherous basalt deltas — everything documented, organized, and searchable.
-        </p>
+      <div><div class="about-cube">🎮</div></div>
+      <div>
+        <p style="font-size:15px;color:#aaa;line-height:1.9;margin-bottom:18px;">The <strong style="color:var(--mc-green-bright)">Minecraft Encyclopedia</strong> is a comprehensive reference built by WonderMayank — covering Minecraft Java &amp; Bedrock 1.21.4 with <em>real game textures</em> sourced from PrismarineJS minecraft-assets.</p>
+        <p style="font-size:13px;color:#888;line-height:1.8;margin-bottom:22px;">All block, item, painting, armor trim, and GUI images are served directly from the official PrismarineJS repository — the same texture data used by thousands of Minecraft tooling projects.</p>
         <div class="about-features">
-          <div class="about-feat"><div class="feat-icon">🧱</div><div class="feat-text"><h4>900+ BLOCKS</h4><p>Complete block database with properties</p></div></div>
-          <div class="about-feat"><div class="feat-icon">🐾</div><div class="feat-text"><h4>ALL MOBS</h4><p>Stats, drops, and behavior</p></div></div>
-          <div class="about-feat"><div class="feat-icon">🗺️</div><div class="feat-text"><h4>BIOME GUIDE</h4><p>Every biome documented</p></div></div>
-          <div class="about-feat"><div class="feat-icon">⚗️</div><div class="feat-text"><h4>RECIPES</h4><p>Complete crafting reference</p></div></div>
-          <div class="about-feat"><div class="feat-icon">✨</div><div class="feat-text"><h4>ENCHANTS</h4><p>All enchantment effects & levels</p></div></div>
-          <div class="about-feat"><div class="feat-icon">🏆</div><div class="feat-text"><h4>ADVANCEMENTS</h4><p>Full achievements checklist</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🧱</div><div class="feat-text"><h4>REAL TEXTURES</h4><p>PrismarineJS 1.21.4 assets</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🖼️</div><div class="feat-text"><h4>40 PAINTINGS</h4><p>All variants documented</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🛡️</div><div class="feat-text"><h4>16 TRIMS</h4><p>All armor trim patterns</p></div></div>
+          <div class="about-feat"><div class="feat-icon">🖥️</div><div class="feat-text"><h4>GUI SCREENS</h4><p>Authentic interface textures</p></div></div>
+          <div class="about-feat"><div class="feat-icon">⚗️</div><div class="feat-text"><h4>350+ RECIPES</h4><p>Full crafting reference</p></div></div>
+          <div class="about-feat"><div class="feat-icon">✨</div><div class="feat-text"><h4>ALL ENCHANTS</h4><p>Every enchantment listed</p></div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <div class="nav-logo">
-        <div class="nav-block-icon"></div>
-        MC ENCYCLOPEDIA
+      <div class="nav-logo" style="margin-bottom:14px;display:flex;">
+        <div class="nav-block-icon"></div>MC ENCYCLOPEDIA
       </div>
-      <p>The most comprehensive Minecraft reference site. Built with ❤️ by WonderMayank. Not affiliated with Mojang or Microsoft.</p>
-      <div style="margin-top:20px;display:flex;gap:8px;">
-        <div class="b-grass" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
-        <div class="b-diamond" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
-        <div class="b-gold" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
-        <div class="b-emerald" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
-        <div class="b-lapis" style="width:24px;height:24px;border:2px solid rgba(0,0,0,0.4);"></div>
-      </div>
+      <p>The most comprehensive Minecraft reference with real 1.21.4 textures. Built with ❤️ by WonderMayank. Not affiliated with Mojang or Microsoft. Textures via PrismarineJS.</p>
     </div>
     <div class="footer-col">
       <h4>EXPLORE</h4>
       <ul>
         <li><a href="#blocks">Blocks Database</a></li>
-        <li><a href="#biomes">Biomes Guide</a></li>
+        <li><a href="#items">Items &amp; Tools</a></li>
         <li><a href="#mobs">Mob Encyclopedia</a></li>
+        <li><a href="#paintings">Paintings</a></li>
+        <li><a href="#trims">Armor Trims</a></li>
+        <li><a href="#gui">GUI Screens</a></li>
+        <li><a href="#biomes">Biomes Guide</a></li>
         <li><a href="#crafting">Crafting Recipes</a></li>
-        <li><a href="#items">Items & Tools</a></li>
         <li><a href="#dimensions">Dimensions</a></li>
         <li><a href="#enchants">Enchantments</a></li>
         <li><a href="#potions">Potions</a></li>
@@ -1533,323 +704,274 @@ footer {
       <ul>
         <li><a href="https://wondermayank.github.io/contact" target="_blank">Contact Owner</a></li>
         <li><a href="https://commercesehoga.github.io/help" target="_blank">Donate / Support</a></li>
+        <li><a href="https://github.com/PrismarineJS/minecraft-assets" target="_blank">Texture Source</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2024 MINECRAFT ENCYCLOPEDIA BY WONDERMAYANK · NOT AFFILIATED WITH MOJANG</div>
-    <div class="footer-blocks">
-      <div class="footer-block-item b-grass"></div>
-      <div class="footer-block-item b-dirt"></div>
-      <div class="footer-block-item b-stone"></div>
-      <div class="footer-block-item b-diamond"></div>
-    </div>
+    <div class="footer-copy">© 2024 MINECRAFT ENCYCLOPEDIA BY WONDERMAYANK · NOT AFFILIATED WITH MOJANG · TEXTURES: PRISMARINEJS</div>
   </div>
 </footer>
 
-<!-- Scroll indicator -->
 <div class="scroll-blocks" id="scrollBlocks">
-  <div class="scroll-block b-diamond" onclick="scrollTo(0,0)" title="Top"></div>
-  <div class="scroll-block b-grass" onclick="document.getElementById('blocks').scrollIntoView({behavior:'smooth'})"></div>
-  <div class="scroll-block b-gold" onclick="document.getElementById('mobs').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="scroll-block" style="background:#4de8ff" onclick="scrollTo(0,0)" title="Top"></div>
+  <div class="scroll-block" style="background:#5a9e2f" onclick="document.getElementById('blocks').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="scroll-block" style="background:#ffd700" onclick="document.getElementById('mobs').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="scroll-block" style="background:#9c27b0" onclick="document.getElementById('paintings').scrollIntoView({behavior:'smooth'})"></div>
 </div>
 
 <script>
-// ===================== LOADING =====================
-const tips = [
-  "Never dig straight down...",
-  "Creepers were a coding mistake.",
-  "Notch created Minecraft in 2009.",
-  "The Enderman language is English played backwards.",
-  "Diamonds are found between Y -58 and Y 16.",
-  "Beds explode in the Nether.",
-  "You can eat pumpkins as a helmet.",
-  "TNT was added in Alpha 1.0.1.",
-  "The Wither has more HP than the Ender Dragon.",
-  "Silk Touch lets you pick up spawners."
-];
+// ===== TEXTURE BASE URL =====
+const BASE = 'https://raw.githubusercontent.com/PrismarineJS/minecraft-assets/master/data/1.21.4';
+const BLOCK_TEX = n => `${BASE}/blocks/${n}.png`;
+const ITEM_TEX  = n => `${BASE}/items/${n}.png`;
 
-let loadPct = 0;
-const bar = document.getElementById('loaderBar');
-const pct = document.getElementById('loaderPct');
-const tipEl = document.getElementById('loaderTip');
-let tipIdx = 0;
-
-const loadInterval = setInterval(() => {
-  loadPct += Math.random() * 8 + 2;
-  if (loadPct >= 100) { loadPct = 100; clearInterval(loadInterval); setTimeout(hideLoader, 500); }
-  bar.style.width = loadPct + '%';
-  pct.textContent = Math.floor(loadPct) + '%';
-}, 80);
-
-setInterval(() => {
-  tipEl.textContent = tips[tipIdx++ % tips.length];
-}, 1200);
-
-function hideLoader() {
-  const loader = document.getElementById('loader');
-  loader.style.transition = 'opacity 0.6s';
-  loader.style.opacity = '0';
-  setTimeout(() => { loader.style.display = 'none'; initCounters(); }, 600);
+function img(src, cls, alt) {
+  return `<img src="${src}" class="${cls}" alt="${alt}" loading="lazy" onerror="this.style.opacity='0.3'">`;
 }
 
-// ===================== BLOCKS DATA =====================
-const BLOCKS = [
-  {name:'Grass Block',  cls:'b-grass',    type:'Natural',  hard:0.6},
-  {name:'Dirt',         cls:'b-dirt',     type:'Natural',  hard:0.5},
-  {name:'Stone',        cls:'b-stone',    type:'Natural',  hard:1.5},
-  {name:'Oak Wood',     cls:'b-wood',     type:'Wood',     hard:2.0},
-  {name:'Oak Leaves',   cls:'b-leaves',   type:'Natural',  hard:0.2},
-  {name:'Sand',         cls:'b-sand',     type:'Natural',  hard:0.5},
-  {name:'Gravel',       cls:'b-gravel',   type:'Natural',  hard:0.6},
-  {name:'Coal Ore',     cls:'b-coal',     type:'Ore',      hard:3.0},
-  {name:'Iron Ore',     cls:'b-iron',     type:'Ore',      hard:3.0},
-  {name:'Gold Ore',     cls:'b-gold',     type:'Ore',      hard:3.0},
-  {name:'Diamond Ore',  cls:'b-diamond',  type:'Ore',      hard:3.0},
-  {name:'Emerald Ore',  cls:'b-emerald',  type:'Ore',      hard:3.0},
-  {name:'Redstone Ore', cls:'b-redstone', type:'Ore',      hard:3.0},
-  {name:'Lapis Ore',    cls:'b-lapis',    type:'Ore',      hard:3.0},
-  {name:'Obsidian',     cls:'b-obsidian', type:'Natural',  hard:50},
-  {name:'Netherrack',   cls:'b-netherrack',type:'Nether',  hard:0.4},
-  {name:'TNT',          cls:'b-tnt',      type:'Utility',  hard:0},
-  {name:'Water',        cls:'b-water',    type:'Fluid',    hard:0},
-  {name:'Lava',         cls:'b-lava',     type:'Fluid',    hard:0},
-  {name:'Glass',        cls:'b-glass',    type:'Utility',  hard:0.3},
-  {name:'Bookshelf',    cls:'b-bookshelf',type:'Utility',  hard:1.5},
-  {name:'Crafting Table',cls:'b-crafting',type:'Utility',  hard:2.5},
-  {name:'Furnace',      cls:'b-furnace',  type:'Utility',  hard:3.5},
-  {name:'Chest',        cls:'b-chest',    type:'Storage',  hard:2.5},
-  {name:'Bed',          cls:'b-bed',      type:'Utility',  hard:0.2},
-  {name:'Torch',        cls:'b-torch',    type:'Light',    hard:0},
-  {name:'Nether Brick', cls:'b-nether-brick',type:'Nether',hard:2.0},
-  {name:'End Stone',    cls:'b-end-stone',type:'End',      hard:3.0},
-  {name:'Purpur Block', cls:'b-purpur',   type:'End',      hard:1.5},
-  {name:'Prismarine',   cls:'b-prismarine',type:'Ocean',   hard:1.5},
-  {name:'Slime Block',  cls:'b-slime',    type:'Utility',  hard:0},
-  {name:'Honey Block',  cls:'b-honey',    type:'Utility',  hard:0},
-  {name:'Amethyst',     cls:'b-amethyst', type:'Geode',    hard:1.5},
-  {name:'Deepslate',    cls:'b-deepslate',type:'Natural',  hard:3.0},
-  {name:'Copper Block', cls:'b-copper',   type:'Natural',  hard:3.0},
-  {name:'Tuff',         cls:'b-tuff',     type:'Natural',  hard:1.5},
-  {name:'Calcite',      cls:'b-calcite',  type:'Natural',  hard:0.75},
-  {name:'Snow Block',   cls:'b-snow',     type:'Natural',  hard:0.2},
-  {name:'Ice',          cls:'b-ice',      type:'Natural',  hard:0.5},
-  {name:'Packed Ice',   cls:'b-packed-ice',type:'Natural', hard:0.5},
-  {name:'Soul Sand',    cls:'b-soul-sand',type:'Nether',   hard:0.5},
-  {name:'Magma Block',  cls:'b-magma',    type:'Nether',   hard:0.5},
-  {name:'Shroomlight',  cls:'b-shroomlight',type:'Nether', hard:1.0},
-  {name:'Warped Nylium',cls:'b-warped-nylium',type:'Nether',hard:0.4},
-  {name:'Crimson',      cls:'b-crimson',  type:'Nether',   hard:2.0},
+// ===== LOADING =====
+const tips = ["Never dig straight down...","Creepers were a coding mistake.","Notch created Minecraft in 2009.","The Enderman language is English backwards.","Diamonds found at Y -58 to Y 16.","Beds explode in the Nether.","The Wither has more HP than the Ender Dragon.","Silk Touch lets you pick up spawners.","You can sleep through a thunderstorm.","Ancient Debris is blast-resistant."];
+let loadPct = 0;
+const bar = document.getElementById('loaderBar'), pct = document.getElementById('loaderPct'), tipEl = document.getElementById('loaderTip');
+let tipIdx = 0;
+const loadInterval = setInterval(() => {
+  loadPct += Math.random()*8+2;
+  if (loadPct >= 100) { loadPct = 100; clearInterval(loadInterval); setTimeout(hideLoader, 500); }
+  bar.style.width = loadPct+'%';
+  pct.textContent = Math.floor(loadPct)+'%';
+}, 80);
+setInterval(() => { tipEl.textContent = tips[tipIdx++%tips.length]; }, 1200);
+function hideLoader() {
+  const l = document.getElementById('loader');
+  l.style.transition = 'opacity 0.6s'; l.style.opacity = '0';
+  setTimeout(() => { l.style.display = 'none'; initCounters(); }, 600);
+}
+
+// ===== BLOCKS DATA WITH REAL TEXTURE NAMES =====
+const BLOCKS_ALL = [
+  {name:'Grass Block',     tex:'grass_block_top',  type:'Natural',  hard:0.6},
+  {name:'Dirt',            tex:'dirt',              type:'Natural',  hard:0.5},
+  {name:'Coarse Dirt',     tex:'coarse_dirt',       type:'Natural',  hard:0.5},
+  {name:'Stone',           tex:'stone',             type:'Natural',  hard:1.5},
+  {name:'Cobblestone',     tex:'cobblestone',       type:'Natural',  hard:2.0},
+  {name:'Mossy Cobblestone',tex:'mossy_cobblestone',type:'Natural',  hard:2.0},
+  {name:'Oak Planks',      tex:'oak_planks',        type:'Wood',     hard:2.0},
+  {name:'Birch Planks',    tex:'birch_planks',      type:'Wood',     hard:2.0},
+  {name:'Spruce Planks',   tex:'spruce_planks',     type:'Wood',     hard:2.0},
+  {name:'Dark Oak Planks', tex:'dark_oak_planks',   type:'Wood',     hard:2.0},
+  {name:'Jungle Planks',   tex:'jungle_planks',     type:'Wood',     hard:2.0},
+  {name:'Acacia Planks',   tex:'acacia_planks',     type:'Wood',     hard:2.0},
+  {name:'Mangrove Planks', tex:'mangrove_planks',   type:'Wood',     hard:2.0},
+  {name:'Cherry Planks',   tex:'cherry_planks',     type:'Wood',     hard:2.0},
+  {name:'Bamboo Planks',   tex:'bamboo_planks',     type:'Wood',     hard:2.0},
+  {name:'Oak Log',         tex:'oak_log',           type:'Wood',     hard:2.0},
+  {name:'Birch Log',       tex:'birch_log',         type:'Wood',     hard:2.0},
+  {name:'Spruce Log',      tex:'spruce_log',        type:'Wood',     hard:2.0},
+  {name:'Oak Leaves',      tex:'oak_leaves',        type:'Natural',  hard:0.2},
+  {name:'Cherry Leaves',   tex:'cherry_leaves',     type:'Natural',  hard:0.2},
+  {name:'Sand',            tex:'sand',              type:'Natural',  hard:0.5},
+  {name:'Red Sand',        tex:'red_sand',          type:'Natural',  hard:0.5},
+  {name:'Gravel',          tex:'gravel',            type:'Natural',  hard:0.6},
+  {name:'Coal Ore',        tex:'coal_ore',          type:'Ore',      hard:3.0},
+  {name:'Iron Ore',        tex:'iron_ore',          type:'Ore',      hard:3.0},
+  {name:'Gold Ore',        tex:'gold_ore',          type:'Ore',      hard:3.0},
+  {name:'Diamond Ore',     tex:'diamond_ore',       type:'Ore',      hard:3.0},
+  {name:'Emerald Ore',     tex:'emerald_ore',       type:'Ore',      hard:3.0},
+  {name:'Redstone Ore',    tex:'redstone_ore',      type:'Ore',      hard:3.0},
+  {name:'Lapis Ore',       tex:'lapis_ore',         type:'Ore',      hard:3.0},
+  {name:'Copper Ore',      tex:'copper_ore',        type:'Ore',      hard:3.0},
+  {name:'Deepslate',       tex:'deepslate_top',     type:'Natural',  hard:3.0},
+  {name:'Deepslate Coal',  tex:'deepslate_coal_ore',type:'Ore',      hard:4.5},
+  {name:'Deepslate Iron',  tex:'deepslate_iron_ore',type:'Ore',      hard:4.5},
+  {name:'Deepslate Diamond',tex:'deepslate_diamond_ore',type:'Ore',  hard:4.5},
+  {name:'Ancient Debris',  tex:'ancient_debris_top',type:'Nether',   hard:30},
+  {name:'Netherite Block', tex:'netherite_block',   type:'Nether',   hard:50},
+  {name:'Obsidian',        tex:'obsidian',          type:'Natural',  hard:50},
+  {name:'Crying Obsidian', tex:'crying_obsidian',   type:'Natural',  hard:50},
+  {name:'Netherrack',      tex:'netherrack',        type:'Nether',   hard:0.4},
+  {name:'Soul Sand',       tex:'soul_sand',         type:'Nether',   hard:0.5},
+  {name:'Soul Soil',       tex:'soul_soil',         type:'Nether',   hard:0.5},
+  {name:'Basalt',          tex:'basalt_top',        type:'Nether',   hard:1.25},
+  {name:'Blackstone',      tex:'blackstone',        type:'Nether',   hard:1.5},
+  {name:'Nether Brick',    tex:'nether_bricks',     type:'Nether',   hard:2.0},
+  {name:'Nether Wart Block',tex:'nether_wart_block',type:'Nether',   hard:1.0},
+  {name:'Crimson Nylium',  tex:'crimson_nylium',    type:'Nether',   hard:0.4},
+  {name:'Warped Nylium',   tex:'warped_nylium',     type:'Nether',   hard:0.4},
+  {name:'Shroomlight',     tex:'shroomlight',       type:'Nether',   hard:1.0},
+  {name:'Magma Block',     tex:'magma',             type:'Nether',   hard:0.5},
+  {name:'End Stone',       tex:'end_stone',         type:'End',      hard:3.0},
+  {name:'End Stone Bricks',tex:'end_stone_bricks',  type:'End',      hard:3.0},
+  {name:'Purpur Block',    tex:'purpur_block',      type:'End',      hard:1.5},
+  {name:'End Rod',         tex:'end_rod',           type:'End',      hard:0},
+  {name:'Amethyst Block',  tex:'amethyst_block',    type:'Geode',    hard:1.5},
+  {name:'Budding Amethyst',tex:'budding_amethyst',  type:'Geode',    hard:1.5},
+  {name:'Calcite',         tex:'calcite',           type:'Natural',  hard:0.75},
+  {name:'Tuff',            tex:'tuff',              type:'Natural',  hard:1.5},
+  {name:'Tuff Bricks',     tex:'tuff_bricks',       type:'Natural',  hard:1.5},
+  {name:'Copper Block',    tex:'copper_block',      type:'Natural',  hard:3.0},
+  {name:'Exposed Copper',  tex:'exposed_copper',    type:'Natural',  hard:3.0},
+  {name:'Weathered Copper',tex:'weathered_copper',  type:'Natural',  hard:3.0},
+  {name:'Oxidized Copper', tex:'oxidized_copper',   type:'Natural',  hard:3.0},
+  {name:'TNT',             tex:'tnt_side',          type:'Utility',  hard:0},
+  {name:'Glass',           tex:'glass',             type:'Utility',  hard:0.3},
+  {name:'Bookshelf',       tex:'bookshelf',         type:'Utility',  hard:1.5},
+  {name:'Crafting Table',  tex:'crafting_table_top',type:'Utility',  hard:2.5},
+  {name:'Furnace',         tex:'furnace_front',     type:'Utility',  hard:3.5},
+  {name:'Blast Furnace',   tex:'blast_furnace_front',type:'Utility', hard:3.5},
+  {name:'Smoker',          tex:'smoker_front',      type:'Utility',  hard:3.5},
+  {name:'Chest',           tex:'chest',             type:'Storage',  hard:2.5},
+  {name:'Barrel',          tex:'barrel_top',        type:'Storage',  hard:2.5},
+  {name:'Shulker Box',     tex:'shulker_box',       type:'Storage',  hard:2.0},
+  {name:'Ender Chest',     tex:'ender_chest',       type:'Storage',  hard:22.5},
+  {name:'Dispenser',       tex:'dispenser_front',   type:'Utility',  hard:3.5},
+  {name:'Dropper',         tex:'dropper_front',     type:'Utility',  hard:3.5},
+  {name:'Piston',          tex:'piston_top_normal', type:'Redstone', hard:1.5},
+  {name:'Observer',        tex:'observer_front',    type:'Redstone', hard:3.0},
+  {name:'Redstone Block',  tex:'redstone_block',    type:'Redstone', hard:5.0},
+  {name:'Redstone Lamp',   tex:'redstone_lamp',     type:'Redstone', hard:0.3},
+  {name:'Note Block',      tex:'note_block',        type:'Redstone', hard:0.8},
+  {name:'Jukebox',         tex:'jukebox_top',       type:'Utility',  hard:2.0},
+  {name:'Enchanting Table',tex:'enchanting_table_top',type:'Utility',hard:5.0},
+  {name:'Beacon',          tex:'beacon',            type:'Utility',  hard:3.0},
+  {name:'Anvil',           tex:'anvil_top',         type:'Utility',  hard:5.0},
+  {name:'Slime Block',     tex:'slime_block',       type:'Utility',  hard:0},
+  {name:'Honey Block',     tex:'honey_block_top',   type:'Utility',  hard:0},
+  {name:'Snow Block',      tex:'snow',              type:'Natural',  hard:0.2},
+  {name:'Ice',             tex:'ice',               type:'Natural',  hard:0.5},
+  {name:'Packed Ice',      tex:'packed_ice',        type:'Natural',  hard:0.5},
+  {name:'Blue Ice',        tex:'blue_ice',          type:'Natural',  hard:2.8},
+  {name:'Prismarine',      tex:'prismarine',        type:'Ocean',    hard:1.5},
+  {name:'Dark Prismarine', tex:'dark_prismarine',   type:'Ocean',    hard:1.5},
+  {name:'Sponge',          tex:'sponge',            type:'Ocean',    hard:0.6},
+  {name:'Wet Sponge',      tex:'wet_sponge',        type:'Ocean',    hard:0.6},
+  {name:'Mud',             tex:'mud',               type:'Natural',  hard:0.5},
+  {name:'Packed Mud',      tex:'packed_mud',        type:'Natural',  hard:1.0},
+  {name:'Mud Bricks',      tex:'mud_bricks',        type:'Natural',  hard:1.5},
+  {name:'Stone Bricks',    tex:'stone_bricks',      type:'Natural',  hard:1.5},
+  {name:'Mossy Stone Bricks',tex:'mossy_stone_bricks',type:'Natural',hard:1.5},
+  {name:'Cracked Stone',   tex:'cracked_stone_bricks',type:'Natural',hard:1.5},
+  {name:'Chiseled Stone',  tex:'chiseled_stone_bricks',type:'Natural',hard:1.5},
+  {name:'Bricks',          tex:'bricks',            type:'Natural',  hard:2.0},
+  {name:'Sandstone',       tex:'sandstone',         type:'Natural',  hard:0.8},
+  {name:'Quartz Block',    tex:'quartz_block_top',  type:'Nether',   hard:0.8},
+  {name:'Smooth Quartz',   tex:'quartz_block_bottom',type:'Nether',  hard:2.0},
+  {name:'Terracotta',      tex:'terracotta',        type:'Natural',  hard:1.25},
+  {name:'White Concrete',  tex:'white_concrete',    type:'Natural',  hard:1.8},
+  {name:'White Wool',      tex:'white_wool',        type:'Natural',  hard:0.8},
+  {name:'Sculk',           tex:'sculk',             type:'Deep Dark',hard:0.2},
+  {name:'Sculk Catalyst',  tex:'sculk_catalyst_top',type:'Deep Dark',hard:3.0},
+  {name:'Sculk Shrieker',  tex:'sculk_shrieker_top',type:'Deep Dark',hard:3.0},
+  {name:'Sculk Sensor',    tex:'sculk_sensor_top',  type:'Deep Dark',hard:1.5},
+  {name:'Reinforced Deepslate',tex:'reinforced_deepslate_top',type:'Deep Dark',hard:55},
+  {name:'Dripstone Block', tex:'dripstone_block',   type:'Natural',  hard:1.5},
+  {name:'Moss Block',      tex:'moss_block',        type:'Natural',  hard:0.1},
 ];
 
+let blocksShown = 60;
+
 function renderBlocks() {
-  const g = document.getElementById('blocksGrid');
-  g.innerHTML = BLOCKS.map(b => `
+  const grid = document.getElementById('blocksGrid');
+  const slice = BLOCKS_ALL.slice(0, blocksShown);
+  grid.innerHTML = slice.map(b => `
     <div class="block-card" data-tooltip="${b.name}">
       <div class="block-hardness">♥ ${b.hard}</div>
-      <div class="block-pixel ${b.cls}"></div>
+      ${img(BLOCK_TEX(b.tex), 'block-tex', b.name)}
       <div class="block-name">${b.name}</div>
       <div class="block-type">${b.type}</div>
     </div>`).join('');
+  document.getElementById('blocksMoreBtn').style.display = blocksShown >= BLOCKS_ALL.length ? 'none' : 'block';
 }
 
-// ===================== BIOMES =====================
-const BIOMES = [
-  {name:'Forest',       cls:'bv-forest',  temp:'Mild',   tags:['Overworld','Wooded','Common']},
-  {name:'Desert',       cls:'bv-desert',  temp:'Hot',    tags:['Overworld','Arid','Villages']},
-  {name:'Ocean',        cls:'bv-ocean',   temp:'Cool',   tags:['Overworld','Aquatic','Ships']},
-  {name:'Mountains',    cls:'bv-mountain',temp:'Cold',   tags:['Overworld','High','Goats']},
-  {name:'Jungle',       cls:'bv-jungle',  temp:'Hot',    tags:['Overworld','Dense','Parrots']},
-  {name:'Snowy Tundra', cls:'bv-tundra',  temp:'Freezing',tags:['Overworld','Cold','Polar Bears']},
-  {name:'Swamp',        cls:'bv-swamp',   temp:'Mild',   tags:['Overworld','Wet','Slimes']},
-  {name:'Savanna',      cls:'bv-savanna', temp:'Warm',   tags:['Overworld','Flat','Horses']},
-  {name:'Nether Wastes',cls:'bv-nether',  temp:'Inferno',tags:['Nether','Dangerous','Ghasts']},
-  {name:'The End',      cls:'bv-end',     temp:'Void',   tags:['End','Boss','Elytra']},
-  {name:'Badlands',     cls:'bv-badlands',temp:'Hot',    tags:['Overworld','Gold','Rare']},
-  {name:'Mushroom Fields',cls:'bv-mushroom',temp:'Mild', tags:['Overworld','Safe','Mooshrooms']},
-];
-
-function renderBiomes() {
-  const g = document.getElementById('biomesGrid');
-  g.innerHTML = BIOMES.map(b => `
-    <div class="biome-card fade-in">
-      <div class="biome-visual ${b.cls}"></div>
-      <div class="biome-info">
-        <div class="biome-name">${b.name}</div>
-        <div class="biome-temp">🌡️ Temperature: <strong>${b.temp}</strong></div>
-        <div class="biome-tags">${b.tags.map(t=>`<span class="biome-tag">${t}</span>`).join('')}</div>
-      </div>
-    </div>`).join('');
+function showMoreBlocks() {
+  blocksShown = Math.min(blocksShown + 60, BLOCKS_ALL.length);
+  renderBlocks();
 }
 
-// ===================== MOBS =====================
-const MOBS = [
-  {n:'Creeper',  e:'💚', hp:20, type:'hostile', drops:'Gunpowder'},
-  {n:'Zombie',   e:'🧟', hp:20, type:'hostile', drops:'Rotten Flesh'},
-  {n:'Skeleton', e:'🦴', hp:20, type:'hostile', drops:'Arrows, Bones'},
-  {n:'Spider',   e:'🕷️', hp:16, type:'neutral',  drops:'String, Spider Eye'},
-  {n:'Enderman', e:'👾', hp:40, type:'neutral',  drops:'Ender Pearl'},
-  {n:'Witch',    e:'🧙', hp:26, type:'hostile', drops:'Potions, Sticks'},
-  {n:'Blaze',    e:'🔥', hp:20, type:'hostile', drops:'Blaze Rod'},
-  {n:'Ghast',    e:'👻', hp:10, type:'hostile', drops:'Ghast Tear, GP'},
-  {n:'Ender Dragon',e:'🐉',hp:200,type:'boss',  drops:'Dragon Egg, XP'},
-  {n:'Wither',   e:'💀', hp:300,type:'boss',    drops:'Nether Star'},
-  {n:'Elder Guardian',e:'🐟',hp:80,type:'boss', drops:'Wet Sponge'},
-  {n:'Warden',   e:'🌑', hp:500,type:'hostile', drops:'Sculk Catalyst'},
-  {n:'Pig',      e:'🐷', hp:10, type:'passive', drops:'Raw Porkchop'},
-  {n:'Cow',      e:'🐄', hp:10, type:'passive', drops:'Leather, Beef'},
-  {n:'Chicken',  e:'🐔', hp:4,  type:'passive', drops:'Feather, Egg'},
-  {n:'Sheep',    e:'🐑', hp:8,  type:'passive', drops:'Wool, Mutton'},
-  {n:'Wolf',     e:'🐺', hp:8,  type:'neutral', drops:'Nothing'},
-  {n:'Cat',      e:'🐱', hp:10, type:'passive', drops:'String'},
-  {n:'Horse',    e:'🐴', hp:30, type:'passive', drops:'Leather'},
-  {n:'Bee',      e:'🐝', hp:10, type:'neutral', drops:'Honey Bottle'},
-  {n:'Axolotl',  e:'🦎', hp:14, type:'passive', drops:'Nothing'},
-  {n:'Fox',      e:'🦊', hp:10, type:'neutral', drops:'Feather'},
-  {n:'Dolphin',  e:'🐬', hp:10, type:'neutral', drops:'Raw Cod'},
-  {n:'Turtle',   e:'🐢', hp:30, type:'passive', drops:'Scute'},
-  {n:'Pillager', e:'⚔️', hp:24, type:'hostile', drops:'Crossbow, Arrow'},
-  {n:'Ravager',  e:'🦏', hp:100,type:'hostile', drops:'Saddle'},
-  {n:'Vindicator',e:'🪓',hp:24, type:'hostile', drops:'Emerald, Axe'},
-  {n:'Piglin',   e:'🪙', hp:16, type:'neutral', drops:'Gold Ingot'},
-];
-
-let currentMobFilter = 'all';
-
-function renderMobs(filter='all') {
-  const g = document.getElementById('mobsGrid');
-  const filtered = filter==='all' ? MOBS : MOBS.filter(m=>m.type===filter);
-  g.innerHTML = filtered.map(m => {
-    const hpPct = Math.min(100, (m.hp / 300) * 100);
-    return `<div class="mob-card">
-      <div class="mob-sprite">${m.e}</div>
-      <div class="mob-name">${m.n}</div>
-      <div class="mob-hp">❤️ ${m.hp} HP</div>
-      <div class="hp-bar-wrap"><div class="hp-bar" style="width:${hpPct}%"></div></div>
-      <div style="margin-top:8px;font-size:10px;color:#666;">${m.drops}</div>
-      <div style="margin-top:8px;"><span class="mob-type type-${m.type}">${m.type.toUpperCase()}</span></div>
-    </div>`;
-  }).join('');
-}
-
-function filterMobs(type, btn) {
-  document.querySelectorAll('.mobs-tabs .tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMobs(type);
-}
-
-// ===================== CRAFTING RECIPES =====================
-const RECIPES = [
-  {name:'Crafting Table', grid:['🪵','🪵','','🪵','🪵','','','',''],  result:'🪚', yield:'1x Crafting Table', mat:'4 Oak Planks'},
-  {name:'Wooden Pickaxe', grid:['🪵','🪵','🪵','','🪹','','','🪹',''],  result:'⛏️', yield:'1x Wooden Pickaxe', mat:'3 Planks + 2 Sticks'},
-  {name:'Iron Sword',     grid:['','⬛','','','⬛','','','🪹',''],        result:'⚔️',  yield:'1x Iron Sword',  mat:'2 Iron + 1 Stick'},
-  {name:'Torch',          grid:['','⬛','','','🪹','','','',''],          result:'🔦', yield:'4x Torch',        mat:'1 Coal + 1 Stick'},
-  {name:'Chest',          grid:['🪵','🪵','🪵','🪵','','🪵','🪵','🪵','🪵'], result:'📦',yield:'1x Chest',       mat:'8 Oak Planks'},
-  {name:'Furnace',        grid:['⬛','⬛','⬛','⬛','','⬛','⬛','⬛','⬛'], result:'🔥', yield:'1x Furnace',      mat:'8 Cobblestone'},
-  {name:'Iron Pickaxe',   grid:['⬛','⬛','⬛','','🪹','','','🪹',''],    result:'⛏️', yield:'1x Iron Pickaxe', mat:'3 Iron + 2 Sticks'},
-  {name:'Shield',         grid:['🪵','⬛','🪵','🪵','🪵','🪵','','🪵',''], result:'🛡️', yield:'1x Shield',      mat:'6 Planks + 1 Iron'},
-  {name:'Bow',            grid:['','🪹','⬜','🪹','','⬜','','🪹','⬜'], result:'🏹', yield:'1x Bow',           mat:'3 Sticks + 3 String'},
-  {name:'Bucket',         grid:['⬛','','⬛','','⬛','','','',''],        result:'🪣', yield:'1x Bucket',        mat:'3 Iron Ingots'},
-  {name:'Bread',          grid:['🌾','🌾','🌾','','','','','',''],       result:'🍞', yield:'1x Bread',          mat:'3 Wheat'},
-  {name:'Golden Apple',   grid:['🥇','🥇','🥇','🥇','🍎','🥇','🥇','🥇','🥇'], result:'🍏',yield:'1x Golden Apple', mat:'8 Gold + 1 Apple'},
-];
-
-let allRecipes = [...RECIPES];
-
-function renderRecipes(list) {
-  const g = document.getElementById('recipesGrid');
-  g.innerHTML = list.map(r => {
-    const slots = Array(9).fill('');
-    r.grid.forEach((v,i)=>{ if(v) slots[i]=v; });
-    return `<div class="recipe-card">
-      <div class="recipe-name">${r.name}</div>
-      <div class="crafting-table">${slots.map(s=>`<div class="ct-slot ${s?'filled':''}">${s}</div>`).join('')}</div>
-      <div class="recipe-arrow">▼</div>
-      <div class="recipe-result">
-        <div class="result-slot">${r.result}</div>
-        <div class="result-info">
-          <div class="recipe-yield">${r.yield}</div>
-          <div class="recipe-mat">${r.mat}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function filterRecipes(q) {
-  const filtered = allRecipes.filter(r=>r.name.toLowerCase().includes(q.toLowerCase()));
-  renderRecipes(filtered);
-}
-
-// ===================== BUILDS =====================
-const BUILDS = [
-  {n:'Starter House',  e:'🏠', bg:'#2d7d32', diff:1, desc:'The classic first night shelter. Simple 5×5 wood and cobblestone home.',tags:['Beginner','Survival','Wood']},
-  {n:'Nether Portal Hub',e:'🌀',bg:'#7b1fa2',diff:2, desc:'A decorated portal room linking your Overworld and Nether networks.',tags:['Intermediate','Nether','Portal']},
-  {n:'Iron Farm',      e:'⚙️', bg:'#607d8b', diff:3, desc:'Automated iron golem farm for endless iron ingots.',tags:['Farms','Redstone','Advanced']},
-  {n:'Tree Farm',      e:'🌳', bg:'#388e3c', diff:2, desc:'Automated tree farm with flying machine or observer array.',tags:['Farms','Wood','Redstone']},
-  {n:'Medieval Castle',e:'🏰', bg:'#795548', diff:5, desc:'Multi-tower stone castle with battlements, great hall, and dungeons.',tags:['Mega','Stone','Medieval']},
-  {n:'Sky Island',     e:'☁️', bg:'#1565c0', diff:3, desc:'A floating island base suspended in the sky with waterfalls and bridges.',tags:['Creative','Sky','Advanced']},
-  {n:'Wheat Farm',     e:'🌾', bg:'#f57f17', diff:1, desc:'Basic or automated villager wheat farm for unlimited bread.',tags:['Beginner','Food','Farms']},
-  {n:'Storage System', e:'📦', bg:'#4e342e', diff:3, desc:'AE/ME style chest + hopper sorting system with labeled categories.',tags:['Redstone','Storage','Advanced']},
-  {n:'Mob Grinder',    e:'💀', bg:'#212121', diff:3, desc:'XP and loot farm using a spawner or dark room spawn platform.',tags:['XP Farm','Hostile','Redstone']},
-  {n:'Village Upgrade',e:'🏘️', bg:'#6d4c41', diff:2, desc:'Transform a default villager village into a thriving trade hub.',tags:['Village','Trade','Intermediate']},
-  {n:'Ocean Monument Base',e:'🐟',bg:'#0d47a1',diff:4,desc:'Convert an ocean monument into an underwater base.',tags:['Ocean','Mega','Advanced']},
-  {n:'End Portal Room',e:'🌑', bg:'#1a0030', diff:4, desc:'Decorative end portal chamber with dragon head trophies.',tags:['End','Decorative','Boss']},
-];
-
-function renderBuilds() {
-  const g = document.getElementById('buildsGrid');
-  g.innerHTML = BUILDS.map(b => {
-    const stars = Array(5).fill(0).map((_,i)=>`<span class="diff-star ${i<b.diff?'filled':'empty'}">${i<b.diff?'★':'☆'}</span>`).join('');
-    return `<div class="build-card">
-      <div class="build-preview" style="background:${b.bg}">
-        <div class="build-isometric">${b.e}</div>
-        <div class="build-gradient"></div>
-      </div>
-      <div class="build-info">
-        <div class="build-name">${b.n}</div>
-        <div class="build-diff">${stars}</div>
-        <div class="build-desc">${b.desc}</div>
-        <div class="build-tags">${b.tags.map(t=>`<span class="build-tag">${t}</span>`).join('')}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ===================== ITEMS =====================
-const ITEMS = [
-  {n:'Diamond Sword',  e:'⚔️',  cat:'weapons',  r:'rare'},
-  {n:'Iron Pickaxe',   e:'⛏️',  cat:'tools',    r:'uncommon'},
-  {n:'Golden Sword',   e:'🗡️',  cat:'weapons',  r:'uncommon'},
-  {n:'Bow',            e:'🏹',  cat:'weapons',  r:'common'},
-  {n:'Diamond Helmet', e:'💎',  cat:'armor',    r:'rare'},
-  {n:'Iron Chestplate',e:'🛡️',  cat:'armor',    r:'uncommon'},
-  {n:'Leather Boots',  e:'👢',  cat:'armor',    r:'common'},
-  {n:'Bread',          e:'🍞',  cat:'food',     r:'common'},
-  {n:'Golden Apple',   e:'🍏',  cat:'food',     r:'rare'},
-  {n:'Cooked Steak',   e:'🥩',  cat:'food',     r:'common'},
-  {n:'Eye of Ender',   e:'👁️',  cat:'misc',     r:'uncommon'},
-  {n:'Ender Pearl',    e:'💫',  cat:'misc',     r:'uncommon'},
-  {n:'Elytra',         e:'🦋',  cat:'misc',     r:'epic'},
-  {n:'Trident',        e:'🔱',  cat:'weapons',  r:'rare'},
-  {n:'Crossbow',       e:'🎯',  cat:'weapons',  r:'uncommon'},
-  {n:'Flint & Steel',  e:'🔥',  cat:'tools',    r:'common'},
-  {n:'Compass',        e:'🧭',  cat:'tools',    r:'common'},
-  {n:'Clock',          e:'🕐',  cat:'misc',     r:'common'},
-  {n:'Spyglass',       e:'🔭',  cat:'misc',     r:'uncommon'},
-  {n:'Totem of Undying',e:'🗿', cat:'misc',     r:'rare'},
-  {n:'Netherite Sword',e:'🗡️',  cat:'weapons',  r:'epic'},
-  {n:'Axe',            e:'🪓',  cat:'tools',    r:'common'},
-  {n:'Shears',         e:'✂️',  cat:'tools',    r:'common'},
-  {n:'Fishing Rod',    e:'🎣',  cat:'tools',    r:'common'},
+// ===== ITEMS WITH REAL TEXTURE NAMES =====
+const ITEMS_ALL = [
+  {n:'Diamond Sword',    tex:'diamond_sword',       cat:'weapons', r:'rare'},
+  {n:'Iron Sword',       tex:'iron_sword',          cat:'weapons', r:'uncommon'},
+  {n:'Golden Sword',     tex:'golden_sword',        cat:'weapons', r:'uncommon'},
+  {n:'Stone Sword',      tex:'stone_sword',         cat:'weapons', r:'common'},
+  {n:'Wooden Sword',     tex:'wooden_sword',        cat:'weapons', r:'common'},
+  {n:'Netherite Sword',  tex:'netherite_sword',     cat:'weapons', r:'epic'},
+  {n:'Bow',              tex:'bow',                 cat:'weapons', r:'common'},
+  {n:'Crossbow',         tex:'crossbow_standby',    cat:'weapons', r:'uncommon'},
+  {n:'Trident',          tex:'trident',             cat:'weapons', r:'rare'},
+  {n:'Diamond Axe',      tex:'diamond_axe',         cat:'weapons', r:'rare'},
+  {n:'Diamond Pickaxe',  tex:'diamond_pickaxe',     cat:'tools',   r:'rare'},
+  {n:'Iron Pickaxe',     tex:'iron_pickaxe',        cat:'tools',   r:'uncommon'},
+  {n:'Stone Pickaxe',    tex:'stone_pickaxe',       cat:'tools',   r:'common'},
+  {n:'Wooden Pickaxe',   tex:'wooden_pickaxe',      cat:'tools',   r:'common'},
+  {n:'Netherite Pickaxe',tex:'netherite_pickaxe',   cat:'tools',   r:'epic'},
+  {n:'Diamond Shovel',   tex:'diamond_shovel',      cat:'tools',   r:'rare'},
+  {n:'Iron Shovel',      tex:'iron_shovel',         cat:'tools',   r:'uncommon'},
+  {n:'Diamond Hoe',      tex:'diamond_hoe',         cat:'tools',   r:'rare'},
+  {n:'Shears',           tex:'shears',              cat:'tools',   r:'common'},
+  {n:'Flint and Steel',  tex:'flint_and_steel',     cat:'tools',   r:'common'},
+  {n:'Fishing Rod',      tex:'fishing_rod',         cat:'tools',   r:'common'},
+  {n:'Compass',          tex:'compass',             cat:'tools',   r:'common'},
+  {n:'Clock',            tex:'clock',               cat:'tools',   r:'common'},
+  {n:'Spyglass',         tex:'spyglass',            cat:'tools',   r:'uncommon'},
+  {n:'Diamond Helmet',   tex:'diamond_helmet',      cat:'armor',   r:'rare'},
+  {n:'Diamond Chest',    tex:'diamond_chestplate',  cat:'armor',   r:'rare'},
+  {n:'Diamond Leggings', tex:'diamond_leggings',    cat:'armor',   r:'rare'},
+  {n:'Diamond Boots',    tex:'diamond_boots',       cat:'armor',   r:'rare'},
+  {n:'Iron Helmet',      tex:'iron_helmet',         cat:'armor',   r:'uncommon'},
+  {n:'Iron Chestplate',  tex:'iron_chestplate',     cat:'armor',   r:'uncommon'},
+  {n:'Iron Leggings',    tex:'iron_leggings',       cat:'armor',   r:'uncommon'},
+  {n:'Iron Boots',       tex:'iron_boots',          cat:'armor',   r:'uncommon'},
+  {n:'Leather Helmet',   tex:'leather_helmet',      cat:'armor',   r:'common'},
+  {n:'Golden Helmet',    tex:'golden_helmet',       cat:'armor',   r:'uncommon'},
+  {n:'Netherite Helmet', tex:'netherite_helmet',    cat:'armor',   r:'epic'},
+  {n:'Elytra',           tex:'elytra',              cat:'armor',   r:'epic'},
+  {n:'Shield',           tex:'shield',              cat:'armor',   r:'uncommon'},
+  {n:'Turtle Helmet',    tex:'turtle_helmet',       cat:'armor',   r:'rare'},
+  {n:'Apple',            tex:'apple',               cat:'food',    r:'common'},
+  {n:'Golden Apple',     tex:'golden_apple',        cat:'food',    r:'rare'},
+  {n:'Enchanted Apple',  tex:'enchanted_golden_apple',cat:'food',  r:'epic'},
+  {n:'Bread',            tex:'bread',               cat:'food',    r:'common'},
+  {n:'Cooked Beef',      tex:'cooked_beef',         cat:'food',    r:'common'},
+  {n:'Cooked Chicken',   tex:'cooked_chicken',      cat:'food',    r:'common'},
+  {n:'Cooked Cod',       tex:'cooked_cod',          cat:'food',    r:'common'},
+  {n:'Carrot',           tex:'carrot',              cat:'food',    r:'common'},
+  {n:'Golden Carrot',    tex:'golden_carrot',       cat:'food',    r:'rare'},
+  {n:'Pumpkin Pie',      tex:'pumpkin_pie',         cat:'food',    r:'common'},
+  {n:'Suspicious Stew',  tex:'suspicious_stew',     cat:'food',    r:'uncommon'},
+  {n:'Ender Pearl',      tex:'ender_pearl',         cat:'misc',    r:'uncommon'},
+  {n:'Eye of Ender',     tex:'ender_eye',           cat:'misc',    r:'uncommon'},
+  {n:'Elytra (item)',    tex:'elytra',              cat:'misc',    r:'epic'},
+  {n:'Totem of Undying', tex:'totem_of_undying',    cat:'misc',    r:'rare'},
+  {n:'Nether Star',      tex:'nether_star',         cat:'misc',    r:'epic'},
+  {n:'Dragon Egg',       tex:'dragon_egg',          cat:'misc',    r:'epic'},
+  {n:'Saddle',           tex:'saddle',              cat:'misc',    r:'uncommon'},
+  {n:'Lead',             tex:'lead',                cat:'misc',    r:'common'},
+  {n:'Name Tag',         tex:'name_tag',            cat:'misc',    r:'rare'},
+  {n:'Book',             tex:'book',                cat:'misc',    r:'common'},
+  {n:'Enchanted Book',   tex:'enchanted_book',      cat:'misc',    r:'uncommon'},
+  {n:'Map',              tex:'map',                 cat:'misc',    r:'common'},
+  {n:'Diamond',          tex:'diamond',             cat:'misc',    r:'rare'},
+  {n:'Emerald',          tex:'emerald',             cat:'misc',    r:'uncommon'},
+  {n:'Netherite Ingot',  tex:'netherite_ingot',     cat:'misc',    r:'epic'},
+  {n:'Blaze Rod',        tex:'blaze_rod',           cat:'misc',    r:'uncommon'},
+  {n:'Blaze Powder',     tex:'blaze_powder',        cat:'misc',    r:'uncommon'},
+  {n:'Gunpowder',        tex:'gunpowder',           cat:'misc',    r:'common'},
+  {n:'String',           tex:'string',              cat:'misc',    r:'common'},
+  {n:'Feather',          tex:'feather',             cat:'misc',    r:'common'},
+  {n:'Bone',             tex:'bone',                cat:'misc',    r:'common'},
+  {n:'Echo Shard',       tex:'echo_shard',          cat:'misc',    r:'rare'},
+  {n:'Disc Fragment',    tex:'disc_fragment_5',     cat:'misc',    r:'rare'},
+  {n:'Mace',             tex:'mace',                cat:'weapons', r:'epic'},
+  {n:'Wind Charge',      tex:'wind_charge',         cat:'misc',    r:'uncommon'},
 ];
 
 function renderItems(filter='all') {
   const g = document.getElementById('itemsGrid');
-  const filtered = filter==='all' ? ITEMS : ITEMS.filter(i=>i.cat===filter);
+  const filtered = filter==='all' ? ITEMS_ALL : ITEMS_ALL.filter(i=>i.cat===filter);
   g.innerHTML = filtered.map(i => `
     <div class="item-card">
-      <span class="item-icon">${i.e}</span>
+      ${img(ITEM_TEX(i.tex), 'item-tex', i.n)}
       <div class="item-name">${i.n}</div>
       <div class="item-rarity rarity-${i.r}">${i.r.toUpperCase()}</div>
     </div>`).join('');
@@ -1861,45 +983,381 @@ function filterItems(type, btn) {
   renderItems(type);
 }
 
-// ===================== ENCHANTMENTS =====================
+// ===== MOBS =====
+const MOBS = [
+  {n:'Creeper',  e:'💚', hp:20, type:'hostile', drops:'Gunpowder'},
+  {n:'Zombie',   e:'🧟', hp:20, type:'hostile', drops:'Rotten Flesh'},
+  {n:'Skeleton', e:'🦴', hp:20, type:'hostile', drops:'Arrows, Bones'},
+  {n:'Spider',   e:'🕷️', hp:16, type:'neutral',  drops:'String, Spider Eye'},
+  {n:'Cave Spider',e:'🕸️',hp:12,type:'hostile', drops:'String'},
+  {n:'Enderman', e:'👾', hp:40, type:'neutral',  drops:'Ender Pearl'},
+  {n:'Creeper',  e:'💚', hp:20, type:'hostile', drops:'Gunpowder'},
+  {n:'Witch',    e:'🧙', hp:26, type:'hostile', drops:'Potions'},
+  {n:'Blaze',    e:'🔥', hp:20, type:'hostile', drops:'Blaze Rod'},
+  {n:'Ghast',    e:'👻', hp:10, type:'hostile', drops:'Ghast Tear'},
+  {n:'Ender Dragon',e:'🐉',hp:200,type:'boss',  drops:'Dragon Egg, XP'},
+  {n:'Wither',   e:'💀', hp:300,type:'boss',    drops:'Nether Star'},
+  {n:'Elder Guardian',e:'🐟',hp:80,type:'boss', drops:'Wet Sponge'},
+  {n:'Warden',   e:'🌑', hp:500,type:'hostile', drops:'Sculk Catalyst'},
+  {n:'Breeze',   e:'🌀', hp:30, type:'hostile', drops:'Wind Charge'},
+  {n:'Pig',      e:'🐷', hp:10, type:'passive', drops:'Porkchop'},
+  {n:'Cow',      e:'🐄', hp:10, type:'passive', drops:'Leather, Beef'},
+  {n:'Chicken',  e:'🐔', hp:4,  type:'passive', drops:'Feather, Egg'},
+  {n:'Sheep',    e:'🐑', hp:8,  type:'passive', drops:'Wool, Mutton'},
+  {n:'Wolf',     e:'🐺', hp:8,  type:'neutral', drops:'Nothing'},
+  {n:'Cat',      e:'🐱', hp:10, type:'passive', drops:'String'},
+  {n:'Horse',    e:'🐴', hp:30, type:'passive', drops:'Leather'},
+  {n:'Donkey',   e:'🫏', hp:20, type:'passive', drops:'Leather'},
+  {n:'Bee',      e:'🐝', hp:10, type:'neutral', drops:'Honey Bottle'},
+  {n:'Axolotl',  e:'🦎', hp:14, type:'passive', drops:'Nothing'},
+  {n:'Fox',      e:'🦊', hp:10, type:'neutral', drops:'Feather'},
+  {n:'Dolphin',  e:'🐬', hp:10, type:'neutral', drops:'Raw Cod'},
+  {n:'Turtle',   e:'🐢', hp:30, type:'passive', drops:'Scute'},
+  {n:'Snifer',   e:'🦏', hp:14, type:'passive', drops:'Torchflower Seeds'},
+  {n:'Armadillo', e:'🐾', hp:12, type:'passive', drops:'Armadillo Scute'},
+  {n:'Pillager', e:'⚔️', hp:24, type:'hostile', drops:'Crossbow'},
+  {n:'Ravager',  e:'🦏', hp:100,type:'hostile', drops:'Saddle'},
+  {n:'Vindicator',e:'🪓',hp:24, type:'hostile', drops:'Emerald'},
+  {n:'Piglin',   e:'🪙', hp:16, type:'neutral', drops:'Gold Ingot'},
+  {n:'Hoglin',   e:'🐗', hp:40, type:'hostile', drops:'Porkchop'},
+  {n:'Zoglin',   e:'🧟', hp:40, type:'hostile', drops:'Rotten Flesh'},
+  {n:'Strider',  e:'🌋', hp:20, type:'passive', drops:'String'},
+  {n:'Phantom',  e:'🦇', hp:20, type:'hostile', drops:'Phantom Membrane'},
+  {n:'Drowned',  e:'🌊', hp:20, type:'hostile', drops:'Rotten Flesh'},
+  {n:'Llama',    e:'🦙', hp:30, type:'neutral', drops:'Leather'},
+];
+
+function renderMobs(filter='all') {
+  const g = document.getElementById('mobsGrid');
+  const filtered = filter==='all' ? MOBS : MOBS.filter(m=>m.type===filter);
+  const seen = new Set();
+  g.innerHTML = filtered.filter(m=>{ if(seen.has(m.n)) return false; seen.add(m.n); return true; })
+    .map(m => `<div class="mob-card">
+      <div class="mob-sprite">${m.e}</div>
+      <div class="mob-name">${m.n}</div>
+      <div class="mob-hp">❤️ ${m.hp} HP</div>
+      <div class="hp-bar-wrap"><div class="hp-bar" style="width:${Math.min(100,(m.hp/500)*100)}%"></div></div>
+      <div style="margin-top:7px;font-size:9px;color:#666;">${m.drops}</div>
+      <div style="margin-top:7px;"><span class="mob-type type-${m.type}">${m.type.toUpperCase()}</span></div>
+    </div>`).join('');
+}
+
+function filterMobs(type, btn) {
+  document.querySelectorAll('.mobs-tabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMobs(type);
+}
+
+// ===== PAINTINGS WITH REAL TEXTURES =====
+// Paintings are in the minecraft-assets texture atlas; they're also available as individual PNGs under textures/painting/
+const PAINTINGS = [
+  {n:'Kebab',      w:1,h:1, tex:'kebab'},
+  {n:'Aztec',      w:1,h:1, tex:'aztec'},
+  {n:'Alban',      w:1,h:1, tex:'alban'},
+  {n:'Aztec2',     w:1,h:1, tex:'aztec2'},
+  {n:'Bomb',       w:1,h:1, tex:'bomb'},
+  {n:'Plant',      w:1,h:1, tex:'plant'},
+  {n:'Wasteland',  w:1,h:1, tex:'wasteland'},
+  {n:'Pool',       w:2,h:1, tex:'pool'},
+  {n:'Courbet',    w:2,h:1, tex:'courbet'},
+  {n:'Sea',        w:2,h:1, tex:'sea'},
+  {n:'Sunset',     w:2,h:1, tex:'sunset'},
+  {n:'Creebet',    w:2,h:1, tex:'creebet'},
+  {n:'Wanderer',   w:1,h:2, tex:'wanderer'},
+  {n:'Graham',     w:1,h:2, tex:'graham'},
+  {n:'Match',      w:2,h:2, tex:'match'},
+  {n:'Bust',       w:2,h:2, tex:'bust'},
+  {n:'Stage',      w:2,h:2, tex:'stage'},
+  {n:'Void',       w:2,h:2, tex:'void'},
+  {n:'SkullAndRoses',w:2,h:2,tex:'skull_and_roses'},
+  {n:'Wither',     w:2,h:2, tex:'wither'},
+  {n:'Fighters',   w:4,h:2, tex:'fighters'},
+  {n:'Pointer',    w:4,h:4, tex:'pointer'},
+  {n:'Pigscene',   w:4,h:4, tex:'pigscene'},
+  {n:'Flaming Skull',w:4,h:4,tex:'burning_skull'},
+  {n:'Skeleton',   w:4,h:3, tex:'skeleton'},
+  {n:'DonkeyKong', w:4,h:3, tex:'donkey_kong'},
+  {n:'Earth',      w:2,h:2, tex:'earth'},
+  {n:'Wind',       w:2,h:2, tex:'wind'},
+  {n:'Water',      w:2,h:2, tex:'water'},
+  {n:'Fire',       w:2,h:2, tex:'fire'},
+  {n:'Baroque',    w:2,h:2, tex:'baroque'},
+  {n:'Humble',     w:2,h:2, tex:'humble'},
+  {n:'Meditative', w:1,h:1, tex:'meditative'},
+  {n:'Prairie Ride',w:1,h:2,tex:'prairie_ride'},
+  {n:'Unpacked',   w:4,h:4, tex:'unpacked'},
+  {n:'Backyard',   w:3,h:4, tex:'backyard'},
+  {n:'Bouquet',    w:3,h:3, tex:'bouquet'},
+  {n:'Cavebird',   w:3,h:3, tex:'cavebird'},
+  {n:'Changing',   w:4,h:2, tex:'changing'},
+  {n:'Cotan',      w:3,h:3, tex:'cotan'},
+];
+
+function renderPaintings() {
+  const g = document.getElementById('paintingsGrid');
+  g.innerHTML = PAINTINGS.map(p => `
+    <div class="painting-card">
+      <div class="painting-frame">
+        <img src="${BASE}/paintings/${p.tex}.png"
+             class="painting-img"
+             alt="${p.n}"
+             loading="lazy"
+             onerror="this.parentElement.innerHTML='<div style=font-size:40px;opacity:0.3;>🖼️</div>'"
+             style="width:${p.w*48}px;height:${p.h*48}px;max-width:180px;max-height:180px;">
+      </div>
+      <div class="painting-info">
+        <div class="painting-name">${p.n}</div>
+        <div class="painting-size">${p.w}×${p.h} blocks</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== ARMOR TRIMS =====
+const TRIMS = [
+  {n:'Sentry',    mat:'Cobblestone',     loc:'Pillager Outpost',    color:'#9e9e9e'},
+  {n:'Dune',      mat:'Sand Block',      loc:'Desert Temple',       color:'#e0c270'},
+  {n:'Coast',     mat:'Cobblestone',     loc:'Shipwreck',           color:'#1565c0'},
+  {n:'Wild',      mat:'Mossy Cobblestone',loc:'Jungle Temple',      color:'#2e7d32'},
+  {n:'Ward',      mat:'Cobblestone',     loc:'Ancient City',        color:'#37474f'},
+  {n:'Eye',       mat:'End Stone',       loc:'Stronghold',          color:'#ce93d8'},
+  {n:'Vex',       mat:'Cobblestone',     loc:'Woodland Mansion',    color:'#7c4dff'},
+  {n:'Tide',      mat:'Prismarine',      loc:'Ocean Monument',      color:'#26a69a'},
+  {n:'Snout',     mat:'Blackstone',      loc:'Bastion Remnant',     color:'#4a148c'},
+  {n:'Rib',       mat:'Netherrack',      loc:'Nether Fortress',     color:'#b71c1c'},
+  {n:'Spire',     mat:'Purpur',          loc:'End City',            color:'#ab47bc'},
+  {n:'Wayfinder', mat:'Terracotta',      loc:'Trail Ruins',         color:'#8d6e63'},
+  {n:'Shaper',    mat:'Terracotta',      loc:'Trail Ruins',         color:'#6d4c41'},
+  {n:'Silence',   mat:'Cobbled Deepslate',loc:'Ancient City',       color:'#263238'},
+  {n:'Raiser',    mat:'Terracotta',      loc:'Trail Ruins',         color:'#5d4037'},
+  {n:'Host',      mat:'Terracotta',      loc:'Trail Ruins',         color:'#795548'},
+  {n:'Flow',      mat:'Breeze Rod',      loc:'Trial Chambers',      color:'#80deea'},
+  {n:'Bolt',      mat:'Copper',          loc:'Trial Chambers',      color:'#b45309'},
+];
+
+function renderTrims() {
+  const g = document.getElementById('trimsGrid');
+  g.innerHTML = TRIMS.map(t => `
+    <div class="trim-card" style="border-color:${t.color}44">
+      <img src="${BASE}/items/armor_trim_smithing_template.png"
+           class="trim-visual"
+           alt="${t.n} Trim"
+           loading="lazy"
+           onerror="this.style.opacity='0.2'"
+           style="border-color:${t.color};">
+      <div class="trim-name" style="color:${t.color}">${t.n}</div>
+      <div class="trim-mat">🔧 ${t.mat}</div>
+      <div class="trim-loc">📍 ${t.loc}</div>
+    </div>`).join('');
+}
+
+// ===== GUI SCREENS =====
+const GUI_SCREENS = [
+  {n:'Inventory',        tex:'container/inventory',     desc:'Player inventory with hotbar, armor slots, and crafting grid.'},
+  {n:'Crafting Table',   tex:'container/crafting_table',desc:'3×3 crafting grid for all recipes.'},
+  {n:'Furnace',          tex:'container/furnace',       desc:'Smelt ores and cook food using fuel.'},
+  {n:'Blast Furnace',    tex:'container/blast_furnace', desc:'Smelt ores at double the speed.'},
+  {n:'Smoker',           tex:'container/smoker',        desc:'Cook food at double the speed.'},
+  {n:'Chest',            tex:'container/shulker_box',   desc:'27-slot storage container.'},
+  {n:'Enchanting Table', tex:'container/enchanting_table',desc:'Apply enchantments using lapis lazuli and XP.'},
+  {n:'Anvil',            tex:'container/anvil',         desc:'Repair items and rename them with an anvil.'},
+  {n:'Brewing Stand',    tex:'container/brewing_stand', desc:'Brew potions using ingredients and blaze powder.'},
+  {n:'Beacon',           tex:'container/beacon',        desc:'Activate beacon powers for area effects.'},
+  {n:'Cartography Table',tex:'container/cartography_table',desc:'Create, clone, and lock maps.'},
+  {n:'Grindstone',       tex:'container/grindstone',    desc:'Remove enchantments and repair items.'},
+  {n:'Smithing Table',   tex:'container/smithing',      desc:'Upgrade diamond gear to netherite or apply trims.'},
+  {n:'Loom',             tex:'container/loom',          desc:'Apply patterns to banners.'},
+  {n:'Stonecutter',      tex:'container/stonecutter',   desc:'Cut stone blocks into slabs and stairs.'},
+  {n:'Villager Trade',   tex:'container/villager',      desc:'Trade emeralds for goods with villagers.'},
+];
+
+function renderGUI() {
+  const g = document.getElementById('guiGrid');
+  g.innerHTML = GUI_SCREENS.map(s => `
+    <div class="gui-card">
+      <div class="gui-preview">
+        <img src="${BASE}/gui/${s.tex}.png"
+             class="gui-img"
+             alt="${s.n} GUI"
+             loading="lazy"
+             onerror="this.parentElement.innerHTML='<div style=font-size:50px;opacity:0.2;>🖥️</div>'"
+             style="max-height:130px;">
+      </div>
+      <div class="gui-info">
+        <div class="gui-name">${s.n}</div>
+        <div class="gui-desc">${s.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== BIOMES =====
+const BIOMES = [
+  {name:'Forest',          cls:'bv-forest',   temp:'Mild',    tags:['Overworld','Wooded','Common']},
+  {name:'Birch Forest',    cls:'bv-forest',   temp:'Mild',    tags:['Overworld','Wooded','Birch']},
+  {name:'Desert',          cls:'bv-desert',   temp:'Hot',     tags:['Overworld','Arid','Villages']},
+  {name:'Ocean',           cls:'bv-ocean',    temp:'Cool',    tags:['Overworld','Aquatic','Ships']},
+  {name:'Deep Ocean',      cls:'bv-ocean',    temp:'Cool',    tags:['Overworld','Deep','Monument']},
+  {name:'Mountains',       cls:'bv-mountain', temp:'Cold',    tags:['Overworld','High','Goats']},
+  {name:'Jungle',          cls:'bv-jungle',   temp:'Hot',     tags:['Overworld','Dense','Parrots']},
+  {name:'Snowy Tundra',    cls:'bv-tundra',   temp:'Freezing',tags:['Overworld','Cold','Polar Bear']},
+  {name:'Swamp',           cls:'bv-swamp',    temp:'Mild',    tags:['Overworld','Wet','Slimes']},
+  {name:'Savanna',         cls:'bv-savanna',  temp:'Warm',    tags:['Overworld','Flat','Horses']},
+  {name:'Cherry Grove',    cls:'bv-cherry',   temp:'Mild',    tags:['Overworld','Cherry','Rare']},
+  {name:'Mangrove Swamp',  cls:'bv-mangrove', temp:'Hot',     tags:['Overworld','Mangrove','New']},
+  {name:'Deep Dark',       cls:'bv-deep-dark',temp:'Cool',    tags:['Overworld','Deep','Warden']},
+  {name:'Nether Wastes',   cls:'bv-nether',   temp:'Inferno', tags:['Nether','Dangerous','Ghasts']},
+  {name:'Crimson Forest',  cls:'bv-nether',   temp:'Inferno', tags:['Nether','Crimson','Hoglins']},
+  {name:'Warped Forest',   cls:'bv-nether',   temp:'Inferno', tags:['Nether','Warped','Safe-ish']},
+  {name:'The End',         cls:'bv-end',      temp:'Void',    tags:['End','Boss','Elytra']},
+  {name:'Badlands',        cls:'bv-badlands', temp:'Hot',     tags:['Overworld','Gold','Rare']},
+  {name:'Mushroom Fields', cls:'bv-mushroom', temp:'Mild',    tags:['Overworld','Safe','Mooshrooms']},
+];
+
+function renderBiomes() {
+  const g = document.getElementById('biomesGrid');
+  g.innerHTML = BIOMES.map(b => `
+    <div class="biome-card fade-in">
+      <div class="biome-visual ${b.cls}"></div>
+      <div class="biome-info">
+        <div class="biome-name">${b.name}</div>
+        <div class="biome-temp">🌡️ ${b.temp}</div>
+        <div class="biome-tags">${b.tags.map(t=>`<span class="biome-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== CRAFTING RECIPES WITH TEXTURE IMAGES =====
+function slotImg(tex, isItem=false) {
+  if (!tex) return '';
+  const url = isItem ? ITEM_TEX(tex) : BLOCK_TEX(tex);
+  return `<img src="${url}" style="width:32px;height:32px;image-rendering:pixelated;" loading="lazy" onerror="this.style.opacity='0.2'">`;
+}
+
+const RECIPES = [
+  {name:'Crafting Table',  slots:['oak_planks','oak_planks',null,'oak_planks','oak_planks',null,null,null,null], blockSlots:[0,1,3,4], result:'crafting_table_top', isBlock:true, yield:'1×', mat:'4 Oak Planks'},
+  {name:'Wooden Pickaxe',  slots:['oak_planks','oak_planks','oak_planks',null,'oak_log',null,null,'oak_log',null], blockSlots:[0,1,2,4,7], result:'wooden_pickaxe', isBlock:false, yield:'1×', mat:'3 Planks + 2 Sticks'},
+  {name:'Iron Sword',      slots:[null,'iron_ore',null,null,'iron_ore',null,null,'oak_log',null], blockSlots:[1,4], result:'iron_sword', isBlock:false, yield:'1×', mat:'2 Iron + 1 Stick'},
+  {name:'Chest',           slots:['oak_planks','oak_planks','oak_planks','oak_planks',null,'oak_planks','oak_planks','oak_planks','oak_planks'], blockSlots:[0,1,2,3,5,6,7,8], result:'chest', isBlock:true, yield:'1×', mat:'8 Planks'},
+  {name:'Furnace',         slots:['stone','stone','stone','stone',null,'stone','stone','stone','stone'], blockSlots:[0,1,2,3,5,6,7,8], result:'furnace_front', isBlock:true, yield:'1×', mat:'8 Cobblestone'},
+  {name:'Iron Pickaxe',    slots:['iron_ore','iron_ore','iron_ore',null,'oak_log',null,null,'oak_log',null], blockSlots:[0,1,2,4,7], result:'iron_pickaxe', isBlock:false, yield:'1×', mat:'3 Iron + 2 Sticks'},
+  {name:'Bow',             slots:[null,'oak_log','string','oak_log',null,'string',null,'oak_log','string'], blockSlots:[1,3,7], result:'bow', isBlock:false, yield:'1×', mat:'3 Sticks + 3 String'},
+  {name:'Shield',          slots:['oak_planks','iron_ore','oak_planks','oak_planks','oak_planks','oak_planks',null,'oak_planks',null], blockSlots:[0,2,3,4,5,7], result:'shield', isBlock:false, yield:'1×', mat:'6 Planks + 1 Iron'},
+  {name:'Bread',           slots:['wheat','wheat','wheat',null,null,null,null,null,null], blockSlots:[], result:'bread', isBlock:false, yield:'1×', mat:'3 Wheat'},
+  {name:'Golden Apple',    slots:['gold_ore','gold_ore','gold_ore','gold_ore','apple','gold_ore','gold_ore','gold_ore','gold_ore'], blockSlots:[], result:'golden_apple', isBlock:false, yield:'1×', mat:'8 Gold + 1 Apple'},
+  {name:'Bucket',          slots:['iron_ore',null,'iron_ore',null,'iron_ore',null,null,null,null], blockSlots:[], result:'bucket', isBlock:false, yield:'1×', mat:'3 Iron Ingots'},
+  {name:'Diamond Sword',   slots:[null,'diamond',null,null,'diamond',null,null,'oak_log',null], blockSlots:[], result:'diamond_sword', isBlock:false, yield:'1×', mat:'2 Diamonds + 1 Stick'},
+];
+
+const EMOJI_MAP = {wheat:'🌾', string:'🧵', apple:'🍎', gold_ore:'🥇', diamond:'💎', iron_ore:'⚙️', oak_log:'🪵', oak_planks:'🪵', stone:'⬛', wheat:'🌾'};
+
+function renderRecipes(list) {
+  const g = document.getElementById('recipesGrid');
+  g.innerHTML = list.map(r => {
+    const slots = Array(9).fill(null);
+    r.slots.forEach((v,i)=>{ slots[i]=v; });
+    const slotsHtml = slots.map(s => {
+      if (!s) return `<div class="ct-slot"></div>`;
+      const isItemTex = !r.blockSlots || !r.blockSlots.includes(slots.indexOf(s));
+      const emojiAlt = EMOJI_MAP[s] || '◼';
+      return `<div class="ct-slot filled">
+        <img src="${r.isBlock && r.blockSlots && r.blockSlots.includes(slots.indexOf(s)) ? BLOCK_TEX(s) : (ITEM_TEX(s))}"
+             style="width:32px;height:32px;image-rendering:pixelated;"
+             loading="lazy"
+             onerror="this.outerHTML='<span style=font-size:18px>${emojiAlt}</span>'">
+      </div>`;
+    }).join('');
+    const resUrl = r.isBlock ? BLOCK_TEX(r.result) : ITEM_TEX(r.result);
+    return `<div class="recipe-card">
+      <div class="recipe-name">${r.name}</div>
+      <div class="crafting-table">${slotsHtml}</div>
+      <div class="recipe-arrow">▼</div>
+      <div class="recipe-result">
+        <div class="result-slot">
+          <img src="${resUrl}" style="width:40px;height:40px;image-rendering:pixelated;" loading="lazy" onerror="this.style.opacity='0.3'">
+        </div>
+        <div class="result-info">
+          <div class="recipe-yield">${r.yield} ${r.name}</div>
+          <div class="recipe-mat">${r.mat}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterRecipes(q) {
+  renderRecipes(RECIPES.filter(r=>r.name.toLowerCase().includes(q.toLowerCase())));
+}
+
+// ===== BUILDS =====
+const BUILDS = [
+  {n:'Starter House',  e:'🏠', bg:'#2d7d32', diff:1, desc:'Classic first-night shelter. Simple 5×5 wood + cobblestone.',tags:['Beginner','Survival']},
+  {n:'Nether Portal Hub',e:'🌀',bg:'#7b1fa2',diff:2, desc:'Decorated portal room linking your dimensions.',tags:['Intermediate','Nether']},
+  {n:'Iron Farm',      e:'⚙️', bg:'#607d8b', diff:3, desc:'Automated iron golem farm for endless iron.',tags:['Farm','Redstone']},
+  {n:'Tree Farm',      e:'🌳', bg:'#388e3c', diff:2, desc:'Automated tree farm with observer array.',tags:['Farm','Wood']},
+  {n:'Medieval Castle',e:'🏰', bg:'#795548', diff:5, desc:'Multi-tower stone castle with great hall.',tags:['Mega','Medieval']},
+  {n:'Sky Island',     e:'☁️', bg:'#1565c0', diff:3, desc:'Floating island base suspended in the sky.',tags:['Creative','Sky']},
+  {n:'Wheat Farm',     e:'🌾', bg:'#f57f17', diff:1, desc:'Automated villager wheat farm.',tags:['Beginner','Food']},
+  {n:'Mob Grinder',    e:'💀', bg:'#212121', diff:3, desc:'XP and loot farm using a spawner.',tags:['XP Farm','Redstone']},
+  {n:'Ocean Monument Base',e:'🐟',bg:'#0d47a1',diff:4,desc:'Convert an ocean monument into a base.',tags:['Ocean','Mega']},
+  {n:'End Portal Room',e:'🌑', bg:'#1a0030', diff:4, desc:'Decorative end portal chamber.',tags:['End','Decorative']},
+  {n:'Trial Chamber Farm',e:'🏛️',bg:'#4a4a7a',diff:4, desc:'Use Trial Vaults to farm rare loot.',tags:['1.21','Trials']},
+  {n:'Cherry Blossom House',e:'🌸',bg:'#e91e63',diff:3,desc:'Aesthetic build using cherry wood and petals.',tags:['Aesthetic','Cherry']},
+];
+
+function renderBuilds() {
+  const g = document.getElementById('buildsGrid');
+  g.innerHTML = BUILDS.map(b => {
+    const stars = Array(5).fill(0).map((_,i)=>`<span class="diff-star ${i<b.diff?'filled':'empty'}">${i<b.diff?'★':'☆'}</span>`).join('');
+    return `<div class="build-card">
+      <div class="build-preview" style="background:${b.bg}">${b.e}<div class="build-gradient"></div></div>
+      <div class="build-info">
+        <div class="build-name">${b.n}</div>
+        <div>${stars}</div>
+        <div class="build-desc">${b.desc}</div>
+        <div class="build-tags">${b.tags.map(t=>`<span class="build-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== ENCHANTMENTS =====
 const ENCHANTS = [
   {n:'Sharpness',    max:5,  desc:'Increases melee damage.',     applies:['Sword','Axe']},
-  {n:'Protection',   max:4,  desc:'Reduces most damage taken.',  applies:['Helmet','Chestplate','Leggings','Boots']},
-  {n:'Efficiency',   max:5,  desc:'Increases tool speed.',       applies:['Pickaxe','Axe','Shovel','Hoe']},
-  {n:'Mending',      max:1,  desc:'Repairs item using XP orbs.', applies:['All']},
-  {n:'Unbreaking',   max:3,  desc:'Increases item durability.',  applies:['All']},
-  {n:'Fortune',      max:3,  desc:'More drops from ores.',       applies:['Pickaxe','Axe','Shovel','Hoe']},
-  {n:'Silk Touch',   max:1,  desc:'Pick up blocks in true form.',applies:['Pickaxe','Axe','Shovel','Hoe']},
-  {n:'Power',        max:5,  desc:'Increases bow damage.',       applies:['Bow']},
-  {n:'Flame',        max:1,  desc:'Arrows set targets on fire.', applies:['Bow']},
-  {n:'Infinity',     max:1,  desc:'Infinite arrows from 1.',     applies:['Bow']},
-  {n:'Feather Falling',max:4,desc:'Reduces fall damage.',        applies:['Boots']},
-  {n:'Thorns',       max:3,  desc:'Damages attackers.',          applies:['Helmet','Chestplate','Leggings','Boots']},
+  {n:'Protection',   max:4,  desc:'Reduces most damage.',        applies:['Armor']},
+  {n:'Efficiency',   max:5,  desc:'Faster tool speed.',          applies:['Tools']},
+  {n:'Mending',      max:1,  desc:'Repairs with XP orbs.',       applies:['All']},
+  {n:'Unbreaking',   max:3,  desc:'Increases durability.',       applies:['All']},
+  {n:'Fortune',      max:3,  desc:'More drops from blocks.',     applies:['Tools']},
+  {n:'Silk Touch',   max:1,  desc:'Mine blocks as-is.',          applies:['Tools']},
+  {n:'Power',        max:5,  desc:'More bow damage.',            applies:['Bow']},
+  {n:'Flame',        max:1,  desc:'Arrows set fire.',            applies:['Bow']},
+  {n:'Infinity',     max:1,  desc:'Infinite arrows.',            applies:['Bow']},
+  {n:'Feather Falling',max:4,desc:'Reduce fall damage.',         applies:['Boots']},
+  {n:'Thorns',       max:3,  desc:'Damage attackers.',           applies:['Armor']},
   {n:'Looting',      max:3,  desc:'More mob drops.',             applies:['Sword']},
-  {n:'Fire Aspect',  max:2,  desc:'Sets target on fire.',        applies:['Sword']},
-  {n:'Knockback',    max:2,  desc:'Knocks enemies back.',        applies:['Sword']},
-  {n:'Aqua Affinity',max:1,  desc:'Normal underwater mining speed.',applies:['Helmet']},
-  {n:'Respiration',  max:3,  desc:'Extends underwater breathing.',applies:['Helmet']},
-  {n:'Depth Strider',max:3,  desc:'Faster underwater movement.', applies:['Boots']},
-  {n:'Soul Speed',   max:3,  desc:'Faster on soul sand/soil.',   applies:['Boots']},
-  {n:'Channeling',   max:1,  desc:'Calls lightning in storm.',   applies:['Trident']},
-  {n:'Riptide',      max:3,  desc:'Fly with trident in rain.',   applies:['Trident']},
-  {n:'Loyalty',      max:3,  desc:'Trident returns after throw.',applies:['Trident']},
-  {n:'Impaling',     max:5,  desc:'Extra damage to aquatic mobs.',applies:['Trident']},
-  {n:'Multishot',    max:1,  desc:'Shoot 3 arrows at once.',     applies:['Crossbow']},
-  {n:'Piercing',     max:4,  desc:'Arrows pass through entities.',applies:['Crossbow']},
-  {n:'Quick Charge', max:3,  desc:'Faster crossbow reload.',     applies:['Crossbow']},
-  {n:'Sweeping Edge',max:3,  desc:'Sweeping attacks deal more damage.',applies:['Sword']},
-  {n:'Bane of Arthropods',max:5,desc:'Extra damage to spiders, silverfish.',applies:['Sword','Axe']},
-  {n:'Smite',        max:5,  desc:'Extra damage to undead mobs.',applies:['Sword','Axe']},
-  {n:'Frost Walker', max:2,  desc:'Freeze water into ice.',      applies:['Boots']},
-  {n:'Blast Protection',max:4,desc:'Reduces explosion damage.',  applies:['Helmet','Chestplate','Leggings','Boots']},
-  {n:'Fire Protection',max:4,desc:'Reduces fire damage.',        applies:['Helmet','Chestplate','Leggings','Boots']},
-  {n:'Projectile Protection',max:4,desc:'Reduces projectile damage.',applies:['Helmet','Chestplate','Leggings','Boots']},
-  {n:'Punch',        max:2,  desc:'Knocks back enemies farther.',applies:['Bow']},
-  {n:'Luck of the Sea',max:3,desc:'Better fishing loot.',        applies:['Fishing Rod']},
+  {n:'Fire Aspect',  max:2,  desc:'Ignite target.',              applies:['Sword']},
+  {n:'Knockback',    max:2,  desc:'Push enemies back.',          applies:['Sword']},
+  {n:'Aqua Affinity',max:1,  desc:'Normal underwater mining.',   applies:['Helmet']},
+  {n:'Respiration',  max:3,  desc:'Longer breathing.',           applies:['Helmet']},
+  {n:'Depth Strider',max:3,  desc:'Faster underwater walk.',     applies:['Boots']},
+  {n:'Soul Speed',   max:3,  desc:'Faster on soul blocks.',      applies:['Boots']},
+  {n:'Channeling',   max:1,  desc:'Calls lightning in storms.',  applies:['Trident']},
+  {n:'Riptide',      max:3,  desc:'Fly in rain.',                applies:['Trident']},
+  {n:'Loyalty',      max:3,  desc:'Trident returns.',            applies:['Trident']},
+  {n:'Impaling',     max:5,  desc:'Extra aquatic damage.',       applies:['Trident']},
+  {n:'Multishot',    max:1,  desc:'3 arrows at once.',           applies:['Crossbow']},
+  {n:'Piercing',     max:4,  desc:'Arrows pass through.',        applies:['Crossbow']},
+  {n:'Quick Charge', max:3,  desc:'Faster reload.',              applies:['Crossbow']},
+  {n:'Sweeping Edge',max:3,  desc:'Sweep damage boost.',         applies:['Sword']},
+  {n:'Bane of Arthropods',max:5,desc:'vs. Spiders.',             applies:['Sword','Axe']},
+  {n:'Smite',        max:5,  desc:'vs. Undead.',                 applies:['Sword','Axe']},
+  {n:'Frost Walker', max:2,  desc:'Freeze water underfoot.',     applies:['Boots']},
+  {n:'Blast Protection',max:4,desc:'Reduce explosion damage.',   applies:['Armor']},
+  {n:'Luck of the Sea',max:3,desc:'Better fishing.',             applies:['Fishing Rod']},
   {n:'Lure',         max:3,  desc:'Faster fishing.',             applies:['Fishing Rod']},
-  {n:'Curse of Binding',max:1,desc:'Cannot remove from armor.',  applies:['Armor']},
+  {n:'Density',      max:5,  desc:'Mace fall damage increase.',  applies:['Mace']},
+  {n:'Breach',       max:4,  desc:'Bypass armor with mace.',     applies:['Mace']},
+  {n:'Wind Burst',   max:3,  desc:'Launch on mace smash.',       applies:['Mace']},
+  {n:'Curse of Binding',max:1,desc:'Cannot remove armor.',       applies:['Armor']},
 ];
 
 function renderEnchants() {
@@ -1907,132 +1365,126 @@ function renderEnchants() {
   g.innerHTML = ENCHANTS.map(e => `
     <div class="enchant-card">
       <div class="enchant-name">${e.n}</div>
-      <div class="enchant-max">Max Level: ${'I'.repeat(e.max)} (${e.max})</div>
+      <div class="enchant-max">Max: ${'I'.repeat(e.max)}</div>
       <div class="enchant-desc">${e.desc}</div>
       <div class="enchant-applies">${e.applies.map(a=>`<span class="enc-tag">${a}</span>`).join('')}</div>
     </div>`).join('');
 }
 
-// ===================== ADVANCEMENTS =====================
+// ===== ADVANCEMENTS =====
 const ADVS = [
-  {t:'Getting Wood',    icon:'🪵', type:'normal', cat:'Minecraft', desc:'Punch a tree to get a log.'},
-  {t:'Stone Age',       icon:'⬛', type:'normal', cat:'Minecraft', desc:'Mine stone with a pickaxe.'},
-  {t:'Getting an Upgrade',icon:'⛏️',type:'normal',cat:'Minecraft', desc:'Craft a stone pickaxe.'},
-  {t:'Acquire Hardware',icon:'🔩', type:'normal', cat:'Minecraft', desc:'Smelt an iron ingot.'},
-  {t:'Suit Up',         icon:'🛡️', type:'normal', cat:'Minecraft', desc:'Craft a piece of iron armor.'},
-  {t:'Hot Stuff',       icon:'🔥', type:'normal', cat:'Minecraft', desc:'Fill a bucket with lava.'},
-  {t:'Into Fire',       icon:'💫', type:'challenge',cat:'Minecraft',desc:'Obtain a blaze rod from a blaze.'},
-  {t:'Eye Spy',         icon:'👁️', type:'normal', cat:'Minecraft', desc:'Follow an Eye of Ender.'},
-  {t:'The End?',        icon:'🌑', type:'goal',    cat:'Minecraft', desc:'Enter the End.'},
-  {t:'Free the End',    icon:'🐉', type:'goal',    cat:'The End',   desc:'Defeat the Ender Dragon.'},
-  {t:'The Parrots & the Bats',icon:'🦜',type:'normal',cat:'Adventure',desc:'Breed animals using food.'},
-  {t:'Monster Hunter',  icon:'⚔️', type:'normal', cat:'Adventure', desc:'Kill any hostile monster.'},
-  {t:'A Throwaway Joke',icon:'🔱', type:'challenge',cat:'Adventure',desc:'Throw a trident at a mob while under riptide.'},
-  {t:'Hero of the Village',icon:'🏘️',type:'challenge',cat:'Adventure',desc:'Successfully defend a village.'},
-  {t:'Voluntary Exile',  icon:'🪓', type:'challenge',cat:'Adventure',desc:'Kill a raid captain.'},
+  {t:'Getting Wood',     icon:'🪵', type:'normal',   cat:'Minecraft', desc:'Punch a tree to get a log.'},
+  {t:'Stone Age',        icon:'⬛', type:'normal',   cat:'Minecraft', desc:'Mine stone with a pickaxe.'},
+  {t:'Getting an Upgrade',icon:'⛏️',type:'normal',   cat:'Minecraft', desc:'Craft a stone pickaxe.'},
+  {t:'Acquire Hardware', icon:'🔩', type:'normal',   cat:'Minecraft', desc:'Smelt an iron ingot.'},
+  {t:'Suit Up',          icon:'🛡️', type:'normal',   cat:'Minecraft', desc:'Craft iron armor.'},
+  {t:'Into Fire',        icon:'💫', type:'challenge',cat:'Minecraft', desc:'Obtain a blaze rod.'},
+  {t:'Eye Spy',          icon:'👁️', type:'normal',   cat:'Minecraft', desc:'Follow an Eye of Ender.'},
+  {t:'The End?',         icon:'🌑', type:'goal',     cat:'Minecraft', desc:'Enter the End.'},
+  {t:'Free the End',     icon:'🐉', type:'goal',     cat:'The End',   desc:'Defeat the Ender Dragon.'},
+  {t:'Monster Hunter',   icon:'⚔️', type:'normal',   cat:'Adventure', desc:'Kill any hostile mob.'},
+  {t:'Hero of the Village',icon:'🏘️',type:'challenge',cat:'Adventure',desc:'Defend a village raid.'},
   {t:'How Did We Get Here?',icon:'💀',type:'challenge',cat:'Husbandry',desc:'Have every effect at once.'},
-  {t:'Adventuring Time',icon:'🗺️', type:'challenge',cat:'Adventure',desc:'Discover 17+ biomes.'},
-  {t:'A Complete Catalogue',icon:'🐱',type:'challenge',cat:'Husbandry',desc:'Tame all cat variants.'},
-  {t:'Serious Dedication',icon:'💎',type:'challenge',cat:'Husbandry',desc:'Max out a tool with Mending.'},
-  {t:'Withering Heights',icon:'💀', type:'challenge',cat:'Nether',  desc:'Summon and defeat the Wither.'},
-  {t:'Uneasy Alliance',  icon:'🐷', type:'challenge',cat:'Nether',  desc:'Rescue a ghast from the Nether.'},
-  {t:'Beaconator',       icon:'🔦', type:'challenge',cat:'Nether',  desc:'Create a full Beacon.'},
-  {t:'Sniper Duel',      icon:'🏹', type:'challenge',cat:'Adventure',desc:'Kill a skeleton from 50m away with a bow.'},
+  {t:'Adventuring Time', icon:'🗺️', type:'challenge',cat:'Adventure', desc:'Discover 17+ biomes.'},
+  {t:'Serious Dedication',icon:'💎',type:'challenge',cat:'Husbandry', desc:'Max tool with Mending.'},
+  {t:'Withering Heights',icon:'💀', type:'challenge',cat:'Nether',    desc:'Defeat the Wither.'},
+  {t:'Beaconator',       icon:'🔦', type:'challenge',cat:'Nether',    desc:'Create a full beacon.'},
+  {t:'Sniper Duel',      icon:'🏹', type:'challenge',cat:'Adventure', desc:'Kill skeleton from 50m.'},
+  {t:'Caves & Cliffs',   icon:'⛰️', type:'challenge',cat:'Adventure', desc:'Fall from top to bottom.'},
+  {t:'Birthday Song',    icon:'🎵', type:'challenge',cat:'Adventure', desc:'Serenade a skeleton with a jukebox.'},
+  {t:'Sound of Music',   icon:'🎶', type:'goal',     cat:'Adventure', desc:'Play a music disc.'},
+  {t:'Who is Cutting Onions?',icon:'😢',type:'challenge',cat:'Nether',desc:'Obtain crying obsidian.'},
+  {t:'A Balanced Diet',  icon:'🍽️', type:'challenge',cat:'Husbandry', desc:'Eat all foods.'},
+  {t:'Oooh Shiny!',      icon:'✨', type:'normal',   cat:'Nether',    desc:'Distract a piglin with gold.'},
+  {t:'The Healing Power of Friendship',icon:'🫂',type:'challenge',cat:'Adventure',desc:'Have an axolotl attack a mob for you.'},
 ];
 
 function renderAdvs() {
   const g = document.getElementById('advGrid');
   g.innerHTML = ADVS.map(a => {
     const cls = a.type==='challenge'?'challenge-text':a.type==='goal'?'goal-text':'';
-    const iconCls = a.type==='challenge'?'challenge':a.type==='goal'?'goal':'';
+    const ic = a.type==='challenge'?'challenge':a.type==='goal'?'goal':'';
     return `<div class="adv-card">
-      <div class="adv-icon ${iconCls}">${a.icon}</div>
-      <div class="adv-content">
+      <div class="adv-icon ${ic}">${a.icon}</div>
+      <div>
         <div class="adv-title ${cls}">${a.t}</div>
         <div class="adv-desc">${a.desc}</div>
-        <div class="adv-cat">${a.cat.toUpperCase()} · ${a.type.toUpperCase()}</div>
+        <div class="adv-cat">${a.cat} · ${a.type.toUpperCase()}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-// ===================== POTIONS =====================
+// ===== POTIONS =====
 const POTIONS = [
-  {n:'Potion of Healing',    e:'🧪', color:'#e57373', effect:'Restores 4 HP instantly.', dur:'Instant'},
-  {n:'Potion of Regeneration',e:'💊',color:'#f48fb1', effect:'+1 HP every 2.5 sec.',     dur:'45s / 2min'},
-  {n:'Potion of Strength',   e:'🧫', color:'#8d6e63', effect:'+3 melee damage.',          dur:'3 min'},
-  {n:'Potion of Speed',      e:'🏃', color:'#80cbc4', effect:'+20% move speed.',          dur:'3 min'},
-  {n:'Potion of Invisibility',e:'👻',color:'#eeeeee', effect:'Makes you invisible.',       dur:'3 min'},
-  {n:'Potion of Night Vision',e:'👁️',color:'#1565c0', effect:'See in the dark.',          dur:'3 min'},
-  {n:'Potion of Fire Resistance',e:'🔥',color:'#ff8a65',effect:'Immune to fire/lava.', dur:'3 min'},
-  {n:'Potion of Water Breathing',e:'🫧',color:'#4fc3f7',effect:'Breathe underwater.',   dur:'3 min'},
-  {n:'Potion of Leaping',    e:'🦘', color:'#a5d6a7', effect:'+1 block jump height.',     dur:'3 min'},
-  {n:'Potion of Slow Falling',e:'🍃',color:'#e8f5e9', effect:'Fall slowly, no damage.',   dur:'90s'},
-  {n:'Potion of Weakness',   e:'💧', color:'#78909c', effect:'-4 melee damage.',           dur:'1.5 min'},
-  {n:'Potion of Poison',     e:'☠️', color:'#9ccc65', effect:'Deals damage over time.',   dur:'45s'},
+  {n:'Healing',          e:'🧪', color:'#e57373', eff:'Restores 4 HP instantly.',         dur:'Instant'},
+  {n:'Regeneration',     e:'💊', color:'#f48fb1', eff:'+1 HP every 2.5 sec.',             dur:'45s / 2min'},
+  {n:'Strength',         e:'🧫', color:'#8d6e63', eff:'+3 melee damage.',                 dur:'3 min'},
+  {n:'Speed',            e:'🏃', color:'#80cbc4', eff:'+20% move speed.',                  dur:'3 min'},
+  {n:'Invisibility',     e:'👻', color:'#eeeeee', eff:'Become invisible.',                 dur:'3 min'},
+  {n:'Night Vision',     e:'👁️', color:'#1565c0', eff:'See in the dark.',                 dur:'3 min'},
+  {n:'Fire Resistance',  e:'🔥', color:'#ff8a65', eff:'Immune to fire and lava.',          dur:'3 min'},
+  {n:'Water Breathing',  e:'🫧', color:'#4fc3f7', eff:'Breathe underwater.',               dur:'3 min'},
+  {n:'Leaping',          e:'🦘', color:'#a5d6a7', eff:'+1 block jump height.',             dur:'3 min'},
+  {n:'Slow Falling',     e:'🍃', color:'#e8f5e9', eff:'Fall slowly, no damage.',           dur:'90s'},
+  {n:'Weakness',         e:'💧', color:'#78909c', eff:'-4 melee damage.',                  dur:'1.5 min'},
+  {n:'Poison',           e:'☠️', color:'#9ccc65', eff:'Deals damage over time.',           dur:'45s'},
+  {n:'Luck',             e:'🍀', color:'#4caf50', eff:'Better loot from fishing/chests.', dur:'5 min'},
+  {n:'Turtle Master',    e:'🐢', color:'#26a69a', eff:'Resistance IV + Slowness IV.',     dur:'20s / 40s'},
 ];
 
 function renderPotions() {
   const g = document.getElementById('potionsGrid');
   g.innerHTML = POTIONS.map(p => `
-    <div class="potion-card" style="border-color:${p.color}33;">
+    <div class="potion-card" style="border-color:${p.color}44">
       <span class="potion-bottle" style="color:${p.color}">${p.e}</span>
-      <div class="potion-name" style="color:${p.color}">${p.n}</div>
-      <div class="potion-effect">${p.effect}</div>
+      <div class="potion-name" style="color:${p.color}">Potion of ${p.n}</div>
+      <div class="potion-effect">${p.eff}</div>
       <div class="potion-dur">⏱ ${p.dur}</div>
     </div>`).join('');
 }
 
-// ===================== SEARCH =====================
-const searchData = [
-  ...BLOCKS.map(b=>({icon:'🧱',name:b.name,type:'Block',cat:'blocks'})),
-  ...BIOMES.map(b=>({icon:'🗺️',name:b.name,type:'Biome',cat:'biomes'})),
-  ...MOBS.map(m=>({icon:m.e,name:m.n,type:'Mob',cat:'mobs'})),
-  ...ITEMS.map(i=>({icon:i.e,name:i.n,type:'Item',cat:'items'})),
-  ...ENCHANTS.map(e=>({icon:'✨',name:e.n,type:'Enchantment',cat:'enchants'})),
+// ===== SEARCH =====
+const SEARCH_DATA = [
+  ...BLOCKS_ALL.map(b=>({icon:BLOCK_TEX(b.tex), name:b.name, type:'Block', cat:'blocks', useImg:true})),
+  ...ITEMS_ALL.map(i=>({icon:ITEM_TEX(i.tex), name:i.n, type:'Item', cat:'items', useImg:true})),
+  ...MOBS.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i).map(m=>({icon:m.e, name:m.n, type:'Mob', cat:'mobs', useImg:false})),
+  ...ENCHANTS.map(e=>({icon:'✨', name:e.n, type:'Enchantment', cat:'enchants', useImg:false})),
+  ...PAINTINGS.map(p=>({icon:`${BASE}/paintings/${p.tex}.png`, name:p.n, type:'Painting', cat:'paintings', useImg:true})),
+  ...TRIMS.map(t=>({icon:'🛡️', name:t.n+' Trim', type:'Armor Trim', cat:'trims', useImg:false})),
 ];
 
 function openSearch() {
   document.getElementById('searchOverlay').classList.add('open');
-  document.getElementById('searchInput').focus();
+  setTimeout(()=>document.getElementById('searchInput').focus(), 50);
   doSearch('');
 }
-
-function closeSearch(e) {
-  if(e.target===document.getElementById('searchOverlay'))
-    document.getElementById('searchOverlay').classList.remove('open');
-}
-
+function closeSearch(e) { if(e.target.id==='searchOverlay') document.getElementById('searchOverlay').classList.remove('open'); }
 document.addEventListener('keydown', e => {
   if(e.key==='Escape') document.getElementById('searchOverlay').classList.remove('open');
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}
 });
-
 function doSearch(q) {
   const r = document.getElementById('searchResults');
-  const results = q.length<1 ? searchData.slice(0,10) : searchData.filter(d=>d.name.toLowerCase().includes(q.toLowerCase())).slice(0,12);
-  r.innerHTML = results.map(d=>`
+  const results = !q ? SEARCH_DATA.slice(0,12) : SEARCH_DATA.filter(d=>d.name.toLowerCase().includes(q.toLowerCase())).slice(0,14);
+  r.innerHTML = results.map(d => `
     <div class="search-result-item" onclick="goToSection('${d.cat}')">
-      <span class="sr-icon">${d.icon}</span>
-      <div class="sr-info">
-        <h4>${d.name}</h4>
-        <p>${d.type}</p>
-      </div>
-    </div>`).join('') || '<div style="padding:20px;color:#666;font-family:var(--pixel-font);font-size:9px;">No results found.</div>';
+      ${d.useImg
+        ? `<img src="${d.icon}" class="sr-icon" loading="lazy" onerror="this.style.opacity='0.2'">`
+        : `<span class="sr-icon-emoji">${d.icon}</span>`}
+      <div class="sr-info"><h4>${d.name}</h4><p>${d.type}</p></div>
+    </div>`).join('') || '<div style="padding:20px;color:#666;font-family:var(--pixel-font);font-size:8px;">No results.</div>';
 }
-
 function goToSection(cat) {
   document.getElementById('searchOverlay').classList.remove('open');
   document.getElementById(cat).scrollIntoView({behavior:'smooth'});
 }
 
-// ===================== COUNTERS =====================
+// ===== COUNTERS =====
 function initCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {
-    const target = +el.dataset.count;
-    let current = 0;
-    const step = target / 60;
-    const iv = setInterval(() => {
+    const target = +el.dataset.count; let current = 0; const step = target/60;
+    const iv = setInterval(()=>{
       current = Math.min(current+step, target);
       el.textContent = Math.floor(current)+(current>=target?'+':'');
       if(current>=target) clearInterval(iv);
@@ -2040,26 +1492,23 @@ function initCounters() {
   });
 }
 
-// ===================== SCROLL ANIMATIONS =====================
+// ===== SCROLL ANIMATIONS =====
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, {threshold:0.1});
-
+}, {threshold:0.08});
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
 window.addEventListener('scroll', () => {
-  const sb = document.getElementById('scrollBlocks');
-  if(window.scrollY > 300) sb.classList.add('visible');
-  else sb.classList.remove('visible');
-
-  // Re-observe newly added elements
+  document.getElementById('scrollBlocks').classList.toggle('visible', window.scrollY > 300);
   document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
 });
 
-// ===================== INIT =====================
+// ===== INIT ALL =====
 renderBlocks();
 renderBiomes();
 renderMobs();
+renderPaintings();
+renderTrims();
+renderGUI();
 renderRecipes(RECIPES);
 renderBuilds();
 renderItems();
